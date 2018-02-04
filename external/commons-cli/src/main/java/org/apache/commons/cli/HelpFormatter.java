@@ -1,4 +1,11 @@
 /**
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Changes: Make appendOption() and renderOptions() public.
+ *          Change longOptSeparator from private to protected.
+ */
+
+/**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -183,7 +190,7 @@ public class HelpFormatter
     protected Comparator<Option> optionComparator = new OptionComparator();
 
     /** The separator displayed between the long option and its value. */
-    private String longOptSeparator = DEFAULT_LONG_OPT_SEPARATOR;
+    protected String longOptSeparator = DEFAULT_LONG_OPT_SEPARATOR;
 
     /**
      * Sets the 'width'.
@@ -676,7 +683,7 @@ public class HelpFormatter
      * @param option the Option to append
      * @param required whether the Option is required or not
      */
-    private void appendOption(final StringBuffer buff, final Option option, final boolean required)
+    public void appendOption(final StringBuffer buff, final Option option, final boolean required)
     {
         if (!required)
         {
@@ -786,7 +793,7 @@ public class HelpFormatter
      *
      * @return the StringBuffer with the rendered Options contents.
      */
-    protected StringBuffer renderOptions(final StringBuffer sb, final int width, final Options options, final int leftPad, final int descPad)
+    public StringBuffer renderOptions(final StringBuffer sb, final int width, final Options options, final int leftPad, final int descPad)
     {
         final String lpad = createPadding(leftPad);
         final String dpad = createPadding(descPad);

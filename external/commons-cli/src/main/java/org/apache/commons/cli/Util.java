@@ -1,4 +1,12 @@
 /**
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Changes: Make Util, stringLeadingHyphens() and
+ *          stripLeadingAndTrailingQuotes() public.
+ *
+ */
+
+/**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -20,7 +28,7 @@ package org.apache.commons.cli;
 /**
  * Contains useful helper methods for classes within this package.
  */
-final class Util
+public final class Util
 {
     /**
      * Remove the hyphens from the beginning of <code>str</code> and
@@ -30,7 +38,7 @@ final class Util
      *
      * @return the new String.
      */
-    static String stripLeadingHyphens(final String str)
+    public static String stripLeadingHyphens(final String str)
     {
         if (str == null)
         {
@@ -57,7 +65,7 @@ final class Util
      *
      * @return The string without the leading and trailing quotes.
      */
-    static String stripLeadingAndTrailingQuotes(String str)
+    public static String stripLeadingAndTrailingQuotes(String str)
     {
         final int length = str.length();
         if (length > 1 && str.startsWith("\"") && str.endsWith("\"") && str.substring(1, length - 1).indexOf('"') == -1)

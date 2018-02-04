@@ -1,4 +1,11 @@
 /**
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Changes: Make getOptionGroups() and helpOptions() public.
+ *
+ */
+
+/**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -89,7 +96,7 @@ public class Options implements Serializable
      *
      * @return a Collection of OptionGroup instances.
      */
-    Collection<OptionGroup> getOptionGroups()
+    public Collection<OptionGroup> getOptionGroups()
     {
         return new HashSet<OptionGroup>(optionGroups.values());
     }
@@ -225,7 +232,7 @@ public class Options implements Serializable
      *
      * @return the List of Options
      */
-    List<Option> helpOptions()
+    public List<Option> helpOptions()
     {
         return new ArrayList<Option>(shortOpts.values());
     }

@@ -1,4 +1,12 @@
 /**
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Changes: Make getKey(), addValueForProcessing(), acceptsArg(),
+ *          and requiresArg() public.
+ *
+ */
+
+/**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -172,7 +180,7 @@ public class Option implements Cloneable, Serializable
      * 
      * @return the 'unique' Option identifier
      */
-    String getKey()
+    public String getKey()
     {
         // if 'opt' is null, then it is a 'long' option
         return (opt == null) ? longOpt : opt;
@@ -435,7 +443,7 @@ public class Option implements Cloneable, Serializable
      * 
      * @param value is a/the value of this Option
      */
-    void addValueForProcessing(final String value)
+    public void addValueForProcessing(final String value)
     {
         if (numberOfArgs == UNINITIALIZED)
         {
@@ -722,7 +730,7 @@ public class Option implements Cloneable, Serializable
      * @return false if the maximum number of arguments is reached
      * @since 1.3
      */
-    boolean acceptsArg()
+    public boolean acceptsArg()
     {
         return (hasArg() || hasArgs() || hasOptionalArg()) && (numberOfArgs <= 0 || values.size() < numberOfArgs);
     }
@@ -733,7 +741,7 @@ public class Option implements Cloneable, Serializable
      * @return false if the option doesn't require more arguments
      * @since 1.3
      */
-    boolean requiresArg()
+    public boolean requiresArg()
     {
         if (optionalArg)
         {

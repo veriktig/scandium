@@ -1,4 +1,10 @@
 /**
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Changes: Make CommandLine(), addArg() and addOption() public.
+ */
+
+/**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -49,7 +55,7 @@ public class CommandLine implements Serializable
     /**
      * Creates a command line.
      */
-    protected CommandLine()
+    public CommandLine()
     {
         // nothing to do
     }
@@ -457,7 +463,7 @@ public class CommandLine implements Serializable
      *
      * @param arg the unrecognized option/argument.
      */
-    protected void addArg(final String arg)
+    public void addArg(final String arg)
     {
         args.add(arg);
     }
@@ -467,7 +473,7 @@ public class CommandLine implements Serializable
      *
      * @param opt the processed option.
      */
-    protected void addOption(final Option opt)
+    public void addOption(final Option opt)
     {
         options.add(opt);
     }
