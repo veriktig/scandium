@@ -1,0 +1,47 @@
+git remote add commons-cli_remote https://github.com/apache/commons-cli.git
+git fetch commons-cli_remote
+git checkout -b commons-cli_branch commons-cli_remote/master
+git checkout master
+git read-tree --prefix=external/commons-cli/ -u commons-cli_branch
+
+git remote add felix_remote https://github.com/apache/felix.git
+git fetch felix_remote
+git checkout -b felix_branch felix_remote/trunk
+git checkout master
+git read-tree --prefix=external/felix/ -u felix_branch
+
+git remote add odftoolkit_remote https://github.com/apache/odftoolkit.git
+git fetch odftoolkit_remote
+git checkout -b odftoolkit_branch odftoolkit_remote/trunk
+git checkout master
+git read-tree --prefix=external/odftoolkit/ -u odftoolkit_branch
+
+git remote add jna_remote https://github.com/java-native-access/jna.git
+git fetch jna_remote
+git checkout -b jna_branch jna_remote/master
+git checkout master
+git read-tree --prefix=external/jna/ -u jna_branch
+
+git remote add jline3_remote https://github.com/jline/jline3.git
+git fetch jline3_remote
+git checkout -b jline3_branch jline3_remote/master
+git checkout master
+git read-tree --prefix=external/jline3/ -u jline3_branch
+
+git remote add jtcl_remote https://github.com/jtcl-project/jtcl.git
+git fetch jtcl_remote
+git checkout -b jtcl_branch jtcl_remote/master
+git checkout master
+git read-tree --prefix=external/jtcl/ -u jtcl_branch
+
+git remote add hamcrest_remote https://github.com/hamcrest/JavaHamcrest.git
+git fetch hamcrest_remote
+git checkout -b hamcrest_branch hamcrest_remote/master
+git checkout master
+git read-tree --prefix=external/JavaHamcrest/ -u hamcrest_branch
+
+git remote add junit4_remote https://github.com/junit-team/junit4.git
+git fetch junit4_remote
+git checkout -b junit4_branch junit4_remote/master
+git checkout master
+git read-tree --prefix=external/junit4/ -u junit4_branch
