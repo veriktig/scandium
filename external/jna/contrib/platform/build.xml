@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="platform" default="default" basedir=".">
+    <description>Builds and tests platform-specific code.</description>
+    <import file="nbproject/build-impl.xml"/>
+    <!--
+
+    There exist several targets which are by default empty and which can be 
+    used for execution of your tasks. These targets are usually executed 
+    before and after some main targets. They are: 
+
+      -pre-init:                 called before initialization of project properties
+      -post-init:                called after initialization of project properties
+      -pre-compile:              called before javac compilation
+      -post-compile:             called after javac compilation
+      -pre-compile-single:       called before javac compilation of single file
+      -post-compile-single:      called after javac compilation of single file
+      -pre-compile-test:         called before javac compilation of JUnit tests
+      -post-compile-test:        called after javac compilation of JUnit tests
+      -pre-compile-test-single:  called before javac compilation of single JUnit test
+      -post-compile-test-single: called after javac compilation of single JUunit test
+      -pre-jar:                  called before JAR building
+      -post-jar:                 called after JAR building
+      -post-clean:               called after cleaning build products
+
+    (Targets beginning with '-' are not intended to be called on their own.)
+
+    Example of inserting an obfuscator after compilation could look like this:
+
+        <target name="-post-compile">
+            <obfuscate>
+                <fileset dir="${build.classes.dir}"/>
+            </obfuscate>
+        </target>
+
+    For list of available properties check the imported 
+    nbproject/build-impl.xml file. 
+
+
+    Another way to customize the build is by overriding existing main targets.
+    The targets of interest are: 
+
+      -init-macrodef-javac:     defines macro for javac compilation
+      -init-macrodef-junit:     defines macro for junit execution
+      -init-macrodef-debug:     defines macro for class debugging
+      -init-macrodef-java:      defines macro for class execution
+      -do-jar-with-manifest:    JAR building (if you are using a manifest)
+      -do-jar-without-manifest: JAR building (if you are not using a manifest)
+      run:                      execution of project 
+      -javadoc-build:           Javadoc generation
+      test-report:              JUnit report generation
+
+    An example of overriding the target for project execution could look like this:
+
+        <target name="run" depends="JnaContrib-impl.jar">
+            <exec dir="bin" executable="launcher.exe">
+                <arg file="${dist.jar}"/>
+            </exec>
+        </target>
+
+    Notice that the overridden target depends on the jar target and not only on
+    the compile target as the regular run target does. Again, for a list of available
+    properties which you can use, check the target you are overriding in the
+    nbproject/build-impl.xml file.
+
+    -->
+    
+    <!-- the -init-macrodef-copylibs target superseeds the target defined in
+    build-impl.xml. The classpath that the base copylibs target adds to the
+    MANIFEST.MF interferes with spring-boot and tomcat   -->
+    <target name="-init-macrodef-copylibs">
+        <macrodef name="copylibs" uri="http://www.netbeans.org/ns/j2se-project/3">
+            <attribute default="${manifest.file}" name="manifest"/>
+            <element name="customize" optional="true"/>
+            <sequential>
+                <property location="${build.classes.dir}" name="build.classes.dir.resolved"/>
+                <pathconvert property="run.classpath.without.build.classes.dir">
+                    <path path="${run.classpath}"/>
+                    <map from="${build.classes.dir.resolved}" to=""/>
+                </pathconvert>
+                <pathconvert pathsep=" " property="jar.classpath">
+                    <path path="${run.classpath.without.build.classes.dir}"/>
+                    <chainedmapper>
+                        <flattenmapper/>
+                        <filtermapper>
+                            <replacestring from=" " to="%20"/>
+                        </filtermapper>
+                        <globmapper from="*" to="lib/*"/>
+                    </chainedmapper>
+                </pathconvert>
+                <taskdef classname="org.netbeans.modules.java.j2seproject.copylibstask.CopyLibs" classpath="${libs.CopyLibs.classpath}" name="copylibs"/>
+                <copylibs compress="${jar.compress}" excludeFromCopy="${copylibs.excludes}" index="${jar.index}" indexMetaInf="${jar.index.metainf}" jarfile="${dist.jar}" manifest="@{manifest}" rebase="${copylibs.rebase}" runtimeclasspath="${run.classpath.without.build.classes.dir}">
+                    <fileset dir="${build.classes.dir}" excludes="${dist.archive.excludes}"/>
+                    <manifest>
+                        <!--<attribute name="Class-Path" value="${jar.classpath}"/>-->
+                        <customize/>
+                    </manifest>
+                </copylibs>
+            </sequential>
+        </macrodef>
+    </target>
+    
+    <target name="-pre-jar">
+        <tempfile deleteonexit="true" destdir="${build.dir}" property="tmp.manifest.file"/>
+        <manifest file="${tmp.manifest.file}" mode="replace">
+            <attribute name="Manifest-Version" value="1.0"/>
+            <attribute name="Implementation-Title" value="${impl.title}"/>
+            <attribute name="Implementation-Vendor" value="${vendor}"/>
+            <attribute name="Implementation-Version" value="${impl.version}"/>
+            <attribute name="Specification-Title" value="${spec.title}"/>
+            <attribute name="Specification-Vendor" value="${spec.vendor}"/>
+            <attribute name="Specification-Version" value="${spec.version}"/>
+            <!--
+               OSGi Bundle attributes
+               See http://www.osgi.org/Specifications/Reference
+             -->
+            <attribute name="Bundle-Category" value="jni"/>
+            <attribute name="Bundle-ManifestVersion" value="2"/>
+            <attribute name="Bundle-Name" value="jna-platform"/>
+            <attribute name="Bundle-Description" value="JNA Platform Library"/>
+            <attribute name="Bundle-SymbolicName" value="com.sun.jna.platform"/>
+            <attribute name="Bundle-Version" value="${osgi.version}"/>
+            <attribute name="Bundle-RequiredExecutionEnvironment" value="J2SE-1.4"/>
+            <attribute name="Bundle-Vendor" value="${vendor}"/>
+            <attribute name="Require-Bundle" value="com.sun.jna;bundle-version=&quot;${osgi.version}&quot;"/>
+            <attribute name="Export-Package"
+                   value="
+com.sun.jna.platform,
+com.sun.jna.platform.dnd,
+com.sun.jna.platform.mac,
+com.sun.jna.platform.unix,
+com.sun.jna.platform.win32,
+com.sun.jna.platform.win32.COM,
+com.sun.jna.platform.win32.COM.tlb,
+com.sun.jna.platform.win32.COM.tlb.imp,
+com.sun.jna.platform.wince
+"/>
+        </manifest>
+    </target>
+
+    <target name="test" depends="init,compile,compile-test,-pre-test-run" description="Run platform unit tests.">
+      <echo>Running platform tests: ${test.src.dir}</echo>
+      <property name="test.fork" value="yes"/>
+      <property name="reports.junit" location="${build}/reports/junit/${os.prefix}"/>
+      <property name="results.junit" location="${build}/junit-results/${os.prefix}"/>
+      <mkdir dir="${results.junit}"/>
+      <echo>Saving test results in ${results.junit}</echo>
+      <condition property="tests.platform" value="**/mac/**/*Test.java">
+        <os family="mac"/>
+      </condition>
+      <condition property="tests.platform" value="**/win32/**/*Test.java">
+        <os family="windows"/>
+      </condition>
+      <condition property="tests.platform" value="**/unix/**/*Test.java">
+        <os family="unix"/>
+      </condition>
+      <property name="tests.platform" value=""/>
+      <property name="tests.exclude" value=""/>
+      <property name="tests.exclude-patterns" value=""/>
+      <condition property="java.awt.headless" value="true">
+        <isset property="headless"/>
+      </condition>
+      <condition property="vmopt.arch" value="-d64" else="-Dignore">
+        <and>
+          <!-- Sun 64-bit VM for windows doesn't support the -d64 switch -->
+          <not><os family="windows"/></not>
+          <equals arg1="${vm.arch}" arg2="-d64" trim="true"/>
+        </and>
+      </condition>
+      <propertyset id="headless">
+        <propertyref prefix="java.awt.headless"/>
+      </propertyset>
+      <echo>tests.platform=${tests.platform}</echo>
+      <junit fork="${test.fork}" failureproperty="testfailure" tempdir="${build.dir}">
+        <!-- optionally run headless -->
+        <syspropertyset refid="headless"/>
+        <!-- avoid VM conflicts with JNA protected mode -->
+        <env key="${ld.preload.name}" file="${libjsig}"/>
+        <!-- Ignore any system install of JNA -->
+        <sysproperty key="jna.nosys" value="true"/>
+        <sysproperty key="jna.builddir" file="${file.reference.jna.build}"/>
+        <jvmarg value="${vmopt.arch}"/>
+        <classpath><path path="${run.test.classpath}"/><path path="${file.reference.jna.build}/test-classes"/></classpath>
+        <formatter type="brief" usefile="false"/>
+        <formatter type="xml"/>
+        <batchtest todir="${results.junit}">
+          <fileset dir="${test.src.dir}" excludes="${tests.exclude-patterns}">
+            <!-- Until StructureFieldOrderTest gets fixed up a little -->
+            <exclude name="**/StructureFieldOrderTest.java"/>
+            <exclude name="com/sun/jna/platform/AbstractWin32TestSupport.java"/>
+            <include name="${tests.platform}"/>
+            <exclude name="${tests.exclude}"/>
+          </fileset>
+        </batchtest>
+      </junit>
+      <junitreport todir="${results.junit}">
+	<fileset dir="${results.junit}">
+	  <include name="TEST-*.xml"/>
+	</fileset>
+	<report todir="${reports.junit}"/>
+      </junitreport>
+      <echo message="View test report in file://${reports.junit}/index.html" />
+      <fail if="testfailure">One or more tests failed</fail>
+    </target>
+
+    <!-- One-off test to check field order definitions -->
+    <target name="test-field-order" depends="-pre-test-run-single" >
+        <!-- @todo How to ensure sys prop: jna.nosys=true is seen in tests? -->
+        <!--<property name="test.includes" value="com/sun/jna/platform/**/*.java"/>-->
+        <property name="test.includes" value="com/sun/jna/platform/StructureFieldOrderTest.java"/>
+        <property name="javac.includes" value="**/*"/>
+        <antcall target="test-single"/>
+    </target>
+</project>

@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<faqs id="JTcl FAQ">
+  <part id="General">
+    <faq id="Jacl">
+      <question>Is JTcl a fork of Jacl?</question>
+      <answer>
+        <p>
+          Yes, JTcl is based on Jacl.  One of the main goals of JTcl is to
+          continue the modernization of Jacl that began with the Google 
+          Summer of Code (GSOC) 2009
+          <i><a href="http://wiki.tcl.tk/23201">Jacl Modernization Project</a></i>.
+        </p>
+      </answer>
+    </faq>
+    <faq id="TclBlend">
+      <question>How do I build the TclBlend extension?</question>
+      <answer>
+        <p>
+          JTcl is solely focused on Jacl, and does not include the TclBlend
+          extension.  Users of TclBlend should continue to use the extension
+          from the <a href="http://tcljava.sf.net">TclJava project.</a>
+        </p>
+      </answer>
+    </faq>
+    <faq id="Tcl85">
+      <question>Tcl 8.5 and 8.6 are available, why is JTcl only supporting Tcl 8.4?</question>
+      <answer>
+        <p>
+          Tcl 8.4 compatibility was the goal of the GSOC 2009 project, and represents a usable
+          Tcl implementation for a wide variety of code.  Tcl 8.5 is the result of several years
+          of development by a much larger team, and contains a large number of additions and changes
+          from Tcl 8.4.  The JTcl Project plans to implement some Tcl 8.5 commands to enable more
+          modern Tcl code (e.g., apply, chan, dict, lassign, etc.)
+        </p>
+      </answer>
+    </faq>
+    <faq id="Tcl_extensions">
+      <question>How do I load a Tcl extension? I have a prebuilt xxx.dll, can I use it in JTcl?</question>
+      <answer>
+        <p>
+          JTcl cannot load C-based Tcl extensions.  C-based extensions call functions of the C-based Tcl
+          intepreter, which are not available in JTcl.  JTcl can utilize extensions coded in Java. 
+        </p>
+      </answer>
+    </faq>
+  </part>
+</faqs>

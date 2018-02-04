@@ -1,0 +1,62 @@
+ ----
+ Getting Started
+ ----
+
+Getting started with JTcl
+
+  * Install Java 1.6 or higher (latest Java version preferred.)  If you don't already have Java installed, 
+    download and install the appropriate Java package (Linux, Solaris, Windows, Mac OSX) from 
+    {{{http://www.oracle.com/technetwork/java/javase/downloads/index.html}Oracle.com}}.
+    Other Java JVMs that are based on HotSpot (OpenJDK, IBM, etc.) are also likely to work.
+    Install either the Java JRE or JDK package.
+    
+    []
+    
+  * {{{https://github.com/jtcl-project/jtcl/releases}Download}} the JTcl distribution ZIP file, and
+    unzip into a directory of your choice.\
+    \
+    Example:\
+    \
+    download jtcl-<(version)>-bin.zip using your web browser\
+    \
+    <<unzip jtcl->><(version)><<-bin.zip>>\
+    <<cd jtcl->><(version)>\
+    \
+    Optional for Linux/Unix systems:  make symbolic links in /usr/local/bin (or any other directory
+    on your PATH of your choice):\
+    \
+    <<sudo ln  -s  `pwd`/jtcl  /usr/local/bin>>
+    \
+    <<sudo ln  -s  `pwd`/jtclni  /usr/local/bin>>
+    
+    []
+  
+  * Start the JTcl interpreter with a Tcl program file:\
+    \
+    <<jtcl>>  <filename>  <arg> <arg ...>\
+    \
+    or to run as an interactive shell:\
+    \
+    <<jtcl>>
+    
+
+    JTcl should be started with the non-interactive shell <<jtclni>>  when stdin is a pipe or redirected from
+    a file.  
+    
+    []
+
+  * Optional environment variables, set any of these before running <jtcl> or <jtcl.bat>: 
+
+    *  <<JAVA_HOME>> - specifies the location of the Java installation.  If not set, the <java> executable 
+       is assumed to be found on the <<PATH>>. 
+
+    *  <<CLASSPATH>> - additional Java jar files or class directories to be included.  Classpath components
+       should be colon separated for Unix/Linux/Mac OSX or semi-colon separated for Windows. 
+
+    *  <<JAVA_OPTS>> - arguments to be passed to the JVM, for example <"-server -Xmx512m">. 
+
+    *  <<TCLLIBPATH>> - additional directories containing Tcl libraries.  The specified directories will
+       be added to the JTcl interpreter <<auto_path>> variable.  Directory components should
+       be space separated for both Unix/Linux/Mac OSX and Windows. 
+
+

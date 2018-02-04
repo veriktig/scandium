@@ -1,0 +1,16 @@
+/build
+/classes
+/bin
+/out
+.DS_Store
+*~
+*.swp
+/.idea
+*.iws
+*.ipr
+*.iml
+.gradle
+
+gradle.properties
+release-key.asc
+grade-wrapper.properties

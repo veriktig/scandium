@@ -1,0 +1,60 @@
+ ----
+ Building JTcl
+ ----
+ 
+ Building JTcl
+ 
+   JTcl builds with {{{http://ant.apache.org/}Ant}} or {{{http://maven.apache.org/}Maven}} (preferred).  
+
+   The TJC package, <Tcl to Java Compiler>, is written in Tcl (stage 1) and is compiled with itself
+   to produce Java code (stage 2).  Subsequently, building the TJC stage 2 compiler 
+   <<may take 5 - 20 minutes or longer>>.  When building with <ant>, the stage 2 compiler is built
+   when <<<ant package>>> is run.  When building with <Maven>, the stage 2 compiler is built when
+   <<<mvn -DskipTests package>>> is run, and will only be rebuilt again if the TJC compiler source 
+   is changed, or the top-level files <<<tjc.jar>>> or <<<tjcsrc.jar>>> are missing.   The stage 2 files
+   <<<tjc.jar>>> and <<<tjcsrc.jar>>> are created locally and not included in the distribution.
+
+   The full JTcl release and website are built with Maven.
+   
+Building with Maven
+   
+  Build the JTcl release, output files in the <target> directory:
+
+------------------------
+mvn -DskipTests clean javadoc:javadoc site package 
+------------------------
+
+  Compile and build .jar file only:
+   
+------------------------
+mvn -DskipTests clean compile jar:jar
+------------------------
+   
+  Compile and run test suite. <Note - Java 1.6 is required for full test coverage>:
+   
+------------------------
+mvn clean test
+------------------------
+   
+Building with Ant (deprecated)
+   
+------------------------
+ant clean
+ant compile
+ant package
+------------------------
+   
+Creating a development environment
+
+   Install Java JDK 1.6 or higher, if not already installed.
+   The JTcl project uses the {{{http://git-scm.com}Git}} version control system. 
+
+
+------------------------
+git clone https://github.com/jtcl-project/jtcl.git
+
+------------------------
+   
+   JTcl source code includes <<.project>> and <<.classpath>> files for the 
+   {{{http://eclipse.org/}Eclipse}} development system.  
+

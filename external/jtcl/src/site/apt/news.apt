@@ -1,0 +1,244 @@
+ ----
+ JTcl News
+ ----
+
+July 23, 2015
+
+  JTcl 2.8.0 has been released.  This is primarily a bug fix release.
+
+  * Fixed a bug in the <<java>> package that allowed methods to
+    be selected for invocation that returned unaccessible classes.  This
+    was manifest with java.lang.StringBuilder and java.lang.StringBuffer instance methods that
+    returned an error <Return type "java.lang.AbstractStringBuilder" is not accessible.>
+
+  * Fixed incorrect use of Integer MIN_VALUE/MAX_VALUE with TCL equivalents (which are
+    redefined from Long MIN_VALUE/MAX_VALUE).
+
+  * Allow "b" and BINARY access modifiers on <<open>> command <(enhancement.)>   This sets
+    the file's encoding to binary.  Examples: <open file wb>;  <open file \{RDONLY BINARY\}>
+
+  * Static utility methods in Util.java now are <public> for use by extensions <(enhancement.)>
+
+ Please report bugs and other unexpected behaviors at the JTcl project
+ site's {{{https://github.com/jtcl-project/jtcl/issues}Bug tracking system}}.
+
+ <The JTcl Team>
+
+
+August 30, 2014
+
+  JTcl 2.7.0 has been released.  This is primarily a bug fix release.
+
+  * JTcl now requires Java 1.6 or higher.  **POTENTIAL INCOMPATIBILITY**
+
+  * Fixed an exception when <<clock scan>> was called with an empty string argument.
+
+  * Fixed an exception when <<unset -nocomplain>> was called without an arugment.
+
+  * Fixed parsing backslashed octal characters to conform to Tcl 8.4+, ascii digits
+    '8' and '9' now terminate octal parsing.  This is a change from previous versions
+    which adhered to Tcl 8.3 and before by treating these as octal when preceded by a valid octal digit.
+     **POTENTIAL INCOMPATIBILITY**
+
+  * Added shell commands <<jtclni>> and <<jtclni.bat>> to start JTcl with the non-interactive
+    shell.  This is useful when stdin is a pipe or redirected from a file to avoid printing
+    command prompts.
+
+  * A new option <-source java-source-text> was added to the hyde package <::hyde::jclass> command.
+    which allows a complete Java class to be specified as a string.
+
+  * <<The JTcl project is now hosted at Github>>.  The project page is at {{https://github.com/jtcl-project/jtcl}}
+    and the main website is {{http://jtcl-project.github.io/jtcl}}.  
+
+  * The JTcl mailing list is now located at {{https://groups.google.com/forum/#!forum/jtcl-project}}.
+
+ Please report bugs and other unexpected behaviors at the JTcl project
+ site's {{{https://github.com/jtcl-project/jtcl/issues}Bug tracking system}}.
+
+ <The JTcl Team>
+
+
+August 4, 2013
+
+  JTcl 2.6.0 has been released.  This is primarily a bug fix release.
+
+  * Fixed a regression bug where trying to invoke an unknown object 
+    method with the <<java>> package caused an exception.
+
+  * Fixed a bug when trying to decode an invalid Unicode character, could
+    cause an infinite loop.
+
+  * Fixed a bug where <<file normalize>> should not try to resolve last path
+    component if it is a link.
+
+  * Added <<source -encoding encname>> option, as well as 
+    <<jtcl -encoding encname>> option when starting the JTcl command line shell.
+
+  * Added <<JTcl>> as a informational package, which provides the JTcl version 
+    when required, <<package require JTcl>>.
+
+
+ <The JTcl Team>
+
+
+
+July 1, 2013
+
+  JTcl 2.5.0 has been released.  This is primarily a bug fix and performance release.
+
+  * Fixed issue with embedded Janino compiler that prevented on-the-fly compilation for <<TJC>> and 
+    <<hyde>> when using Java 7.
+
+  * Fixed runtime execption thrown when invalid <<format>> specifier was encountered.
+
+  * Fixed issue that setting env(VAR) was not actually passed to sub-process environment for <<exec>>.
+
+  * Fixed issue where line continuation with \r\n sequences were not parsed correctly during 
+    Interp.eval().
+
+  * Major performance enhancement when reading stdin, now read as many bytes as are available.
+
+  * Minor performance improvements when using the <<java>> package, better caching of previously
+    resolved classes.  Patch contributed by Fabrice Ilponse.
+
+
+ <The JTcl Team>
+
+
+October 11, 2012
+
+  JTcl 2.4.0 has be released. 
+
+  * Bug fixes:
+
+    * Creating a safe interpreter (<<interp create -safe>>) now excludes <jaclloadjava>, <jaclloadtjc>
+      and assorted <auto_*> commands.
+
+    * Fixed leaking Java objects created using the <<java>> package, which could cause out of memory
+      exceptions in long-running programs.
+
+    * Compiling Tcl code to Java using TJC now uses the <-debug> compiler flag to include debugging information
+      in the generated class files.
+
+
+ <The JTcl Team>
+
+
+July 12, 2012
+
+  JTcl 2.3.0 has be released.  New or fixed in this release:
+
+  * <New!> JTcllib - module <<fleet>> enables light-weight concurrent programming in JTcl.  See the 
+    manual page in the {{{./docs/jtcllib/index.html}jtcllib}} documentation.
+
+  * Bug fixes:
+
+    * An empty variable name ("") would cause IsArrayVarname to throw exception.
+
+    * After a backslash-newline sequence, only gobble up spaces and tabs (not newlines 
+      or any other whitespace) during eval.
+
+    * <<dict>> now preserves order of entries.
+
+
+ <The JTcl Team>
+
+
+February 23, 2012
+
+  JTcl 2.2.0 has be released.  New or fixed in this release:
+
+  * <New!> Backported Tcl 8.5 commands <<lassign>>, <<lrepeat>>, and <<lreverse>> are now 
+    implemented.
+
+  * <New!> JTcllib - module <<ziplib>> to access and manipulate ZIP and JAR files.
+
+  * <New!> <<paraffin.tcl>> utility allows building self-contained JTcl applications in a
+    single JAR file.
+
+  * Bug fixes:
+
+    * <<glob "">> previously caused an exception, now treated as <<glob ".">>.
+
+    * An ArrayIndexOutOfBounds exception was fixed in MarkableInputStream.
+
+
+ <The JTcl Team>
+
+
+December 19, 2011
+
+  JTcl 2.1.0 has be released.  New or fixed in this release:
+
+  * <New!> JTcllib - JTcl specific library of modules using the <java> package.  The first (and so far, only) 
+    module is {{{./docs/jtcllib/index.html}hyde}}.  User submissions are encouraged.
+
+  * Bug fixes:
+
+    * <<info command ::foo>> returned too many leading namespace separators.
+
+    * An exception was thrown when opening a non-existent file in mode "a" or "a+".
+
+    * Fileevent processing on an open socket would cause excessive CPU usage.
+
+
+
+
+ <The JTcl Team>
+
+
+July 14, 2011
+
+  JTcl 2.0.0 has been released. New or fixed in this release:
+
+  * <<info nameofexecutable>> now creates and returns a temporary shell/bat script that invokes JTcl.
+
+  * <<lset>> performance issues fixed.
+
+  * <<socket -server command>> now executes <command> as a script.
+
+  * ManagedSystemInStream thread is stopped when Interp is disposed.
+
+  * All user background threads are now Java daemon threads, so that they will be stopped on main thread exit.
+
+  * TJC enforces Java version 1.5 when compiling Tcl procs using javac.
+
+  * Javadoc for JTcl interpreter is now generated and included in website and doc zip file.
+
+
+
+ <The JTcl Team>
+
+April 13, 2011
+
+  JTcl 2.0.0-b1 has been released. New or fixed in this release:
+
+  * <<dict>> and <<apply>> commands have been backported from Tcl 8.5.  A compatibilty package <dict> is included.
+
+  * <<array unset>> on an undefined variable will not cause an error.
+
+  * <user> element added to <tcl_platform> array.
+
+  * Tcllib 1.13 is included.  Note that Tcllib modules have not been extensively tested, some may not work due to JTcl differences. 
+
+  * <<java::import>> now imports classes from wildcard package names ("*").  Example: \
+    <java::import java.util.* ; java::new Date>\ \ \ \  will import java.util.Date and create a new instance.
+
+  * Building with Maven is now fully supported, including the TJC stage 2 compiler and JTcl distribution. 
+
+  * Command line program <tjc> (Windows: <tjc.bat>) now included.
+
+  * Documentation for Tcl 8.4 and included packages now local to the website.
+
+
+
+
+ <The JTcl Team>
+
+November 17, 2010
+
+  JTcl 2.0.0-a1 has been released!  This is the first release of JTcl, and you may
+  find bugs.  Please report bugs and other unexpected behaviors at the JTcl project
+  site's {{{https://github.com/jtcl-project/jtcl/issues}Bug tracking system}}.
+
+  <The JTcl Team>
