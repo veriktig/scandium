@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<help_pkg package="com.veriktig.scandium.internal.test.help">
+<help
+    name="internal_test"
+    rv="string"
+    help="Runs tests on commands.">
+    <desc p="internal_test runs tests against Tcl commands using tcltest."/>
+</help>
+</help_pkg>

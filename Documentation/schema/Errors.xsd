@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+ <xs:annotation>
+  <xs:documentation xml:lang="en">
+    "A schema for generating human-readable documentation for errors."
+  </xs:documentation>
+ </xs:annotation>
+
+ <xs:element name="error_pkg" type="ErrorPackage"/>
+
+ <xs:complexType name="ErrorPackage">
+  <xs:sequence>
+   <xs:element name="error" type="Error" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+  <xs:attribute name="package" type="xs:string" use="required"/>
+ </xs:complexType>
+
+ <xs:complexType name="Error">
+  <xs:sequence>
+   <xs:element name="desc" type="Description" minOccurs="1" maxOccurs="unbounded"/>
+   <xs:element name="what_next" type="WhatNext" minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="see_also" type="SeeAlso" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+  <xs:attribute name="number" type="IntType" use="required"/>
+  <xs:attribute name="severity" type="SeverityType" use="required"/>
+  <xs:attribute name="help" type="xs:string" use="required"/>
+ </xs:complexType>
+
+ <xs:simpleType name="IntType">
+  <xs:restriction base="xs:nonNegativeInteger">
+  <xs:minInclusive value="1000"/>
+  <xs:maxInclusive value="10000"/>
+  </xs:restriction>
+ </xs:simpleType>
+
+ <xs:simpleType name="SeverityType">
+  <xs:restriction base="xs:string">
+  <xs:enumeration value="info"/>
+  <xs:enumeration value="warning"/>
+  <xs:enumeration value="error"/>
+  <xs:enumeration value="severe"/>
+  <xs:enumeration value="fatal"/>
+  </xs:restriction>
+ </xs:simpleType>
+
+ <xs:complexType name="Description">
+  <xs:attribute name="p" type="xs:string" use="required"/>
+ </xs:complexType>
+
+ <xs:complexType name="WhatNext">
+  <xs:attribute name="p" type="xs:string" use="required"/>
+ </xs:complexType>
+
+ <xs:complexType name="SeeAlso">
+  <xs:attribute name="name" type="xs:string" use="required"/>
+ </xs:complexType>
+
+</xs:schema>

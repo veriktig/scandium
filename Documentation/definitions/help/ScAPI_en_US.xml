@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<help_pkg package="com.veriktig.scandium.api.help">
+<help
+    name="help"
+    rv="string"
+    help="Displays a concise description of a command.">
+    <desc p="Describes what a command does."/>
+    <option
+    	arg_name="command_name"
+  		desc="Name of command(s) to display help about."
+  		option="null"
+  		type="list"
+  		value=""
+  		required="true"/>
+</help>
+<help
+    name="print_versions"
+    rv="string"
+    help="Displays the installed bundles and version information.">
+    <desc p="Useful for reporting problems."/>
+</help>
+<help
+    name="printvar"
+    rv="string"
+    help="Displays the value of variables.">
+    <desc p="Displays the application or user variables that are defined."/>
+    <option
+    	arg_name="pattern"
+  		desc="Pattern for filtering names. Supports * and ? wildcards."
+  		option="null"
+  		type="string"
+  		value=""
+  		required="false"/>
+    <option_group>
+    <option
+    	arg_name=""
+  		desc="Show only user defined variables.."
+  		option="user_defined"
+  		type="boolean"
+  		value=""
+  		required="false"/>
+    <option
+    	arg_name=""
+  		desc="Show only variables defined by the application."
+  		option="application"
+  		type="boolean"
+  		value=""
+  		required="false"/>
+    </option_group>
+    <example
+    desc="Here's an example:"
+    verbatim="printvar p*"/>
+</help>
+</help_pkg>

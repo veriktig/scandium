@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+ <xs:annotation>
+  <xs:documentation xml:lang="en">
+    "A schema for generating human-readable documentation for the help and man commands."
+  </xs:documentation>
+ </xs:annotation>
+
+ <xs:element name="help_pkg" type="HelpPackage"/>
+
+ <xs:complexType name="HelpPackage">
+  <xs:sequence>
+   <xs:element name="help" type="Help" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+  <xs:attribute name="package" type="xs:string" use="required"/>
+ </xs:complexType>
+
+ <xs:complexType name="Help">
+  <xs:sequence>
+   <xs:element name="desc" type="Description" minOccurs="1" maxOccurs="unbounded"/>
+   <xs:element name="option" type="Option" minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="option_group" type="OptionGroup" minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="example" type="Example" minOccurs="0" maxOccurs="unbounded"/>
+   <xs:element name="see_also" type="SeeAlso" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+  <xs:attribute name="name" type="xs:string" use="required"/>
+  <xs:attribute name="rv" type="xs:string" use="required"/>
+  <xs:attribute name="help" type="xs:string" use="required"/>
+ </xs:complexType>
+
+ <xs:complexType name="Option">
+  <xs:attribute name="arg_name" type="xs:string" use="required"/>
+  <xs:attribute name="desc" type="xs:string" use="required"/>
+  <xs:attribute name="option" type="xs:string" use="required"/>
+  <xs:attribute name="type" type="xs:string" use="required"/>
+  <xs:attribute name="value" type="xs:string" use="required"/>
+  <xs:attribute name="required" type="xs:boolean" use="required"/>
+ </xs:complexType>
+
+ <xs:complexType name="OptionGroup">
+  <xs:sequence>
+   <xs:element name="option" type="Option" minOccurs="2" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
+
+ <xs:complexType name="Example">
+  <xs:attribute name="desc" type="xs:string" use="required"/>
+  <xs:attribute name="verbatim" type="xs:string" use="optional"/>
+ </xs:complexType>
+
+ <xs:complexType name="SeeAlso">
+  <xs:attribute name="name" type="xs:string" use="required"/>
+ </xs:complexType>
+
+ <xs:complexType name="Description">
+  <xs:attribute name="p" type="xs:string" use="required"/>
+ </xs:complexType>
+
+</xs:schema>

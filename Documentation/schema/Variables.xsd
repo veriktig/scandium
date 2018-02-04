@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+ <xs:annotation>
+  <xs:documentation xml:lang="en">
+    "A schema for generating human-readable documentation for variables."
+  </xs:documentation>
+ </xs:annotation>
+
+ <xs:element name="variable_pkg" type="VariablePackage"/>
+
+ <xs:complexType name="VariablePackage">
+  <xs:sequence>
+   <xs:element name="variable" type="Variable" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+ </xs:complexType>
+
+ <xs:complexType name="Variable">
+  <xs:sequence>
+   <xs:element name="desc" type="Description" minOccurs="1" maxOccurs="unbounded"/>
+   <xs:element name="see_also" type="SeeAlso" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+  <xs:attribute name="package" type="xs:string" use="required"/>
+  <xs:attribute name="name" type="xs:string" use="required"/>
+  <xs:attribute name="help" type="xs:string" use="required"/>
+  <xs:attribute name="type" type="Type" use="required"/>
+  <xs:attribute name="default" type="xs:string" use="required"/>
+ </xs:complexType>
+
+ <xs:simpleType name="Type">
+  <xs:restriction base="xs:string">
+  <xs:enumeration value="String"/>
+  <xs:enumeration value="Boolean"/>
+  </xs:restriction>
+ </xs:simpleType>
+
+ <xs:complexType name="Description">
+  <xs:attribute name="p" type="xs:string" use="required"/>
+ </xs:complexType>
+
+ <xs:complexType name="SeeAlso">
+  <xs:attribute name="name" type="xs:string" use="required"/>
+ </xs:complexType>
+
+</xs:schema>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<error_pkg package="com.veriktig.scandium.api.errors">
+<error
+    number="1000"
+    help="Wrong number of arguments."
+    severity="error">
+    <desc p="Use help or refer to the man pages for the correct syntax."/>
+</error>
+<error
+    number="1001"
+    help="%s is a file, not a directory."
+    severity="error">
+    <desc p="The operation requires a directory."/>
+</error>
+<error
+    number="1002"
+    help="Error unmarshaling XML source file %s: %s"
+    severity="error">
+    <desc p="Review the file/line number in the error messages."/>
+</error>
+<error
+    number="1003"
+    help="File %s does not exist."
+    severity="error">
+    <desc p="Check the path and/or file name."/>
+</error>
+<error
+    number="1004"
+    help="Package %s: Whitespace not allowed in Names: %s"
+    severity="error">
+    <desc p="Remove spaces or tabs from names."/>
+</error>
+<error
+    number="1005"
+    help="Package %s: Slash is not allowed in Names: %s"
+    severity="error">
+    <desc p="Remove the slash from the name."/>
+</error>
+<error
+    number="1006"
+    help="Package %s: Reserved word null found in Name."
+    severity="error">
+    <desc p="Do not use null as a Name."/>
+</error>
+<error
+    number="1007"
+    help="Package %s: Reserved word %s from %s found in Name."
+    severity="error">
+    <desc p="Do not use reserved words as Names."/>
+</error>
+<error
+    number="1008"
+    help="Package %s: Undefined attribute Name."
+    severity="error">
+    <desc p="The function checkName() is being called with a null string."/>
+</error>
+<error
+    number="1009"
+    help="Unable to create %s: %s"
+    severity="error">
+    <desc p="Unable to create file due to security exception."/>
+</error>
+<error
+    number="1010"
+    help="Unable to create PrintWriter: %s"
+    severity="error">
+    <desc p="Unable to create file due to IO exception."/>
+</error>
+<error
+    number="1011"
+    help="Unable to close BufferedReader: %s"
+    severity="error">
+    <desc p="Unable to close file due to IO exception."/>
+</error>
+<error
+    number="1012"
+    help="Directory does not exist: %s"
+    severity="error">
+    <desc p="Please create the directory before referencing it."/>
+</error>
+<error
+    number="1013"
+    help="Application variable interface_delimiter is not allowed in Names: %s"
+    severity="error">
+    <desc p="Remove the interface_delimiter from the name."/>
+</error>
+<error
+    number="1014"
+    help="Unable to read from file: %s"
+    severity="error">
+    <desc p="Check file permissions."/>
+</error>
+</error_pkg>
