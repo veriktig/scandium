@@ -1,4 +1,20 @@
 /*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * NamespaceCmd.java
  *
  * Copyright (c) 1993-1997 Lucent Technologies.
@@ -21,7 +37,7 @@
 package tcl.lang.cmd;
 
 import java.util.Iterator;
-import java.util.Map;
+import java.util.Map.Entry;
 
 import tcl.lang.CallFrame;
 import tcl.lang.Command;
@@ -230,10 +246,10 @@ public class NamespaceCmd implements InternalRep, Command {
 		// whose names match the specified pattern, if any.
 
 		list = TclList.newInstance();
-		for (Iterator iter = ns.childTable.entrySet().iterator(); iter
+		for (Iterator<Entry<String, Namespace>> iter = ns.childTable.entrySet().iterator(); iter
 				.hasNext();) {
-			Map.Entry entry = (Map.Entry) iter.next();
-			childNs = (Namespace) entry.getValue();
+			Entry<String, Namespace> entry = iter.next();
+			childNs = entry.getValue();
 			if ((pattern == null)
 					|| Util.stringMatch(childNs.fullName, pattern)) {
 				elem = TclString.newInstance(childNs.fullName);
@@ -272,7 +288,7 @@ public class NamespaceCmd implements InternalRep, Command {
 			throws TclException {
 		Namespace currNs;
 		TclObject list, obj;
-		String arg, p;
+		String arg;
 		int length;
 		int p_ind;
 

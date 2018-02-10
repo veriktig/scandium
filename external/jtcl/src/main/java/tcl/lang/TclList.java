@@ -1,4 +1,20 @@
 /*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * TclList.java
  *
  * Copyright (c) 1997 Sun Microsystems, Inc.
@@ -79,7 +95,7 @@ public class TclList implements InternalRep {
 	/**
 	 * DupListInternalRep -> duplicate
 	 * 
-	 * Returns a dupilcate of the current object.
+	 * Returns a duplicate of the current object.
 	 * 
 	 */
 	public InternalRep duplicate() {
@@ -379,7 +395,7 @@ public class TclList implements InternalRep {
 	 * @exception TclException
 	 *                if tobj is not a valid list.
 	 */
-	public static ArrayList getElementsList(Interp interp, TclObject tobj)
+	public static ArrayList<TclObject> getElementsList(Interp interp, TclObject tobj)
 			throws TclException {
 		if (!tobj.isListType()) {
 			setListFromAny(interp, tobj);
@@ -469,10 +485,11 @@ public class TclList implements InternalRep {
 			TclObject[] oldElems = elems;
 			
 			listRep = new TclList(elemCount);
-			
+			/* XXX Flagged as Dead Code
 			if (listRep == null) {
 				throw new TclRuntimeError("Not enough memory to allocate list");
 			}
+			*/
 			
 			elems = (TclObject[]) listRep.alist.toArray();
 			
@@ -535,7 +552,6 @@ public class TclList implements InternalRep {
 			TclObject value) throws TclException {
 
 		TclList listRep; 	// Internal representation of the list being modified.
-		TclObject[] elems; 	// Pointers to elements of the list.
 		int elemCount;
 
 		// Ensure that the list parameter designates an unshared list.
@@ -563,7 +579,7 @@ public class TclList implements InternalRep {
 		 * !!!!!!!!!!!!!!! unchecked!
 		 */
 		listRep = (TclList) list.getInternalRep();
-		ArrayList elemList = listRep.alist;
+		ArrayList<TclObject> elemList = listRep.alist;
 		elemCount = elemList.size();
 
 		// Ensure that the index is in bounds.
@@ -582,10 +598,11 @@ public class TclList implements InternalRep {
 			TclList oldListRep = listRep;
 
 			listRep = new TclList(elemCount);
-
+			/* XXX Flagged as Dead Code
 			if (listRep == null) {
 				throw new TclRuntimeError("Not enough memory to allocate list");
 			}
+			*/
 
 			listRep.duplicate();
 			list.setInternalRep(listRep);
@@ -720,7 +737,7 @@ public class TclList implements InternalRep {
 				count = size - index;
 			}
 			for (i = 0; i < count; i++) {
-				TclObject obj = (TclObject) tlist.alist.get(index);
+				// TclObject obj = (TclObject) tlist.alist.get(index);
 				// obj.release();
 				tlist.alist.remove(index);
 			}

@@ -1,4 +1,20 @@
 /*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * FileCmd.java --
  *
  *	This file contains the Jacl implementation of the built-in Tcl "file"
@@ -23,6 +39,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
 import tcl.lang.Command;
 import tcl.lang.FileUtil;
 import tcl.lang.Interp;
@@ -118,6 +135,7 @@ public class FileCmd implements Command {
 			}
 			if (argv.length == 4) {
 				try {
+					@SuppressWarnings("unused")  // TODO
 					int time = Integer.parseInt(argv[3].toString());
 				} catch (NumberFormatException e) {
 					throw new TclException(interp, "expected integer but got \"" + argv[3] + "\"");
@@ -652,7 +670,7 @@ public class FileCmd implements Command {
 		try {
 			int mtime = getMtime(interp, fileName, fileObj);
 			TclObject mtimeObj = TclInteger.newInstance(mtime);
-			TclObject atimeObj = TclInteger.newInstance(mtime);
+			// TODO TclObject atimeObj = TclInteger.newInstance(mtime);
 			TclObject ctimeObj = TclInteger.newInstance(mtime);
 			// interp.setVar(varName, "atime", atimeObj, 0);
 			interp.setVar(varName, "ctime", ctimeObj, 0);

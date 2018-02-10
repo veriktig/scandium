@@ -1,3 +1,4 @@
+// Copyright (c) 2017 Veriktig.  All rights reserved.
 /*
  * ExitCmd.java
  *
@@ -49,6 +50,17 @@ public class ExitCmd implements Command {
 		 */
 		TclIO.flushAllOpenChannels(interp);
 		
-		System.exit(code);
+        // Store the bundle context in interp
+        if (Interp.context == null) {
+            System.exit(code);
+        } else {
+            try {
+                Interp.context.getBundle(0).stop();
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        System.exit(code);
 	}
 }

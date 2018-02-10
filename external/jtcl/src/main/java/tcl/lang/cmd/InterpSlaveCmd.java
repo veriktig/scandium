@@ -1,4 +1,20 @@
 /*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * InterpSlaveCmd.java --
  *
  *	Implements the built-in "interp" Tcl command.
@@ -16,7 +32,7 @@
 package tcl.lang.cmd;
 
 import java.util.Iterator;
-import java.util.Map;
+import java.util.Map.Entry;
 
 import tcl.lang.AssocData;
 import tcl.lang.CommandWithDispose;
@@ -63,6 +79,7 @@ public class InterpSlaveCmd implements CommandWithDispose, AssocData {
 
 	static final private String hiddenOptions[] = { "-global", "--" };
 	static final private int OPT_HIDDEN_GLOBAL = 0;
+	@SuppressWarnings("unused")
 	static final private int OPT_HIDDEN_LAST = 1;
 
 	// Master interpreter for this slave.
@@ -260,11 +277,11 @@ public class InterpSlaveCmd implements CommandWithDispose, AssocData {
 		// delete those aliases. If the other interp was already dead, it
 		// would have removed the target record already.
 
-		for (Iterator iter = interp.targetTable.entrySet().iterator(); iter
+		for (Iterator<Entry<WrappedCommand, Interp>> iter = interp.targetTable.entrySet().iterator(); iter
 				.hasNext();) {
-			Map.Entry entry = (Map.Entry) iter.next();
-			WrappedCommand slaveCmd = (WrappedCommand) entry.getKey();
-			Interp slaveInterp = (Interp) entry.getValue();
+			Entry<WrappedCommand, Interp> entry = iter.next();
+			WrappedCommand slaveCmd = entry.getKey();
+			Interp slaveInterp = entry.getValue();
 			slaveInterp.deleteCommandFromToken(slaveCmd);
 		}
 
@@ -524,10 +541,10 @@ public class InterpSlaveCmd implements CommandWithDispose, AssocData {
 		}
 
 		TclObject result = TclList.newInstance();
-		for (Iterator iter = slaveInterp.hiddenCmdTable.entrySet().iterator(); iter
+		for (Iterator<Entry<String, WrappedCommand>> iter = slaveInterp.hiddenCmdTable.entrySet().iterator(); iter
 				.hasNext();) {
-			Map.Entry entry = (Map.Entry) iter.next();
-			String cmdName = (String) entry.getKey();
+			Entry<String, WrappedCommand> entry = iter.next();
+			String cmdName = entry.getKey();
 			TclList.append(interp, result, TclString.newInstance(cmdName));
 		}
 		interp.setResult(result);

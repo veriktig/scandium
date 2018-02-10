@@ -1,4 +1,20 @@
 /*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * InterpCmd.java --
  *
  *	Implements the built-in "interp" Tcl command.
@@ -16,7 +32,7 @@
 package tcl.lang.cmd;
 
 import java.util.Iterator;
-import java.util.Map;
+import java.util.Map.Entry;
 
 import tcl.lang.Command;
 import tcl.lang.Interp;
@@ -27,7 +43,6 @@ import tcl.lang.TclList;
 import tcl.lang.TclNumArgsException;
 import tcl.lang.TclObject;
 import tcl.lang.TclString;
-import tcl.lang.channel.Channel;
 
 /**
  * This class implements the built-in "interp" command in Tcl.
@@ -63,6 +78,7 @@ public class InterpCmd implements Command {
 
 	static final private String hiddenOptions[] = { "-global", "--" };
 	static final private int OPT_HIDDEN_GLOBAL = 0;
+	@SuppressWarnings("unused")
 	static final private int OPT_HIDDEN_LAST = 1;
 
 	/**
@@ -280,9 +296,9 @@ public class InterpCmd implements Command {
 			Interp slaveInterp = getInterp(interp, objv);
 
 			TclObject result = TclList.newInstance();
-			for (Iterator iter = slaveInterp.slaveTable.entrySet().iterator(); iter
+			for (Iterator<Entry<String, InterpSlaveCmd>> iter = slaveInterp.slaveTable.entrySet().iterator(); iter
 					.hasNext();) {
-				Map.Entry entry = (Map.Entry) iter.next();
+				Entry<String, InterpSlaveCmd> entry = iter.next();
 				String string = (String) entry.getKey();
 				TclList.append(interp, result, TclString.newInstance(string));
 			}

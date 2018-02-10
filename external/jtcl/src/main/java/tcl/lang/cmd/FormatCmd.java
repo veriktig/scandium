@@ -1,4 +1,20 @@
 /*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * FormatCmd.java
  *
  * Copyright (c) 1997 Sun Microsystems, Inc.
@@ -34,6 +50,7 @@ public class FormatCmd implements Command {
 	private static final int PAD_W_ZERO = 8;
 	private static final int ALT_OUTPUT = 16;
 	private static final int SIGNED_VALUE = 32;
+	@SuppressWarnings("unused")
 	private static final int RADIX = 1; // Integer types. %d, %x, %o
 	private static final int FLOAT = 2; // Floating point. %f
 	private static final int EXP = 3; // Exponentional. %e and %E
@@ -82,6 +99,7 @@ public class FormatCmd implements Command {
 		double dblValue; // Store the TclDouble.get() result
 		boolean noPercent; // Special case for speed: indicates there's
 		// no field specifier, just a string to copy.
+		@SuppressWarnings("unused")
 		boolean xpgSet; // Indicates that xpg has been used for the
 		// particular format of the main while loop
 		boolean gotXpg; // True means that an XPG3 %n$-style
@@ -91,7 +109,9 @@ public class FormatCmd implements Command {
 		// been seen.
 		boolean useShort; // Value to be printed is short
 		// (half word).
+		@SuppressWarnings("unused")
 		boolean useLong;  // Value to be printed is long
+		@SuppressWarnings("unused")
 		boolean precisionSet; // Used for f, e, and E conversions
 		boolean cont; // Used for phase 3
 

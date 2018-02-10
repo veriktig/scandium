@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /* 
  * Parser.java --
  *
@@ -813,7 +829,6 @@ public class Parser {
 					throw new TclException(interp, "invalid command name \""
 							+ objv[0].toString() + "\"");
 				} else {
-					
 					evalObjv(interp, newObjv, length, 0);
 				}
 				newObjv[0].release();
@@ -1775,11 +1790,11 @@ public class Parser {
 			return new BackSlashResult('\\', script_index + 1, count);
 		}
 		default: {
-
-			
-			if ((c >= '0') && (c <= '7')) {
+			// FIXME: This octal impl needs to be updated so that it does
+			// not allow 09 to match the Tcl 8.4 impl.
+			if ((c >= '0') && (c <= '9')) {
 				// Convert it to an octal number. This implementation is
-				// compatible with tcl 8.4+ - characters 8 and 9 are not allowed.
+				// compatible with tcl 7.6 - characters 8 and 9 are allowed.
 
 				result = c - '0';
 				script_index++;
@@ -1789,7 +1804,7 @@ public class Parser {
 						break getoctal;
 					}
 					c = script_array[script_index];
-					if (!((c >= '0') && (c <= '7'))) {
+					if (!((c >= '0') && (c <= '9'))) {
 						break getoctal;
 					}
 					count++;
@@ -1800,7 +1815,7 @@ public class Parser {
 						break getoctal;
 					}
 					c = script_array[script_index];
-					if (!((c >= '0') && (c <= '7'))) {
+					if (!((c >= '0') && (c <= '9'))) {
 						break getoctal;
 					}
 					count++;
@@ -2543,15 +2558,16 @@ public class Parser {
 
 		if ((size < OBJV_CACHE_MAX)
 				&& ((OPEN = interp.parserObjvUsed[size]) < OBJV_CACHE_SIZES[size])) {
-			// Found an open cache slot
+			/* Found an open cache slot
 			if (false) {
 				// System.out.println("cache hit for objv of size " + size);
 				// OBJV_CACHE_HITS[i] = OBJV_CACHE_HITS[i] + 1;
 			}
+			*/
 			interp.parserObjvUsed[size] += 1;
 			return interp.parserObjv[size][OPEN];
 		} else {
-			// Did not find a free cache array of this size
+			/* Did not find a free cache array of this size
 			if (false) {
 				if (size >= OBJV_CACHE_MAX) {
 					// System.out.println("cache allocate for big objv of size "
@@ -2562,6 +2578,7 @@ public class Parser {
 					// OBJV_CACHE_MISS[i] = OBJV_CACHE_MISS[i] + 1;
 				}
 			}
+			*/
 			return new TclObject[size];
 		}
 

@@ -1,4 +1,20 @@
 /*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * TclDict.java
  *
  * Copyright (c) 2006 Neil Madden.
@@ -14,9 +30,9 @@
 package tcl.lang;
 
 import java.util.Map;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Iterator;
+import java.util.Map.Entry;
 
 /**
  * This class implements the dict object type in Tcl.
@@ -26,20 +42,20 @@ public class TclDict implements InternalRep {
 	/**
 	 * Internal representation of a dict value (key -> value)
 	 */
-	private final Map map;
+	private final Map<TclObject, TclObject> map;
 
 	/**
 	 * Map of key values to actual keys. The actual TclObject key must be
 	 * released when removed from the value map.  (key -> key)
 	 */
-	private final Map keymap;
+	private final Map<TclObject, TclObject> keymap;
 
 	/**
 	 * Create a new empty Tcl dict.
 	 */
 	private TclDict() {
-		map = new LinkedHashMap();
-		keymap = new LinkedHashMap();
+		map = new LinkedHashMap<TclObject, TclObject>();
+		keymap = new LinkedHashMap<TclObject, TclObject>();
 
 		if (TclObject.saveObjRecords) {
 			String key = "TclDict";
@@ -61,8 +77,8 @@ public class TclDict implements InternalRep {
 	 *            the number of slots pre-allocated in the map.
 	 */
 	private TclDict(int size) {
-		map = new LinkedHashMap(size);
-		keymap = new LinkedHashMap(size);
+		map = new LinkedHashMap<TclObject, TclObject>(size);
+		keymap = new LinkedHashMap<TclObject, TclObject>(size);
 
 		if (TclObject.saveObjRecords) {
 			String key = "TclDict";
@@ -81,11 +97,11 @@ public class TclDict implements InternalRep {
 	 */
 	public void dispose() {
 		// Release the objects associated with each key/value pair.
-		final Iterator entries = map.entrySet().iterator();
+		final Iterator<Entry<TclObject, TclObject>> entries = map.entrySet().iterator();
 		while (entries.hasNext()) {
-			Map.Entry entry = (Map.Entry) entries.next();
-			TclObject key = (TclObject) entry.getKey();
-			TclObject val = (TclObject) entry.getValue();
+			Entry<TclObject, TclObject> entry = entries.next();
+			TclObject key = entry.getKey();
+			TclObject val = entry.getValue();
 			key.release();
 			val.release();
 		}
@@ -98,11 +114,11 @@ public class TclDict implements InternalRep {
 		final int size = map.size();
 		TclDict newDict = new TclDict(size);
 
-		final Iterator entries = map.entrySet().iterator();
+		final Iterator<Entry<TclObject, TclObject>> entries = map.entrySet().iterator();
 		while (entries.hasNext()) {
-			Map.Entry entry = (Map.Entry) entries.next();
-			TclObject key = (TclObject) entry.getKey();
-			TclObject value = (TclObject) entry.getValue();
+			Entry<TclObject, TclObject> entry = entries.next();
+			TclObject key = entry.getKey();
+			TclObject value = entry.getValue();
 			key.preserve();
 			value.preserve();
 			newDict.map.put(key, value);
@@ -138,9 +154,9 @@ public class TclDict implements InternalRep {
 
 		StringBuffer sbuf = new StringBuffer((est > 64) ? est : 64);
 		try {
-			Iterator entries = map.entrySet().iterator();
+			Iterator<Entry<TclObject, TclObject>> entries = map.entrySet().iterator();
 			while (entries.hasNext()) {
-				Map.Entry entry = (Map.Entry) entries.next();
+				Entry<TclObject, TclObject> entry = entries.next();
 				Object key = entry.getKey();
 				Object val = entry.getValue();
 				if (key != null) {
@@ -209,7 +225,8 @@ public class TclDict implements InternalRep {
 	 * @exception TclException
 	 *                if the object doesn't contain a valid dict.
 	 */
-	private static final void splitDict(Interp interp, Map map, Map keymap, String s) throws TclException {
+	private static final void splitDict(Interp interp, Map<TclObject, TclObject> map,
+			Map<TclObject, TclObject> keymap, String s) throws TclException {
 		int len = s.length();
 		int i = 0;
 		FindElemResult res = new FindElemResult();
@@ -363,11 +380,11 @@ public class TclDict implements InternalRep {
 		// aren't released before we have finished iterating. This can
 		// happen e.g. if the dict is shimmered to a list (which would
 		// release() all the elements).
-		Iterator elements = ir.map.entrySet().iterator();
+		Iterator<Entry<TclObject, TclObject>> elements = ir.map.entrySet().iterator();
 		while (elements.hasNext()) {
-			Map.Entry entry = (Map.Entry) elements.next();
-			TclObject key = (TclObject) entry.getKey();
-			TclObject val = (TclObject) entry.getValue();
+			Entry<TclObject, TclObject> entry = elements.next();
+			TclObject key = entry.getKey();
+			TclObject val = entry.getValue();
 			key.preserve();
 			val.preserve();
 		}
@@ -376,9 +393,9 @@ public class TclDict implements InternalRep {
 		try {
 			elements = ir.map.entrySet().iterator();
 			while (elements.hasNext()) {
-				Map.Entry entry = (Map.Entry) elements.next();
-				TclObject key = (TclObject) entry.getKey();
-				TclObject val = (TclObject) entry.getValue();
+				Entry<TclObject, TclObject> entry = elements.next();
+				TclObject key = entry.getKey();
+				TclObject val = entry.getValue();
 				try {
 					accum = body.visit(interp, accum, key, val);
 				} catch (TclException e) {
@@ -396,9 +413,9 @@ public class TclDict implements InternalRep {
 			// Release all elements again...
 			elements = ir.map.entrySet().iterator();
 			while (elements.hasNext()) {
-				Map.Entry entry = (Map.Entry) elements.next();
-				TclObject key = (TclObject) entry.getKey();
-				TclObject val = (TclObject) entry.getValue();
+				Entry<TclObject, TclObject> entry = elements.next();
+				TclObject key = entry.getKey();
+				TclObject val = entry.getValue();
 				key.release();
 				val.release();
 			}

@@ -1,4 +1,20 @@
 /*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * TclObjectBase.java
  *
  * Copyright (c) 1997 Sun Microsystems, Inc.
@@ -47,7 +63,7 @@ abstract class TclObjectBase {
 	// and transitions from one internal rep to another.
 
 	static final boolean saveObjRecords = false;
-	static Hashtable objRecordMap = (saveObjRecords ? new Hashtable() : null);
+	static Hashtable<String, Integer> objRecordMap = (saveObjRecords ? new Hashtable<String, Integer>() : null);
 
 	// Only set this to true if running test code and
 	// the user wants to run extra ref count checks.
@@ -529,7 +545,7 @@ abstract class TclObjectBase {
 	static String getObjRecords() {
 		if (TclObjectBase.saveObjRecords) {
 			StringBuffer sb = new StringBuffer(64);
-			for (Enumeration keys = TclObject.objRecordMap.keys(); keys
+			for (Enumeration<String> keys = TclObject.objRecordMap.keys(); keys
 					.hasMoreElements();) {
 				String key = (String) keys.nextElement();
 				Integer num = (Integer) TclObject.objRecordMap.get(key);
@@ -538,7 +554,7 @@ abstract class TclObjectBase {
 				sb.append(num.intValue());
 				sb.append("\n");
 			}
-			TclObject.objRecordMap = new Hashtable();
+			TclObject.objRecordMap = new Hashtable<String, Integer>();
 			return sb.toString();
 		} else {
 			return "";

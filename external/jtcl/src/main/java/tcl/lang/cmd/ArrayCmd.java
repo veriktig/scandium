@@ -1,4 +1,20 @@
 /*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * ArrayCmd.java
  *
  * Copyright (c) 1997 Sun Microsystems, Inc.
@@ -14,9 +30,9 @@
 package tcl.lang.cmd;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import tcl.lang.Command;
 import tcl.lang.Interp;
@@ -37,7 +53,6 @@ import tcl.lang.Var;
  */
 
 public class ArrayCmd implements Command {
-	static Class procClass = null;
 
 	static final private String validCmds[] = { "anymore", "donesearch", "exists", "get", "names", "nextelement",
 			"set", "size", "startsearch", "unset" };
@@ -62,7 +77,7 @@ public class ArrayCmd implements Command {
 		Var var = null, array = null;
 		boolean notArray = false;
 		String varName, msg;
-		int index, result;
+		int index;
 
 		if (objv.length < 3) {
 			throw new TclNumArgsException(interp, 1, objv, "option arrayName ?arg ...?");
@@ -118,7 +133,7 @@ public class ArrayCmd implements Command {
 				errorIllegalSearchId(interp, objv[2].toString(), objv[3].toString());
 			}
 
-			Iterator iter = var.getSearch(objv[3].toString());
+			Iterator<Entry<String, Var>> iter = var.getSearch(objv[3].toString());
 			if (iter == null) {
 				errorIllegalSearchId(interp, objv[2].toString(), objv[3].toString());
 			}
@@ -239,8 +254,8 @@ public class ArrayCmd implements Command {
 			// pattern, test for a match. Each valid key and its value
 			// is written into sbuf, which is returned.
 
-			for (Iterator iter = table.entrySet().iterator(); iter.hasNext();) {
-				Map.Entry entry = (Map.Entry) iter.next();
+			for (Iterator<Entry<String, Var>> iter = table.entrySet().iterator(); iter.hasNext();) {
+				Map.Entry<String, Var> entry = (Map.Entry<String, Var>) iter.next();
 				key = (String) entry.getKey();
 				Var elem = (Var) entry.getValue();
 				if (!elem.isVarUndefined()) {
@@ -268,14 +283,14 @@ public class ArrayCmd implements Command {
 				errorIllegalSearchId(interp, objv[2].toString(), objv[3].toString());
 			}
 
-			Iterator iter = var.getSearch(objv[3].toString());
+			Iterator<Entry<String, Var>> iter = var.getSearch(objv[3].toString());
 			if (iter == null) {
 				errorIllegalSearchId(interp, objv[2].toString(), objv[3].toString());
 			}
 			if (iter.hasNext()) {
-				Map.Entry entry = (Map.Entry) iter.next();
-				String key = (String) entry.getKey();
-				Var elem = (Var) entry.getValue();
+				Entry<String, Var> entry = iter.next();
+				String key = entry.getKey();
+				Var elem = entry.getValue();
 
 				if (!elem.isVarUndefined()) {
 					interp.setResult(key);
@@ -333,10 +348,9 @@ public class ArrayCmd implements Command {
 				Map<String, Var> table = var.getArrayMap();
 				int size = 0;
 
-				for (Iterator iter = table.entrySet().iterator(); iter.hasNext();) {
-					Map.Entry entry = (Map.Entry) iter.next();
-					String key = (String) entry.getKey();
-					Var elem = (Var) entry.getValue();
+				for (Iterator<Entry<String, Var>> iter = table.entrySet().iterator(); iter.hasNext();) {
+					Entry<String, Var> entry = iter.next();
+					Var elem = entry.getValue();
 					if (!elem.isVarUndefined()) {
 						size++;
 					}
@@ -355,7 +369,7 @@ public class ArrayCmd implements Command {
 			}
 
 			if (var.sidVec == null) {
-				var.sidVec = new ArrayList();
+				var.sidVec = new ArrayList<SearchId>();
 			}
 
 			// Create a SearchId Object:
@@ -377,8 +391,8 @@ public class ArrayCmd implements Command {
 
 			int i = var.getNextIndex();
 			String s = "s-" + i + "-" + objv[2].toString();
-			Map table = var.getArrayMap();
-			Iterator iter = table.entrySet().iterator();
+			Map<String, Var> table = var.getArrayMap();
+			Iterator<Entry<String, Var>> iter = table.entrySet().iterator();
 			var.sidVec.add(new SearchId(iter, s, i));
 			interp.setResult(s);
 			break;
@@ -399,12 +413,12 @@ public class ArrayCmd implements Command {
 				interp.unsetVar(objv[2], 0);
 			} else {
 				pattern = objv[3].toString();
-				Map table = var.getArrayMap();
+				Map<String, Var> table = var.getArrayMap();
 
-				for (Iterator iter = table.entrySet().iterator(); iter.hasNext();) {
-					Map.Entry entry = (Map.Entry) iter.next();
-					name = (String) entry.getKey();
-					Var elem = (Var) entry.getValue();
+				for (Iterator<Entry<String, Var>> iter = table.entrySet().iterator(); iter.hasNext();) {
+					Entry<String, Var> entry = iter.next();
+					name = entry.getKey();
+					Var elem = entry.getValue();
 					if (elem.isVarUndefined()) {
 						continue;
 					}

@@ -1,4 +1,20 @@
 /*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * Extension.java --
  *
  * Copyright (c) 1997 Cornell University.
@@ -88,6 +104,26 @@ abstract public class Extension {
 			String clsName) {
 		interp.createCommand(cmdName, new AutoloadStub(clsName));
 	}
+	
+	/**
+	 * Create a stub command which autoloads the real command the first time the
+	 * stub command is invoked. Register the stub command in the interpreter.
+	 * 
+	 * @param cl
+	 * 			  ClassLoader from Service
+	 * @param interp
+	 *            current interp.
+	 * @param cmdName
+	 *            name of the command, e.g., "after".
+	 * @param clsName
+	 *            name of the Java class that implements this command, e.g.
+	 *            "tcl.lang.AfterCmd"
+	 */
+
+	public static final void loadOnDemand(ClassLoader cl, Interp interp,
+			String cmdName, String clsName) {
+		interp.createCommand(cmdName,  new AutoloadStub(cl, clsName));
+	}
 }
 
 /**
@@ -98,6 +134,7 @@ abstract public class Extension {
 
 class AutoloadStub implements Command {
 	String className;
+	ClassLoader classLoadr;
 
 	/**
 	 * Create a stub command which autoloads the real command the first time the
@@ -108,6 +145,11 @@ class AutoloadStub implements Command {
 	 *            "tcl.lang.AfterCmd"
 	 */
 	AutoloadStub(String clsName) {
+		className = clsName;
+	}
+	
+	AutoloadStub(ClassLoader cl, String clsName) {
+		classLoadr = cl;
 		className = clsName;
 	}
 
@@ -136,16 +178,23 @@ class AutoloadStub implements Command {
 	 */
 
 	Command load(Interp interp, String qname) throws TclException {
-		Class cmdClass = null;
+		Class<?> cmdClass = null;
 		Command cmd;
 
 		try {
-			TclClassLoader classLoader = (TclClassLoader) interp
-					.getClassLoader();
+			TclClassLoader classLoader = (TclClassLoader) interp.getClassLoader();
 			cmdClass = classLoader.loadClass(className);
 		} catch (ClassNotFoundException e) {
-			throw new TclException(interp,
-					"ClassNotFoundException for class \"" + className + "\"");
+			try {
+				//for (Enumeration<URL> tt = Interp.context.getBundle(5).findEntries("com", "*.class", true); tt.hasMoreElements();)
+				//       System.out.println(tt.nextElement());
+				cmdClass = classLoadr.loadClass(className);
+			} catch (ClassNotFoundException e1) {
+				throw new TclException(interp,
+						"ClassNotFoundException for classLoadr \"" + className + "\"");
+			}
+			//throw new TclException(interp,
+			//		"ClassNotFoundException for classLoader \"" + className + "\"");
 		} catch (PackageNameException e) {
 			throw new TclException(interp, "PackageNameException for class \""
 					+ className + "\"");

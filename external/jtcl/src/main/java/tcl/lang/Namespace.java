@@ -1,4 +1,20 @@
 /*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * Namespace.java
  *
  * Copyright (c) 1993-1997 Lucent Technologies.
@@ -28,6 +44,8 @@ import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
+
+import tcl.lang.Interp.ResolverScheme;
 
 /**
  * This structure contains a cached pointer to a namespace that is the result of
@@ -493,7 +511,7 @@ public class Namespace {
 		// ns.clientData = clientData;
 		ns.deleteProc = deleteProc;
 		ns.parent = parent;
-		ns.childTable = new HashMap();
+		ns.childTable = new HashMap<String, Namespace>();
 		synchronized (nsMutex) {
 			numNsCreated++;
 			ns.nsId = numNsCreated;
@@ -507,8 +525,8 @@ public class Namespace {
 		// We can do ignore the refCount because GC will reclaim mem.
 		// ns.refCount = 0;
 		ns.refCount = 1;
-		ns.cmdTable = new HashMap();
-		ns.varTable = new HashMap();
+		ns.cmdTable = new HashMap<String, WrappedCommand>();
+		ns.varTable = new HashMap<String, Var>();
 		ns.exportArray = null;
 		ns.numExportPatterns = 0;
 		ns.maxExportPatterns = 0;
@@ -638,7 +656,6 @@ public class Namespace {
 		Namespace childNs;
 		WrappedCommand cmd;
 		Namespace globalNs = getGlobalNamespace(interp);
-		int i;
 
 		/*
 		 * Fire the command traces early, and then delete the traces so they don't 
@@ -815,8 +832,8 @@ public class Namespace {
 		final int INIT_EXPORT_PATTERNS = 5;
 		Namespace ns, exportNs;
 		Namespace currNs = getCurrentNamespace(interp);
-		String simplePattern, patternCpy;
-		int neededElems, len, i;
+		String simplePattern;
+		int neededElems, i;
 
 		// If the specified namespace is null, use the current namespace.
 
@@ -958,7 +975,7 @@ public class Namespace {
 		WrappedCommand autoCmd, importedCmd;
 		ImportedCmdData data;
 		boolean wasExported;
-		int i, result;
+		int i;
 
 		// If the specified namespace is null, use the current namespace.
 
@@ -1505,7 +1522,6 @@ public class Namespace {
 		Namespace altNs;
 		Namespace globalNs = getGlobalNamespace(interp);
 		Namespace entryNs;
-		String start, end;
 		String nsName;
 		int len;
 		int start_ind, end_ind, name_len;
@@ -1805,9 +1821,9 @@ public class Namespace {
 				}
 
 				if (cmd == null && interp.resolvers != null) {
-					for (ListIterator iter = interp.resolvers.listIterator(); cmd == null
+					for (ListIterator<ResolverScheme> iter = interp.resolvers.listIterator(); cmd == null
 							&& iter.hasNext();) {
-						res = (Interp.ResolverScheme) iter.next();
+						res = iter.next();
 						cmd = res.resolver.resolveCmd(interp, name, cxtNs,
 								flags);
 					}
@@ -1926,9 +1942,9 @@ public class Namespace {
 				}
 
 				if (var == null && interp.resolvers != null) {
-					for (ListIterator iter = interp.resolvers.listIterator(); var == null
+					for (ListIterator<ResolverScheme> iter = interp.resolvers.listIterator(); var == null
 							&& iter.hasNext();) {
-						res = (Interp.ResolverScheme) iter.next();
+						res = iter.next();
 						var = res.resolver.resolveVar(interp, name, cxtNs,
 								flags);
 					}
@@ -2078,10 +2094,10 @@ public class Namespace {
 
 					// nsPtr->cmdRefEpoch++;
 
-					for (Iterator iter = ns.cmdTable.entrySet().iterator(); iter
+					for (Iterator<Map.Entry<String, WrappedCommand>> iter = ns.cmdTable.entrySet().iterator(); iter
 							.hasNext();) {
-						Map.Entry entry = (Map.Entry) iter.next();
-						wcmd = (WrappedCommand) entry.getValue();
+						Map.Entry<String, WrappedCommand> entry = iter.next();
+						wcmd = entry.getValue();
 						wcmd.incrEpoch();
 					}
 				}
@@ -2197,18 +2213,18 @@ public class Namespace {
 	 * @return first element in the hash table
 	 */
 
-	public static Object FirstHashEntry(HashMap table) {
+	public static Object FirstHashEntry(HashMap<?,?> table) {
 		Object retVal;
-		Set eset = table.entrySet();
+		Set<?> eset = table.entrySet();
 		if (eset.size() == 0) {
 			return null;
 		}
-		Iterator iter = eset.iterator();
+		Iterator<?> iter = eset.iterator();
 		if (!iter.hasNext()) {
 			throw new TclRuntimeError("no next() object but set size was "
 					+ eset.size());
 		}
-		Map.Entry entry = (Map.Entry) iter.next();
+		Map.Entry<?,?> entry = (Map.Entry<?,?>) iter.next();
 		retVal = entry.getValue();
 		if (retVal == null) {
 			throw new TclRuntimeError("entry value should not be null");

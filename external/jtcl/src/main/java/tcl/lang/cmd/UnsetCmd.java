@@ -1,4 +1,20 @@
 /*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * UnsetCmd.java
  *
  * Copyright (c) 1997 Cornell University.
@@ -13,6 +29,8 @@
  */
 
 package tcl.lang.cmd;
+
+import com.veriktig.systemcompiler.api.state.InternalState;
 
 import tcl.lang.Command;
 import tcl.lang.Interp;
@@ -41,7 +59,8 @@ public class UnsetCmd implements Command {
 		boolean noComplain = false;
 
 		if (objv.length < 2) {
-			return;
+			throw new TclNumArgsException(interp, 1, objv,
+					"?-nocomplain? ?--? ?varName varName ...?");
 		}
 
 		/*
@@ -55,9 +74,7 @@ public class UnsetCmd implements Command {
 		if (opt.startsWith("-")) {
 			if ("-nocomplain".equals(opt)) {
 				noComplain = true;
-				if (++firstArg < objv.length) {
-					opt = objv[firstArg].toString();
-				}
+				opt = objv[++firstArg].toString();
 			}
 			if ("--".equals(opt)) {
 				firstArg++;
@@ -65,6 +82,7 @@ public class UnsetCmd implements Command {
 		}
 		for (int i = firstArg; i < objv.length; i++) {
 			try {
+				InternalState.removeUserVariable(objv[i].toString());
 				interp.unsetVar(objv[i], noComplain ? 0 : TCL.LEAVE_ERR_MSG);
 			} catch (TclException e) {
 				if (!noComplain) {

@@ -1,4 +1,20 @@
 /*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * SearchId.java
  *
  * Copyright (c) 1997 Sun Microsystems, Inc.
@@ -14,6 +30,7 @@
 package tcl.lang;
 
 import java.util.Iterator;
+import java.util.Map.Entry;
 
 /**
  * SearchId is used only by the ArrayVar class. When searchstart is called on an
@@ -26,7 +43,7 @@ public class SearchId {
 	/**
 	 * An Enumeration that stores the list of keys for the ArrayVar.
 	 */
-	private Iterator iter;
+	private Iterator<Entry<String, Var>> iter;
 
 	/**
 	 * The unique searchId string
@@ -51,7 +68,7 @@ public class SearchId {
 	 * @param i
 	 *            index value for this object
 	 */
-	public SearchId(Iterator iter, String s, int i) {
+	public SearchId(Iterator<Entry<String, Var>> iter, String s, int i) {
 		this.iter = iter;
 		str = s;
 		index = i;
@@ -71,7 +88,7 @@ public class SearchId {
 	 * @param none
 	 * @return The Iterator for the SearchId object
 	 */
-	Iterator getIterator() {
+	Iterator<Entry<String, Var>> getIterator() {
 		return iter;
 	}
 
@@ -80,7 +97,7 @@ public class SearchId {
 	 * next unique SearchId string.
 	 * 
 	 * @param none
-	 * @returnh The integer value of the index
+	 * @return The integer value of the index
 	 */
 	int getIndex() {
 		return index;

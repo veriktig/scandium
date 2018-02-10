@@ -1,4 +1,20 @@
 /*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * Expression.java
  *
  * Copyright (c) 1997 Cornell University.
@@ -1022,9 +1038,9 @@ public class Expression {
 				dividend = value.getIntValue();
 				divisor = value2.getIntValue();
 
-				if (dividend == TCL.INT_MIN && divisor == -1) {
-					// Avoid integer overflow on (TCL.INT_MIN / -1)
-					quotient = TCL.INT_MIN;
+				if (dividend == Integer.MIN_VALUE && divisor == -1) {
+					// Avoid integer overflow on (Integer.MIN_VALUE / -1)
+					quotient = Integer.MIN_VALUE;
 				} else {
 					quotient = dividend / divisor;
 					// Round down to a smaller negative number if
@@ -1069,26 +1085,27 @@ public class Expression {
 			dividend = value.getIntValue();
 			divisor = value2.getIntValue();
 
-			if (dividend == TCL.INT_MIN && divisor == -1) {
-				// Avoid integer overflow on (TCL.INT_MIN  % -1)
+			if (dividend == Integer.MIN_VALUE && divisor == -1) {
+				// Avoid integer overflow on (Integer.MIN_VALUE % -1)
 				remainder = 0;
 			} else {
 				if (divisor < 0) {
 					divisor = -divisor;
-					dividend = -dividend; // Note: -TCL.INT_MIN  == TCL.INT_MIN
+					dividend = -dividend; // Note: -Integer.MIN_VALUE ==
+											// Integer.MIN_VALUE
 					neg_divisor = true;
 				}
 				remainder = dividend % divisor;
 
 				// remainder is (remainder + divisor) when the
 				// remainder is negative. Watch out for the
-				// special case of a TCL.INT_MIN dividend
+				// special case of a Integer.MIN_VALUE dividend
 				// and a negative divisor. Don't add the divisor
 				// in that case because the remainder should
 				// not be negative.
 
 				if (remainder < 0
-						&& !(neg_divisor && (dividend == TCL.INT_MIN))) {
+						&& !(neg_divisor && (dividend == Integer.MIN_VALUE))) {
 					remainder += divisor;
 				}
 			}
@@ -2103,7 +2120,7 @@ public class Expression {
 	}
 
 	public final void releaseExprValue(ExprValue val) {
-		// Debug check for duplicate value already in cachedExprValue
+		/* Debug check for duplicate value already in cachedExprValue
 		if (false) {
 			if (cachedExprIndex < 0) {
 				throw new TclRuntimeError("cachedExprIndex is "
@@ -2119,22 +2136,13 @@ public class Expression {
 				}
 			}
 		}
+		*/
 
 		if (cachedExprIndex > 0) {
 			// Cache is not full, return value to cache
 			cachedExprValue[--cachedExprIndex] = val;
 		}
 	}
-}
-
-abstract class MathFunction {
-	static final int INT = 0;
-	static final int DOUBLE = 1;
-	static final int EITHER = 2;
-
-	int[] argTypes;
-
-	abstract void apply(Interp interp, ExprValue[] values) throws TclException;
 }
 
 abstract class UnaryMathFunction extends MathFunction {

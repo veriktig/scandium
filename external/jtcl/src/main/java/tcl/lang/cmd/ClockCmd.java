@@ -1,4 +1,20 @@
 /*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * ClockCmd.java --
  *
  *	Implements the built-in "clock" Tcl command.
@@ -54,8 +70,6 @@ public class ClockCmd implements Command {
 	static final private int CMD_SECONDS = 3;
 
 	static final private String clicksOpts[] = { "-milliseconds" };
-
-	static final private int OPT_CLICKS_MILLISECONDS = 0;
 
 	static final private String[] formatOpts = { "-format", "-gmt" };
 
@@ -153,14 +167,6 @@ public class ClockCmd implements Command {
 				throw new TclNumArgsException(interp, 2, objv, "dateString ?-base clockValue? ?-gmt boolean?");
 			}
 			dateString = objv[2].toString();
-			
-			// check for empty datestring
-			if (dateString.trim().length() == 0) {
-				long millis = System.currentTimeMillis();
-				int seconds = (int) (millis / 1000);
-				interp.setResult(seconds);
-				break;
-			}
 
 			for (argIx = 3; argIx + 1 < objv.length; argIx += 2) {
 				int scanOpt = TclIndex.get(interp, objv[argIx], scanOpts, "switch", 0);
@@ -1309,7 +1315,7 @@ public class ClockCmd implements Command {
 	{
 		ParsePosition parsePos = new ParsePosition(0);
 		ClockToken dt;
-		ArrayList tokens = new ArrayList(in.length());
+		ArrayList<ClockToken> tokens = new ArrayList<ClockToken>(in.length());
 
 		while ((dt = GetNextToken(in, parsePos)) != null) {
 			tokens.add(dt);
@@ -1353,7 +1359,6 @@ public class ClockCmd implements Command {
 			ParsePosition parsePos) // Current position in input
 	{
 		int pos = parsePos.getIndex();
-		int sign;
 
 		while (true) {
 			while (pos < in.length() && Character.isSpaceChar(in.charAt(pos))) {

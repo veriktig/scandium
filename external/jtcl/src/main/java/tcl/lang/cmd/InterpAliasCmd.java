@@ -1,4 +1,20 @@
 /*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * InterpAliasCmd.java --
  *
  *	Implements the built-in "interp" Tcl command.
@@ -16,7 +32,7 @@
 package tcl.lang.cmd;
 
 import java.util.Iterator;
-import java.util.Map;
+import java.util.Map.Entry;
 
 import tcl.lang.CommandWithDispose;
 import tcl.lang.Interp;
@@ -73,7 +89,7 @@ public class InterpAliasCmd implements CommandWithDispose {
 	 * 
 	 */
 	private Interp slaveInterp;
-
+	
 	/**
      *	
 	 * This is the procedure that services invocations of aliases in a slave
@@ -94,6 +110,7 @@ public class InterpAliasCmd implements CommandWithDispose {
 			throws TclException // A standard Tcl exception.
 	{
 		targetInterp.preserve();
+		targetInterp.lambda_name = argv[0];
 
 		try {
 			targetInterp.nestLevel++;
@@ -105,13 +122,14 @@ public class InterpAliasCmd implements CommandWithDispose {
 			// in the target interp's global namespace.
 
 			TclObject[] prefv = TclList.getElements(interp, prefix);
+			targetInterp.lambda_length = prefv.length;
+
 			TclObject cmd = TclList.newInstance();
 			cmd.preserve();
 			TclList.replace(interp, cmd, 0, 0, prefv, 0, prefv.length - 1);
 			TclList.replace(interp, cmd, prefv.length, 0, argv, 1,
 					argv.length - 1);
 			TclObject[] cmdv = TclList.getElements(interp, cmd);
-
 			int result = targetInterp.invoke(cmdv, Interp.INVOKE_NO_TRACEBACK);
 
 			cmd.release();
@@ -332,10 +350,10 @@ public class InterpAliasCmd implements CommandWithDispose {
 			Interp slaveInterp) // Interp whose aliases to compute.
 			throws TclException {
 		TclObject result = TclList.newInstance();
-		for (Iterator iter = slaveInterp.aliasTable.entrySet().iterator(); iter
+		for (Iterator<Entry<String, InterpAliasCmd>> iter = slaveInterp.aliasTable.entrySet().iterator(); iter
 				.hasNext();) {
-			Map.Entry entry = (Map.Entry) iter.next();
-			InterpAliasCmd alias = (InterpAliasCmd) entry.getValue();
+			Entry<String, InterpAliasCmd> entry = iter.next();
+			InterpAliasCmd alias = entry.getValue();
 			TclList.append(interp, result, alias.name);
 		}
 		interp.setResult(result);

@@ -1,4 +1,20 @@
 /*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * CallFrame.java
  *
  * Copyright (c) 1997 Cornell University.
@@ -17,7 +33,7 @@ package tcl.lang;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * This class implements a frame in the call stack.
@@ -81,7 +97,7 @@ public class CallFrame {
 	 * Stores the variables of this CallFrame.
 	 */
 
-	public HashMap varTable;
+	public HashMap<String, Var> varTable;
 
 	/**
 	 * Array of local variables in a compiled proc frame. These include locals
@@ -158,6 +174,8 @@ public class CallFrame {
 	 *                if wrong number of arguments.
 	 */
 	void chain(Procedure proc, TclObject[] objv) throws TclException {
+		int startIndex;
+		
 		this.ns = proc.wcmd.ns;
 		this.objv = objv;
 		// FIXME : quick level hack : fix later
@@ -173,9 +191,18 @@ public class CallFrame {
 
         // If the proc is a lambda, invoked by [apply], then there will be an
         // extra argument: apply lambda args... vs procName args...
-        int startIndex = proc.isLambda() ? 2 : 1;
+		if (proc.isLambda()) {
+			startIndex = 2; // interp.lambda_length;
+			/*
+			if (startIndex > 2) {
+				numArgs--; // TODO Can this go negative?
+			}
+			*/
+		} else {
+			startIndex = 1;
+		}
 		if ((!proc.isVarArgs) && (objv.length - startIndex > numArgs)) {
-			wrongNumProcArgs(objv, proc);
+			wrongNumProcArgs(objv, proc, numArgs);
 		}
 
 		int i, j;
@@ -201,26 +228,32 @@ public class CallFrame {
 				} else if (proc.argList[i][1] != null) {
 					value = proc.argList[i][1];
 				} else {
-					wrongNumProcArgs(objv, proc);
+					wrongNumProcArgs(objv, proc, numArgs);
 				}
 				interp.setVar(varName, value, 0);
 			}
 		}
 	}
 
-	private String wrongNumProcArgs(TclObject[] objv, Procedure proc)
+	private String wrongNumProcArgs(TclObject[] objv, Procedure proc, int numArgs)
 			throws TclException {
 		int i;
 		StringBuffer sbuf = new StringBuffer(200);
 		sbuf.append("wrong # args: should be \"");
 		TclObject procNameList = TclList.newInstance();
         if (proc.isLambda()) {
-            TclList.append(interp, procNameList, objv, 0, 2);
+            //TclList.append(interp, procNameList, objv, 0, 2);
+        	if (interp.lambda_name != null) {
+        		TclList.append(interp, procNameList, interp.lambda_name);
+        	} else {
+        		TclList.append(interp, procNameList, objv, 0, 2);
+        	}
         } else {
             TclList.append(interp, procNameList, objv[0]);
         }
 		sbuf.append(procNameList.toString());
-		for (i = 0; i < proc.argList.length; i++) {
+		//for (i = 0; i < proc.argList.length; i++) {
+		for (i = 0; i < numArgs; i++) {
 			TclObject arg = proc.argList[i][0];
 			TclObject def = proc.argList[i][1];
 
@@ -265,16 +298,16 @@ public class CallFrame {
 
 	// FIXME : need to port Tcl 8.1 implementation here
 
-	ArrayList getVarNames() {
-		ArrayList alist = new ArrayList();
+	ArrayList<String> getVarNames() {
+		ArrayList<String> alist = new ArrayList<String>();
 
 		if (varTable == null) {
 			return alist;
 		}
 
-		for (Iterator iter = varTable.entrySet().iterator(); iter.hasNext();) {
-			Map.Entry entry = (Map.Entry) iter.next();
-			Var v = (Var) entry.getValue();
+		for (Iterator<Entry<String, Var>> iter = varTable.entrySet().iterator(); iter.hasNext();) {
+			Entry<String, Var> entry = iter.next();
+			Var v = entry.getValue();
 			if (!v.isVarUndefined()) {
 				alist.add(v.hashKey);
 			}
@@ -287,16 +320,16 @@ public class CallFrame {
 	 *         CallFrame (excluding upvar's)
 	 */
 
-	ArrayList getLocalVarNames() {
-		ArrayList alist = new ArrayList();
+	ArrayList<String> getLocalVarNames() {
+		ArrayList<String> alist = new ArrayList<String>();
 
 		if (varTable == null) {
 			return alist;
 		}
 
-		for (Iterator iter = varTable.entrySet().iterator(); iter.hasNext();) {
-			Map.Entry entry = (Map.Entry) iter.next();
-			Var v = (Var) entry.getValue();
+		for (Iterator<Entry<String, Var>> iter = varTable.entrySet().iterator(); iter.hasNext();) {
+			Entry<String, Var> entry = iter.next();
+			Var v = entry.getValue();
 			if (!v.isVarUndefined() && !v.isVarLink()) {
 				alist.add(v.hashKey);
 			}

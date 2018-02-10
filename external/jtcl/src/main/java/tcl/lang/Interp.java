@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package tcl.lang;
 
 import java.io.File;
@@ -9,11 +25,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownServiceException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Map.Entry;
+
+import org.osgi.framework.BundleContext;
 
 import tcl.lang.channel.Channel;
 import tcl.lang.channel.FileChannel;
@@ -44,31 +62,31 @@ public class Interp extends EventuallyFreed {
 	 * Translates Object to ReflectObject. This makes sure we have only one ReflectObject internalRep for the same
 	 * Object -- this way Object identity can be done by string comparison.
 	 */
-	public HashMap reflectObjTable = new HashMap();
+//	public HashMap reflectObjTable = new HashMap();
 
 	/**
 	 * Number of reflect objects created so far inside this Interp (including those that have be freed)
 	 */
-	public long reflectObjCount = 0;
+//	public long reflectObjCount = 0;
 
 	/**
 	 * Table used to store reflect hash index conflicts, see ReflectObject implementation for more details
 	 */
-	public HashMap reflectConflictTable = new HashMap();
+//	public HashMap reflectConflictTable = new HashMap();
 
 	/**
 	 * The number of chars to copy from an offending command into error message.
 	 */
-	private static final int MAX_ERR_LENGTH = 200;
+	//private static final int MAX_ERR_LENGTH = 200;
 
 	/**
 	 * We pretend this is Tcl 8.4
 	 */
-	public static final String TCL_VERSION = "8.4";
+	static final String TCL_VERSION = "8.4";
 	/**
 	 * We pretend this is Tcl 8.4, patch level 0.
 	 */
-	public static final String TCL_PATCH_LEVEL = "8.4.0";
+	static final String TCL_PATCH_LEVEL = "8.4.0";
 
 	/**
 	 * Total number of times a command procedure has been called for this interpreter.
@@ -119,7 +137,7 @@ public class Interp extends EventuallyFreed {
 	/**
 	 * Hash table used to keep track of hidden commands on a per-interp basis.
 	 */
-	public HashMap hiddenCmdTable;
+	public HashMap<String, WrappedCommand> hiddenCmdTable;
 
 	/**
 	 * Information used by InterpCmd.java to keep track of master/slave interps on a per-interp basis.
@@ -129,7 +147,7 @@ public class Interp extends EventuallyFreed {
 	 * interpreter, to map over all slaves, etc.
 	 */
 
-	public HashMap slaveTable;
+	public HashMap<String, InterpSlaveCmd> slaveTable;
 
 	/**
 	 * Hash table for Target Records. Contains all Target records which denote aliases from slaves or sibling
@@ -137,7 +155,7 @@ public class Interp extends EventuallyFreed {
 	 * slave (or sibling) interpreters when this interpreter is deleted.
 	 */
 
-	public HashMap targetTable;
+	public HashMap<WrappedCommand, Interp> targetTable;
 
 	/**
 	 * Information necessary for this interp to function as a slave.
@@ -147,7 +165,13 @@ public class Interp extends EventuallyFreed {
 	/**
 	 * Table which maps from names of commands in slave interpreter to InterpAliasCmd objects.
 	 */
-	public HashMap aliasTable;
+	public HashMap<String, InterpAliasCmd> aliasTable;
+	
+	/**
+	 * Store the original alias for use by CallFrame wrongNumArgs
+	 */
+	public TclObject lambda_name;
+	public int lambda_length;
 
 	// FIXME : does globalFrame need to be replaced by globalNs?
 	// Points to the global variable frame.
@@ -158,6 +182,7 @@ public class Interp extends EventuallyFreed {
 	 * The script file currently under execution. Can be null if the interpreter is not evaluating any script file.
 	 */
 	public String scriptFile;
+    public String scriptSource;
 
 	/**
 	 * Number of times the interp.eval() routine has been recursively invoked.
@@ -192,7 +217,7 @@ public class Interp extends EventuallyFreed {
 	// Schemes are added/removed by calling addInterpResolver and
 	// removeInterpResolver.
 
-	ArrayList resolvers;
+	ArrayList<ResolverScheme> resolvers;
 
 	/**
 	 * The expression parser for this interp.
@@ -336,7 +361,7 @@ public class Interp extends EventuallyFreed {
 
 	// Used ONLY by PackageCmd.
 
-	public HashMap packageTable;
+	public HashMap<String, PackageCmd.Package> packageTable;
 	public String packageUnknown;
 
 	// Used ONLY by the Parser.
@@ -348,8 +373,9 @@ public class Interp extends EventuallyFreed {
 	int parserTokensUsed;
 
 	/** Used ONLY by JavaImportCmd: classTable, packageTable, wildcardTable */
+	/*
 	public HashMap[] importTable = { new HashMap(), new HashMap(), new HashMap() };
-
+	*/
 	/**
 	 * Used by callers of Util.strtoul(), also used in FormatCmd.strtoul(). There is typically only one instance of a
 	 * StrtoulResult around at any one time. Callers should exercise care to use the results before any other code could
@@ -400,7 +426,7 @@ public class Interp extends EventuallyFreed {
 	// in order to avoid a possible race condition
 	// during the first call to evalResource.
 
-	static HashMap tclLibraryScripts = new HashMap();
+	static HashMap<String, String> tclLibraryScripts = new HashMap<String, String>();
 
 	// The interruptedEvent field is set after a call
 	// to Interp.setInterrupted(). When non-null, this
@@ -438,12 +464,16 @@ public class Interp extends EventuallyFreed {
 	 */
 	private String shellClassName;
 
+    /**
+     * Store the bundle context so ExitCmd can call framework.stop()
+     */
+    static public BundleContext context = null;
+
 	/**
 	 * Side effects: Various parts of the interpreter are initialized; built-in commands are created; global variables
 	 * are initialized, etc.
 	 * 
 	 */
-
 	public Interp() {
 
 		// freeProc = null;
@@ -544,13 +574,14 @@ public class Interp extends EventuallyFreed {
 		errorInfo = null;
 		errorCode = null;
 
-		packageTable = new HashMap();
+		packageTable = new HashMap<String, PackageCmd.Package>();
 		packageUnknown = null;
 		cmdCount = 0;
 		termOffset = 0;
 		resolvers = null;
 		evalFlags = 0;
 		scriptFile = null;
+        scriptSource = null;
 		flags = 0;
 		isSafe = false;
 		assocData = null;
@@ -580,9 +611,9 @@ public class Interp extends EventuallyFreed {
 
 		dbg = initDebugInfo();
 
-		slaveTable = new HashMap();
-		targetTable = new HashMap();
-		aliasTable = new HashMap();
+		slaveTable = new HashMap<String, InterpSlaveCmd>();
+		targetTable = new HashMap<WrappedCommand, Interp>();
+		aliasTable = new HashMap<String, InterpAliasCmd>();
 		
 		// find the name of constructing class to use as the shell class name
 		// can be overridden by setShellClassName()
@@ -611,7 +642,6 @@ public class Interp extends EventuallyFreed {
 			// Set up tcl_platform, tcl_version, tcl_library and other
 			// global variables.
 
-			setVar("tcl_platform", "engine", "JTcl", TCL.GLOBAL_ONLY);
 			setVar("tcl_platform", "platform", "java", TCL.GLOBAL_ONLY);
 			setVar("tcl_platform", "byteOrder", "bigEndian", TCL.GLOBAL_ONLY);
 			setVar("tcl_platform", "user", Util.tryGetSystemProperty("user.name", "unknown"), TCL.GLOBAL_ONLY);
@@ -643,8 +673,9 @@ public class Interp extends EventuallyFreed {
 			pkgProvide("Tcl", TCL_VERSION);
 
 			// Source the init.tcl script to initialize auto-loading.
-
 			evalResource("/tcl/lang/library/init.tcl");
+			// history add is added to commands, so load it now.
+			evalResource("/tcl/lang/library/history.tcl");
 
 		} catch (TclException e) {
 			System.out.println(getResult());
@@ -655,7 +686,7 @@ public class Interp extends EventuallyFreed {
 		// Debug print interp info, this is handy when tracking
 		// down where an Interp that was not disposed of properly
 		// was allocated.
-
+		/*
 		if (false) {
 			try {
 				throw new Exception();
@@ -664,6 +695,7 @@ public class Interp extends EventuallyFreed {
 				e.printStackTrace(System.err);
 			}
 		}
+		*/
 	}
 
 	/**
@@ -790,12 +822,12 @@ public class Interp extends EventuallyFreed {
 		// callbacks, so we iterate.
 
 		while (assocData != null) {
-			HashMap table = assocData;
+			HashMap<String, AssocData> table = assocData;
 			assocData = null;
 
-			for (Iterator iter = table.entrySet().iterator(); iter.hasNext();) {
-				Map.Entry entry = (Map.Entry) iter.next();
-				AssocData data = (AssocData) entry.getValue();
+			for (Iterator<Entry<String, AssocData>> iter = table.entrySet().iterator(); iter.hasNext();) {
+				Entry<String, AssocData> entry = iter.next();
+				AssocData data = entry.getValue();
 				data.disposeAssocData(this);
 				iter.remove();
 			}
@@ -803,9 +835,9 @@ public class Interp extends EventuallyFreed {
 
 		// Close any remaining channels
 
-		for (Iterator iter = interpChanTable.entrySet().iterator(); iter.hasNext();) {
-			Map.Entry entry = (Map.Entry) iter.next();
-			Channel chan = (Channel) entry.getValue();
+		for (Iterator<Entry<String, Channel>> iter = interpChanTable.entrySet().iterator(); iter.hasNext();) {
+			Entry<String, Channel> entry = iter.next();
+			Channel chan = entry.getValue();
 			try {
 				chan.close();
 			} catch (IOException ex) {
@@ -875,6 +907,13 @@ public class Interp extends EventuallyFreed {
 	 * into the JVM the first time the given command is executed.
 	 */
 	protected void createCommands() {
+/*
+		ClassLoader loader = Interp.class.getClassLoader();
+		URL cl = loader.getResource("tcl/lang/cmd/IfCmd.class");
+		System.err.println(cl);
+		URL cl2 = loader.getResource("tcl/lang/Interp.class");
+		System.err.println(cl2);
+*/
 		Extension.loadOnDemand(this, "after", "tcl.lang.cmd.AfterCmd");
 		Extension.loadOnDemand(this, "append", "tcl.lang.cmd.AppendCmd");
         Extension.loadOnDemand(this, "apply", "tcl.lang.cmd.ApplyCmd");
@@ -962,6 +1001,7 @@ public class Interp extends EventuallyFreed {
 		// Add "regexp" and related commands to this interp.
 		RegexpCmd.init(this);
 
+/*
 		// Load tcltest package as a result of "package require tcltest"
 
 		try {
@@ -1023,6 +1063,7 @@ public class Interp extends EventuallyFreed {
 			e.printStackTrace();
 			throw new TclRuntimeError("unexpected TclException: " + e);
 		}
+*/
 
 	}
 
@@ -1768,8 +1809,8 @@ public class Interp extends EventuallyFreed {
 		String newTail;
 		Namespace cmdNs, newNs;
 		WrappedCommand cmd;
-		HashMap table, oldTable;
-		String hashKey, oldHashKey;
+		HashMap<String, WrappedCommand> oldTable;
+		String oldHashKey;
 
 		// Find the existing command. An error is returned if cmdName can't
 		// be found.
@@ -2675,7 +2716,7 @@ public class Interp extends EventuallyFreed {
 		try {
 			content = url.getContent();
 		} catch (UnknownServiceException e) {
-			Class jar_class;
+			Class<?> jar_class;
 
 			try {
 				// Load JarURLConnection via the system class loader
@@ -2699,8 +2740,8 @@ public class Interp extends EventuallyFreed {
 			// Because the class JarURLConnection does not exist in JDK1.1
 
 			try {
-				Method m = jar_class.getMethod("openConnection", null);
-				content = m.invoke(jar, null);
+				Method m = jar_class.getMethod("openConnection", (Class<?>[]) null);
+				content = m.invoke(jar, (Object[]) null);
 			} catch (Exception e2) {
 				return null;
 			}
@@ -2873,7 +2914,7 @@ public class Interp extends EventuallyFreed {
 
 		if (USE_SCRIPT_CACHE && couldBeCached) {
 			synchronized (tclLibraryScripts) {
-				if ((script = (String) tclLibraryScripts.get(resName)) == null) {
+				if ((script = tclLibraryScripts.get(resName)) == null) {
 					isCached = false;
 				} else {
 					isCached = true;
@@ -2917,6 +2958,27 @@ public class Interp extends EventuallyFreed {
 
 		String oldScript = scriptFile;
 		scriptFile = "resource:" + resName;
+
+		try {
+			eval(script, 0);
+		} finally {
+			scriptFile = oldScript;
+		}
+	}
+	
+	public void evalResource(String resName, InputStream stream) throws TclException {
+		String script = null;
+		
+		if (stream == null) {
+			throw new TclException(this, "cannot read resource - null InputStream");
+		}
+		script = readScriptFromInputStream(stream, EncodingCmd.systemJavaEncoding);
+		if (script == null) {
+			throw new TclException(this, "cannot read resource \"" + stream.toString() + "\"");
+		}
+		String oldScript = scriptFile;
+		scriptFile = "stream:" + resName;
+        scriptSource = new String(script);
 
 		try {
 			eval(script, 0);
@@ -3420,7 +3482,7 @@ public class Interp extends EventuallyFreed {
 		// Initialize the hidden command table if necessary.
 
 		if (hiddenCmdTable == null) {
-			hiddenCmdTable = new HashMap();
+			hiddenCmdTable = new HashMap<String, WrappedCommand>();
 		}
 
 		// It is an error to move an exposed command to a hidden command with
@@ -3653,10 +3715,11 @@ public class Interp extends EventuallyFreed {
 
 		int result = TCL.OK;
 		try {
-			if (cmd.mustCallInvoke(this))
+			if (cmd.mustCallInvoke(this)) {
 				cmd.invoke(this, objv);
-			else
+			} else {
 				cmd.cmd.cmdProc(this, objv);
+			}
 		} catch (TclException e) {
 			result = e.getCompletionCode();
 		}
@@ -3765,8 +3828,8 @@ public class Interp extends EventuallyFreed {
 		// If found, then replace its rules.
 
 		if (resolvers != null) {
-			for (ListIterator iter = resolvers.listIterator(); iter.hasNext();) {
-				res = (ResolverScheme) iter.next();
+			for (ListIterator<ResolverScheme> iter = resolvers.listIterator(); iter.hasNext();) {
+				res = iter.next();
 				if (name.equals(res.name)) {
 					res.resolver = resolver;
 					return;
@@ -3775,7 +3838,7 @@ public class Interp extends EventuallyFreed {
 		}
 
 		if (resolvers == null) {
-			resolvers = new ArrayList();
+			resolvers = new ArrayList<ResolverScheme>();
 		}
 
 		// Otherwise, this is a new scheme. Add it to the FRONT
@@ -3801,14 +3864,13 @@ public class Interp extends EventuallyFreed {
 	 */
 	public Resolver getInterpResolver(String name) {
 		ResolverScheme res;
-		Enumeration e;
 
 		// Look for an existing scheme with the given name. If found,
 		// then return pointers to its procedures.
 
 		if (resolvers != null) {
-			for (ListIterator iter = resolvers.listIterator(); iter.hasNext();) {
-				res = (ResolverScheme) iter.next();
+			for (ListIterator<ResolverScheme> iter = resolvers.listIterator(); iter.hasNext();) {
+				res = iter.next();
 				if (name.equals(res.name)) {
 					return res.resolver;
 				}
@@ -3837,8 +3899,8 @@ public class Interp extends EventuallyFreed {
 		// Look for an existing scheme with the given name.
 
 		if (resolvers != null) {
-			for (ListIterator iter = resolvers.listIterator(); iter.hasNext();) {
-				res = (ResolverScheme) iter.next();
+			for (ListIterator<ResolverScheme> iter = resolvers.listIterator(); iter.hasNext();) {
+				res = iter.next();
 				if (name.equals(res.name)) {
 					found = true;
 					break;
@@ -4071,14 +4133,14 @@ public class Interp extends EventuallyFreed {
 	 */
 
 	public ClassLoader getClassLoader() {
-		// Allocate a TclClassLoader that will delagate to the
+		// Allocate a TclClassLoader that will delegate to the
 		// context class loader and then search on the
 		// env(TCL_CLASSPATH) for classes.
 
 		if (classLoader == null) {
-			classLoader = new TclClassLoader(this, null, Thread.currentThread().getContextClassLoader()
-			// Interp.class.getClassLoader()
-			);
+		    ClassLoader loader = Interp.class.getClassLoader();
+			classLoader = new TclClassLoader(this, null, loader);
+			//classLoader = new TclClassLoader(this, null, Thread.currentThread().getContextClassLoader());
 		}
 		return classLoader;
 	}

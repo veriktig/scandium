@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /* 
  * tclpro/tclparser/tclParser.c -> TclParser.java
  *
@@ -71,9 +87,11 @@ public class TclParser implements Command {
 			script = new UTF8CharPointer(tobj.toString());
 			tobj.setInternalRep(script);
 		}
+		/*
 		if (script == null) {
 			System.out.println(script); // For debugging only
 		}
+		*/
 		scriptLength = script.getByteLength();
 
 		// Check the number arguments passed to the command and
@@ -198,7 +216,6 @@ public class TclParser implements Command {
 		TclParse parse;
 		int i;
 		int endCharIndex;
-		int endByteIndex;
 
 		// Convert byte index and range into char index and range
 		int charIndex = script.getCharIndex(index);
@@ -302,7 +319,7 @@ public class TclParser implements Command {
 		char c;
 		String list;
 		int elementIndex;
-		int listIndex, prevListIndex, lastListIndex;
+		int listIndex;
 		FindElemResult fer = new FindElemResult();
 		int charIndex, charLength, charListOffset;
 		boolean found;
@@ -314,11 +331,8 @@ public class TclParser implements Command {
 		list = script.getByteRangeAsString(index, length);
 		charLength = list.length();
 
-		lastListIndex = charLength;
 		listIndex = 0;
-
 		for (;;) {
-			prevListIndex = listIndex;
 
 			try {
 				found = Util.findElement(interp, list, listIndex, charLength,
@@ -730,9 +744,9 @@ public class TclParser implements Command {
 			TclObject rangePtr2) // Possibly null, otherwise used to terminate
 			// newline counting
 			throws TclException {
-		int subStrIndex, endStrIndex;
+		int subStrIndex;
 		int offset, index1, index2 = 0;
-		int length, length1, length2;
+		int length, length1;
 		int listLen1, listLen2;
 		int numNewline;
 
@@ -746,7 +760,6 @@ public class TclParser implements Command {
 			listLen2 = TclList.getLength(interp, rangePtr2);
 			ParseGetIndexAndLength(interp, rangePtr2, scriptLength, result);
 			index2 = result.indexPtr;
-			length2 = result.lengthPtr;
 		} else {
 			listLen2 = 0;
 		}
@@ -781,7 +794,6 @@ public class TclParser implements Command {
 		}
 
 		subStrIndex = offset;
-		endStrIndex = subStrIndex + length;
 		numNewline = 0;
 
 		// Get byte range as a String and count the number of
@@ -853,13 +865,11 @@ public class TclParser implements Command {
 			result.indexPtr = 0;
 			result.lengthPtr = scriptLen;
 		} else {
-			int len;
 			String bytes;
 			itemPtr = TclList.index(interp, rangePtr, 0);
 			result.indexPtr = TclInteger.getInt(interp, itemPtr);
 			itemPtr = TclList.index(interp, rangePtr, 1);
 			bytes = itemPtr.toString();
-			len = bytes.length();
 
 			if (bytes.equals("end")) {
 				result.lengthPtr = scriptLen;
@@ -956,6 +966,7 @@ class UTF8CharPointer extends CharPointer implements InternalRep {
 												// null
 			bytes = chars.getBytes("UTF8");
 
+			/*
 			if (chars == null) { // For debugging only
 				System.out.println("chars is \"" + chars + "\" len = "
 						+ chars.length());
@@ -963,6 +974,7 @@ class UTF8CharPointer extends CharPointer implements InternalRep {
 				System.out.println("bytes is \"" + bstr + "\" len = "
 						+ bytes.length);
 			}
+			*/
 
 			// Count UTF8 bytes for each character, map char to byte index
 

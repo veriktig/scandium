@@ -1,4 +1,20 @@
 /*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * DictCmd.java
  *
  * Copyright (c) 2006 Neil Madden.
@@ -80,7 +96,7 @@ public class DictCmd implements Command {
 			TclObject dictObj = null;
 			try {
 				dictObj = interp.getVar(objv[2], 0);
-			} catch (TclException _) {
+			} catch (TclException zz) {
 				// Var doesn't exist: create it
 				dictObj = TclDict.newInstance();
 				dictObj.preserve();
@@ -380,15 +396,15 @@ public class DictCmd implements Command {
 			TclObject dictObj = null;
 			try {
 				dictObj = interp.getVar(objv[2], 0);
-			} catch (TclException _) {
+			} catch (TclException zz) {
 				// Var doesn't exist: create it
 				dictObj = TclDict.newInstance();
 				dictObj.preserve();
 			}
 			TclObject key = objv[3];
-			int increment = 1;
+			long increment = 1;
 			if (objv.length == 5) {
-				increment = TclInteger.get(interp, objv[4]);
+				increment = TclInteger.getLong(interp, objv[4]);
 			}
 			if (dictObj.isShared()) {
 				dictObj = dictObj.duplicate();
@@ -484,7 +500,7 @@ public class DictCmd implements Command {
 			TclObject dictObj = null;
 			try {
 				dictObj = interp.getVar(objv[2], 0);
-			} catch (TclException _) {
+			} catch (TclException zz) {
 				// Var doesn't exist: create it
 				dictObj = TclDict.newInstance();
 				dictObj.preserve();
@@ -607,7 +623,7 @@ public class DictCmd implements Command {
 			TclObject dict = null;
 			try {
 				dict = interp.getVar(objv[2], 0);
-			} catch (TclException _) {
+			} catch (TclException zz) {
 				// Var doesn't exist: create it
 				dict = TclDict.newInstance();
 				dict.preserve();
@@ -655,7 +671,7 @@ public class DictCmd implements Command {
 			TclObject dict = null;
 			try {
 				dict = interp.getVar(objv[2], 0);
-			} catch (TclException _) {
+			} catch (TclException zz) {
 				// Var doesn't exist: create it (yes, even unset creates the
 				// var!)
 				dict = TclDict.newInstance();
@@ -694,7 +710,7 @@ public class DictCmd implements Command {
 			TclObject dict = null;
 			try {
 				dict = interp.getVar(objv[2], 0);
-			} catch (TclException _) {
+			} catch (TclException zz) {
 				// Var doesn't exist: create it
 				dict = TclDict.newInstance();
 				dict.preserve();
@@ -708,7 +724,7 @@ public class DictCmd implements Command {
 					// Make sure the var is unset
 					try {
 						interp.unsetVar(objv[i + 1], 0);
-					} catch (TclException _) {
+					} catch (TclException zz) {
 					}
 				}
 			}
@@ -730,7 +746,7 @@ public class DictCmd implements Command {
 				// still readable.
 				try {
 					interp.getVar(objv[2], 0);
-				} catch (TclException _) {
+				} catch (TclException zz) {
 					// No longer readable - ignore
 					interp.resetResult();
 					return;
@@ -743,7 +759,7 @@ public class DictCmd implements Command {
 					TclObject newVal = null;
 					try {
 						newVal = interp.getVar(objv[i + 1], 0);
-					} catch (TclException _) {
+					} catch (TclException zz) {
 						// Var was unset
 						newVal = null;
 					}
@@ -826,7 +842,7 @@ public class DictCmd implements Command {
 
 			dict.preserve();
 
-			final List keyList = new LinkedList();
+			final List<TclObject> keyList = new LinkedList<TclObject>();
 			// Add each key as a new variable in the environment
 			TclDict.foreach(interp, null, current, new TclDict.Visitor() {
 				public Object visit(Interp interp, Object accum, TclObject key, TclObject val) throws TclException {
@@ -849,20 +865,20 @@ public class DictCmd implements Command {
 			// still readable
 			try {
 				interp.getVar(objv[2], 0);
-			} catch (TclException _) {
+			} catch (TclException zz) {
 				interp.resetResult();
 				return;
 			}
 			final TclObject tmp = TclDict.newInstance();
 			// Get new key values -- using keys that were in the
 			// dictionary when we started.
-			Iterator keys = keyList.iterator();
+			Iterator<TclObject> keys = keyList.iterator();
 			while (keys.hasNext()) {
-				TclObject key = (TclObject) keys.next();
+				TclObject key = keys.next();
 				TclObject val = null;
 				try {
 					val = interp.getVar(key, 0);
-				} catch (TclException _) {
+				} catch (TclException zz) {
 					val = null;
 				}
 				if (val != null) {

@@ -1,4 +1,20 @@
 /*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * InfoCmd.java
  *
  * Copyright (c) 1997 Cornell University.
@@ -28,6 +44,8 @@ import tcl.lang.CallFrame;
 import tcl.lang.Command;
 import tcl.lang.Expression;
 import tcl.lang.Interp;
+import tcl.lang.JACL;
+import tcl.lang.MathFunction;
 import tcl.lang.Namespace;
 import tcl.lang.Procedure;
 import tcl.lang.TCL;
@@ -211,7 +229,6 @@ public class InfoCmd implements Command {
 	private static void InfoBodyCmd(Interp interp, TclObject[] objv) throws TclException {
 		String name;
 		Procedure proc;
-		TclObject body, result;
 
 		if (objv.length != 3) {
 			throw new TclNumArgsException(interp, 2, objv, "procname");
@@ -303,13 +320,13 @@ public class InfoCmd implements Command {
 		list = TclList.newInstance();
 
 		if (ns != null) {
-			for (Iterator iter = ns.cmdTable.entrySet().iterator(); iter.hasNext();) {
-				Map.Entry entry = (Map.Entry) iter.next();
+			for (Iterator<Entry<String,WrappedCommand>> iter = ns.cmdTable.entrySet().iterator(); iter.hasNext();) {
+				Map.Entry<String, WrappedCommand> entry = iter.next();
 				cmdName = (String) entry.getKey();
 
 				if ((simplePattern == null) || Util.stringMatch(cmdName, simplePattern)) {
 					if (specificNsInPattern) {
-						cmd = (WrappedCommand) entry.getValue();
+						cmd = entry.getValue();
 						elemObj = TclString.newInstance(interp.getCommandFullName(cmd));
 					} else {
 						elemObj = TclString.newInstance(cmdName);
@@ -325,9 +342,9 @@ public class InfoCmd implements Command {
 			// the effective namespace.
 
 			if ((ns != globalNs) && !specificNsInPattern) {
-				for (Iterator iter = globalNs.cmdTable.entrySet().iterator(); iter.hasNext();) {
-					Map.Entry entry = (Map.Entry) iter.next();
-					cmdName = (String) entry.getKey();
+				for (Iterator<Entry<String, WrappedCommand>> iter = globalNs.cmdTable.entrySet().iterator(); iter.hasNext();) {
+					Map.Entry<String, WrappedCommand> entry = iter.next();
+					cmdName = entry.getKey();
 					if ((simplePattern == null) || Util.stringMatch(cmdName, simplePattern)) {
 						if (ns.cmdTable.get(cmdName) == null) {
 							TclList.append(interp, list, TclString.newInstance(cmdName));
@@ -375,7 +392,6 @@ public class InfoCmd implements Command {
 	private static void InfoDefaultCmd(Interp interp, TclObject[] objv) throws TclException {
 		String procName, argName, varName;
 		Procedure proc;
-		TclObject valueObj;
 
 		if (objv.length != 5) {
 			throw new TclNumArgsException(interp, 2, objv, "procname arg varname");
@@ -456,7 +472,6 @@ public class InfoCmd implements Command {
 	private void InfoFunctionsCmd(Interp interp, TclObject[] objv) throws TclException {
 		String varName, pattern;
 		Expression mathFns = new Expression();
-		Var var;
 		TclObject list;
 
 		if (objv.length == 2) {
@@ -472,12 +487,12 @@ public class InfoCmd implements Command {
 
 		list = TclList.newInstance();
 
-		Set set = mathFns.mathFuncTable.entrySet();
-		Iterator it = set.iterator();
+		Set<Entry<String, MathFunction>> set = mathFns.mathFuncTable.entrySet();
+		Iterator<Entry<String, MathFunction>> it = set.iterator();
 
 		while (it.hasNext()) {
-			Map.Entry entry = (Map.Entry) it.next();
-			varName = (String) entry.getKey();
+			Map.Entry<String, MathFunction> entry = it.next();
+			varName = entry.getKey();
 
 			if ((pattern == null) || Util.stringMatch(varName, pattern)) {
 				TclList.append(interp, list, TclString.newInstance(varName));
@@ -518,8 +533,8 @@ public class InfoCmd implements Command {
 
 		list = TclList.newInstance();
 
-		for (Iterator iter = globalNs.varTable.entrySet().iterator(); iter.hasNext();) {
-			Map.Entry entry = (Map.Entry) iter.next();
+		for (Iterator<Entry<String, Var>> iter = globalNs.varTable.entrySet().iterator(); iter.hasNext();) {
+			Map.Entry<String, Var> entry = iter.next();
 			varName = (String) entry.getKey();
 			var = (Var) entry.getValue();
 			if (var.isVarUndefined()) {
@@ -784,6 +799,7 @@ public class InfoCmd implements Command {
 
 			// add the top level class
 			execLine += interp.getShellClassName();
+			//execLine += "com.veriktig.systemcompiler.launcher.Main";
 
 			// add shell parameters
 			execLine += (isWindows ? " %*" : " ${1+\"$@\"}") + eol;
@@ -815,6 +831,111 @@ public class InfoCmd implements Command {
 		}
 
 		interp.setResult(nameOfExecutable);
+		return;
+	}
+
+	/**
+	 * Need something like this with OSGi.
+	 * Returns the framework, not the Thread
+	 * 
+	 * @param interp
+	 *            Interpreter in which to evaluate command
+	 * @param objv
+	 *            arguments 'info nameofexecutable'
+	 * @throws TclException
+	 *             on any error
+	 */
+
+	private static void InfoNameOfMainCmd(Interp interp, TclObject[] objv) throws TclException {
+
+		if (objv.length != 2) {
+			throw new TclNumArgsException(interp, 2, objv, null);
+		}
+
+		String nameOfMain = null;
+		File execFile = null;
+
+		// create a new temp file to execute JTcl interpreter
+		boolean isWindows = Util.isWindows();
+		String eol = isWindows ? "\r\n" : "\n";
+		String suffix = isWindows ? ".bat" : ".sh";
+		try {
+			execFile = File.createTempFile("jtcl", suffix);
+			nameOfMain = execFile.getCanonicalPath();
+		} catch (IOException e) {
+			throw new TclException(interp, "Could not create temp file for [info nameofexecutable]");
+		}
+
+		// The JDK provides direct no means to learn the name of the executable
+		// that launched the application. We'll try to find the java vm, but use
+		// 'java' as a default.
+
+		String javaExecutable = "java";
+		String javaHome = System.getProperty("java.home");
+		if (javaHome != null) {
+			// test java.home/bin/java
+			String execSuffix = isWindows ? ".exe" : "";
+			File javaPath = new File(new File(new File(javaHome), "bin"), "java" + execSuffix);
+			if (javaPath.exists()) {
+				javaExecutable = javaPath.getPath();
+			} else {
+				// IBM's JDK on AIX uses strange locations for the executables (from Apache Maven 'bin/mvn')
+				// test java.home/jre/sh/java
+				javaPath = new File(new File(new File(new File(javaHome), "jre"), "sh"), "java");
+				if (javaPath.exists()) {
+					javaExecutable = javaPath.getPath();
+				}
+			}
+		}
+
+		String execLine = isWindows ? "@echo off" + eol : "#!" + eol + "exec ";
+		execLine += "\"" + javaExecutable + "\"";
+		String classpath = System.getProperty("java.class.path");
+		// Get the name of the working dir.
+
+		// XXX START OF HACK
+		String dirName = interp.getWorkingDir().toString();
+
+		// Java File Object methods use backslashes on Windows.
+		// Convert them to forward slashes before returning the dirName to Tcl.
+
+		if (JACL.PLATFORM == JACL.PLATFORM_WINDOWS) {
+			dirName = dirName.replace('\\', '/');
+		}
+
+		if (classpath != null) {
+			execLine += " -jar \"" + dirName + "/" + classpath + "\" ";
+		}
+
+		// add the top level class
+		execLine += "com.veriktig.systemcompiler.launcher.Main";
+
+		// add shell parameters
+		execLine += (isWindows ? " %*" : " ${1+\"$@\"}") + eol;
+
+		// write the file and set delete on exit
+		FileWriter out = null;
+		try {
+			out = new FileWriter(execFile);
+			out.write(execLine);
+			out.close();
+		} catch (Exception e) {
+			throw new TclException(interp, "Could not write temp file [info nameofexecutable]");
+		}
+		execFile.deleteOnExit();
+
+		// set as executable
+		if (!isWindows) {
+			try {
+				Process process = Runtime.getRuntime().exec("chmod +x " + execFile.getPath());
+				process.waitFor();
+				process.destroy();
+			} catch (Exception e) {
+				throw new TclException(interp, "Couldn't set executable file as executable [name of executable]");
+			}
+		}
+
+		interp.setResult(nameOfMain);
 		return;
 	}
 
@@ -1032,10 +1153,10 @@ public class InfoCmd implements Command {
 			// but a specific namespace was specified. Create a list containing
 			// only the variables in the effective namespace's variable table.
 
-			for (Iterator iter = ns.varTable.entrySet().iterator(); iter.hasNext();) {
-				Map.Entry entry = (Map.Entry) iter.next();
-				varName = (String) entry.getKey();
-				var = (Var) entry.getValue();
+			for (Iterator<Entry<String, Var>> iter = ns.varTable.entrySet().iterator(); iter.hasNext();) {
+				Map.Entry<String, Var> entry = iter.next();
+				varName = entry.getKey();
+				var = entry.getValue();
 
 				if (!var.isVarUndefined() || var.isVarNamespace()) {
 					if ((simplePattern == null) || Util.stringMatch(varName, simplePattern)) {
@@ -1057,10 +1178,10 @@ public class InfoCmd implements Command {
 			// namespace.
 
 			if ((ns != globalNs) && !specificNsInPattern) {
-				for (Iterator iter = globalNs.varTable.entrySet().iterator(); iter.hasNext();) {
-					Map.Entry entry = (Map.Entry) iter.next();
-					varName = (String) entry.getKey();
-					var = (Var) entry.getValue();
+				for (Iterator<Entry<String, Var>> iter = globalNs.varTable.entrySet().iterator(); iter.hasNext();) {
+					Map.Entry<String, Var> entry = iter.next();
+					varName = entry.getKey();
+					var = entry.getValue();
 
 					if (!var.isVarUndefined() || var.isVarNamespace()) {
 						if ((simplePattern == null) || Util.stringMatch(varName, simplePattern)) {

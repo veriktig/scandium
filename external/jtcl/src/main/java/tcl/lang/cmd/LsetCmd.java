@@ -1,4 +1,20 @@
 /*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * LsetCmd.java
  *
  * Copyright (c) 1997 Cornell University.
@@ -159,11 +175,11 @@ public class LsetCmd implements Command {
 		int duplicated; 		// Flag == 1 if the obj has been duplicated, 0 otherwise 
 		TclObject retValue; 	// The list to be returned 
 		int elemCount; 			// Length of one sublist being changed 
-		ArrayList elems; 		// The elements of a sublist 
+		ArrayList<TclObject> elems; 		// The elements of a sublist 
 		TclObject subList; 		// The current sublist 
 		int result = 0; 		// Status return from library calls 
 		int index = 0; 			// Index of the element to replace in the current sublist
-		ArrayList chainList = new ArrayList();		// check track of sub-lists, in order to invalidate string reps
+		ArrayList<TclObject> chainList = new ArrayList<TclObject>();		// check track of sub-lists, in order to invalidate string reps
 
 		// If there are no indices, then simply return the new value
 		if (indexCount == 0) {
@@ -340,8 +356,8 @@ public class LsetCmd implements Command {
 		int result = 0; 		// Status return from library calls 
 		TclObject subList; 		// The current sublist 
 		int elemCount; 			// Count of elements in the current sublist 
-		ArrayList elems; 		// Elements of current sublist 
-		ArrayList chainList = new ArrayList();		// check track of sub-lists, in order to invalidate string reps
+		ArrayList<TclObject> elems; 		// Elements of current sublist 
+		ArrayList<TclObject> chainList = new ArrayList<TclObject>();		// check track of sub-lists, in order to invalidate string reps
 
 		// Determine whether the index arg designates a list or a single index.
 		// We have to be careful about the order of the checks to avoid repeated

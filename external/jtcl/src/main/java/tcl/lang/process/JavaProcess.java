@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package tcl.lang.process;
 
 import java.io.BufferedInputStream;
@@ -101,12 +117,19 @@ public class JavaProcess extends TclProcess {
 	
 	@Override
 	public void start() throws IOException {
+        boolean skip_stdin_coupler = false;
+
 		processBuilder.command(command);
 		initializeEnv(processBuilder);
 		
 		if (stderrRedirect != null && stderrRedirect.type == Redirect.Type.MERGE_ERROR) {
 			processBuilder.redirectErrorStream(true);
 		}
+        if (stdinRedirect != null && stdinRedirect.type == Redirect.Type.INHERIT) {
+            stdinStream = new ManagedSystemInStream();
+            processBuilder.redirectInput(ProcessBuilder.Redirect.INHERIT);
+            skip_stdin_coupler = true;
+        }
 		process = processBuilder.start();
 		
 		/*
@@ -122,7 +145,6 @@ public class JavaProcess extends TclProcess {
 				stdinStream = upstream.getInputStream();
 				break;
 			case INHERIT:
-				stdinStream = new ManagedSystemInStream();
 				break;
 			case STREAM:
 				stdinStream = null;
@@ -152,7 +174,9 @@ public class JavaProcess extends TclProcess {
 				break;
 			}
 		}
-		if (stdinStream != null) {
+        if (skip_stdin_coupler) {
+            //
+        } else if (stdinStream != null) {
 			Thread coupler = new Coupler(stdinStream, process.getOutputStream(), true, true);
 			coupler.setDaemon(true);
 			coupler.setName("JavaProcess Coupler stdin");

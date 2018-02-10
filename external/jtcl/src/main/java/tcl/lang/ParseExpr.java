@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /* 
  * tclParseExpr.c -> ParseExpr.java
  *
@@ -175,8 +191,6 @@ class ParseExpr {
 	// script consists of all characters up to the
 	// first null character.
 	{
-		int code;
-		char savedChar;
 		ParseInfo info;
 		String fileName = "unknown";
 		int lineNum = 0;
@@ -255,8 +269,8 @@ class ParseExpr {
 	// info Holds the parse state for the expression being parsed.
 	{
 		TclParse parseObj = info.parseObj;
-		TclToken token, firstToken, condToken;
-		int firstIndex, numToMove, code;
+		TclToken token, condToken;
+		int firstIndex;
 		int srcStart;
 
 		// HERE("condExpr", 1);
@@ -332,7 +346,7 @@ class ParseExpr {
 
 	static void ParseLorExpr(Interp interp, ParseInfo info) throws TclException {
 		TclParse parseObj = info.parseObj;
-		int firstIndex, code;
+		int firstIndex;
 		int srcStart;
 		int operator;
 
@@ -375,7 +389,7 @@ class ParseExpr {
 	static void ParseLandExpr(Interp interp, ParseInfo info)
 			throws TclException {
 		TclParse parseObj = info.parseObj;
-		int firstIndex, code;
+		int firstIndex;
 		int srcStart, operator;
 
 		// HERE("landExpr", 3);
@@ -417,7 +431,7 @@ class ParseExpr {
 	static void ParseBitOrExpr(Interp interp, ParseInfo info)
 			throws TclException {
 		TclParse parseObj = info.parseObj;
-		int firstIndex, code;
+		int firstIndex;
 		int srcStart, operator;
 
 		// HERE("bitOrExpr", 4);
@@ -460,7 +474,7 @@ class ParseExpr {
 	static void ParseBitXorExpr(Interp interp, ParseInfo info)
 			throws TclException {
 		TclParse parseObj = info.parseObj;
-		int firstIndex, code;
+		int firstIndex;
 		int srcStart, operator;
 
 		// HERE("bitXorExpr", 5);
@@ -503,7 +517,7 @@ class ParseExpr {
 	static void ParseBitAndExpr(Interp interp, ParseInfo info)
 			throws TclException {
 		TclParse parseObj = info.parseObj;
-		int firstIndex, code;
+		int firstIndex;
 		int srcStart, operator;
 
 		// HERE("bitAndExpr", 6);
@@ -546,7 +560,7 @@ class ParseExpr {
 	static void ParseEqualityExpr(Interp interp, ParseInfo info)
 			throws TclException {
 		TclParse parseObj = info.parseObj;
-		int firstIndex, lexeme, code;
+		int firstIndex, lexeme;
 		int srcStart, operator;
 
 		// HERE("equalityExpr", 7);
@@ -593,7 +607,7 @@ class ParseExpr {
 	static void ParseRelationalExpr(Interp interp, ParseInfo info)
 			throws TclException {
 		TclParse parseObj = info.parseObj;
-		int firstIndex, lexeme, operatorSize, code;
+		int firstIndex, lexeme, operatorSize;
 		int srcStart, operator;
 
 		// HERE("relationalExpr", 8);
@@ -643,7 +657,7 @@ class ParseExpr {
 	static void ParseShiftExpr(Interp interp, ParseInfo info)
 			throws TclException {
 		TclParse parseObj = info.parseObj;
-		int firstIndex, lexeme, code;
+		int firstIndex, lexeme;
 		int srcStart, operator;
 
 		// HERE("shiftExpr", 9);
@@ -686,7 +700,7 @@ class ParseExpr {
 
 	static void ParseAddExpr(Interp interp, ParseInfo info) throws TclException {
 		TclParse parseObj = info.parseObj;
-		int firstIndex, lexeme, code;
+		int firstIndex, lexeme;
 		int srcStart, operator;
 
 		// HERE("addExpr", 10);
@@ -735,7 +749,7 @@ class ParseExpr {
 	static void ParseMultiplyExpr(Interp interp, ParseInfo info)
 			throws TclException {
 		TclParse parseObj = info.parseObj;
-		int firstIndex, lexeme, code;
+		int firstIndex, lexeme;
 		int srcStart, operator;
 
 		// HERE("multiplyExpr", 11);
@@ -779,7 +793,7 @@ class ParseExpr {
 	static void ParseUnaryExpr(Interp interp, ParseInfo info)
 			throws TclException {
 		TclParse parseObj = info.parseObj;
-		int firstIndex, lexeme, code;
+		int firstIndex, lexeme;
 		int srcStart, operator;
 
 		// HERE("unaryExpr", 12);
@@ -828,7 +842,7 @@ class ParseExpr {
 		TclToken token, exprToken;
 		TclParse nested;
 		int dollar, stringStart, term, src;
-		int lexeme, exprIndex, firstIndex, numToMove, code;
+		int lexeme, exprIndex, firstIndex;
 		// System.out.println("parse primary "+info.lexeme+" "+info.start+" "+info.size+" "+parseObj.numTokens);
 		// System.out.println(info.originalExpr);
 
@@ -1181,12 +1195,10 @@ class ParseExpr {
 	{
 		int src; // Points to current source char.
 		int term; // Points to char terminating a literal.
-		double doubleValue; // Value of a scanned double literal.
 		char c, c2;
 		boolean startsWithDigit;
-		int offset, length;
+		int length;
 		TclParse parseObj = info.parseObj;
-		char ch;
 		info.lexeme = UNKNOWN;
 		// System.out.println("getlex");
 
@@ -1585,9 +1597,7 @@ class ParseExpr {
 	{
 		// System.out.println("prepend "+firstIndex+" "+srcBytes+" "+src);
 		TclParse parseObj = info.parseObj;
-		TclToken token, firstToken;
-		int numToMove;
-
+		TclToken token;
 		if ((parseObj.numTokens + 1) >= parseObj.tokensAvailable) {
 			parseObj.expandTokenArray(parseObj.numTokens + 1);
 		}

@@ -1,4 +1,20 @@
 /*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * Var.java
  *
  * Copyright (c) 1997 Sun Microsystems, Inc.
@@ -17,6 +33,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Map.Entry;
+
+import tcl.lang.Interp.ResolverScheme;
 
 /*
  * Implements variables in Tcl. The Var class encapsulates most of the functionality
@@ -205,9 +224,9 @@ public class Var {
 	 * List that holds the traces that were placed in this Var
 	 */
 
-	public ArrayList traces;
+	public ArrayList<TraceRecord> traces;
 
-	public ArrayList sidVec;
+	public ArrayList<SearchId> sidVec;
 
 	/**
 	 * Miscellaneous bits of information about variable.
@@ -233,7 +252,7 @@ public class Var {
 	 * needed.
 	 */
 
-	public Map table;
+	public Map<String, Var> table;
 
 	/**
 	 * The key under which this variable is stored in the hash table.
@@ -387,7 +406,7 @@ public class Var {
 		if (size == 0) {
 			return 1;
 		}
-		SearchId sid = (SearchId) sidVec.get(size - 1);
+		SearchId sid = sidVec.get(size - 1);
 		return (sid.getIndex() + 1);
 	}
 
@@ -400,10 +419,10 @@ public class Var {
 	 * @return Iterator if a match is found else null.
 	 */
 
-	public Iterator getSearch(String s) {
+	public Iterator<Entry<String, Var>> getSearch(String s) {
 		SearchId sid;
 		for (int i = 0; i < sidVec.size(); i++) {
-			sid = (SearchId) sidVec.get(i);
+			sid = sidVec.get(i);
 			if (sid.equals(s)) {
 				return sid.getIterator();
 			}
@@ -422,7 +441,7 @@ public class Var {
 		SearchId curSid;
 
 		for (int i = 0; i < sidVec.size(); i++) {
-			curSid = (SearchId) sidVec.get(i);
+			curSid = sidVec.get(i);
 			if (curSid.equals(sid)) {
 				sidVec.remove(i);
 				return true;
@@ -509,7 +528,7 @@ public class Var {
 		// variables are currently in use. Same as
 		// the current procedure's frame, if any,
 		// unless an "uplevel" is executing.
-		HashMap table; // to the hashtable, if any, in which
+		HashMap<String, Var> table; // to the hashtable, if any, in which
 		// to look up the variable.
 		Var var; // Used to search for global names.
 		String elName; // Name of array element or null.
@@ -577,9 +596,9 @@ public class Var {
 				}
 
 				if (var == null && interp.resolvers != null) {
-					for (ListIterator iter = interp.resolvers.listIterator(); var == null
+					for (ListIterator<ResolverScheme> iter = interp.resolvers.listIterator(); var == null
 							&& iter.hasNext();) {
-						res = (Interp.ResolverScheme) iter.next();
+						res = iter.next();
 						var = res.resolver.resolveVar(interp, part1, cxtNs,
 								flags);
 						if (var != null) {
@@ -709,7 +728,7 @@ public class Var {
 				table = varFrame.varTable;
 				if (createPart1) {
 					if (table == null) {
-						table = new HashMap();
+						table = new HashMap<String, Var>();
 						varFrame.varTable = table;
 					}
 					var = (Var) table.get(part1);
@@ -1246,7 +1265,7 @@ public class Var {
 			}
 
 			// Look in local table, there should not be an entry
-			HashMap table = varFrame.varTable;
+			HashMap<String, Var> table = varFrame.varTable;
 
 			if (table != null && table.size() > 0) {
 				Var var = (Var) table.get(varname);
@@ -1504,7 +1523,7 @@ public class Var {
 
 			// Look in local table, there should not be an entry for this
 			// varname
-			HashMap table = varFrame.varTable;
+			HashMap<String, Var> table = varFrame.varTable;
 
 			if (table != null && table.size() > 0) {
 				Var var = (Var) table.get(varname);
@@ -1610,7 +1629,7 @@ public class Var {
 
 			// Look in local table, there should not be an entry for this
 			// varname
-			HashMap table = varFrame.varTable;
+			HashMap<String, Var> table = varFrame.varTable;
 
 			if (table != null && table.size() > 0) {
 				Var var = (Var) table.get(varname);
@@ -1817,7 +1836,6 @@ public class Var {
 		boolean createdNewObj; // Set to true if var's value object is shared
 		// so we must increment a copy (i.e. copy
 		// on write).
-		int i;
 		boolean err;
 
 		// There are two possible error conditions that depend on the setting of
@@ -2051,7 +2069,7 @@ public class Var {
 
 		if (var.traces == null) {
 			var.setVarTraceExists();
-			var.traces = new ArrayList();
+			var.traces = new ArrayList<TraceRecord>();
 		}
 
 		TraceRecord rec = new TraceRecord();
@@ -2159,7 +2177,7 @@ public class Var {
 	 *            misc flags that control the actions of this method.
 	 */
 
-	public static ArrayList getTraces(Interp interp, // Interpreter containing
+	public static ArrayList<TraceRecord> getTraces(Interp interp, // Interpreter containing
 														// variable.
 			String part1, // Name of variable or array.
 			String part2, // Name of element within array; null means
@@ -2233,12 +2251,11 @@ public class Var {
 		Var[] result = null;
 		CallFrame varFrame;
 		CallFrame savedFrame = null;
-		HashMap table;
+		HashMap<String, Var> table;
 		Namespace ns, altNs;
 		String tail;
 		boolean newvar = false;
 		boolean foundInCompiledLocalsArray = false;
-		boolean foundInLocalTable = false;
 		Var[] compiledLocals = null;
 
 		// Find "other" in "frame". If not looking up other in just the
@@ -2396,7 +2413,7 @@ public class Var {
 				// should be created in the compiledLocals array.
 
 				if (table == null) {
-					table = new HashMap();
+					table = new HashMap<String, Var>();
 					varFrame.varTable = table;
 				}
 
@@ -2411,9 +2428,6 @@ public class Var {
 
 					var.hashKey = myName;
 					var.table = table;
-				}
-				if (var != null) {
-					foundInLocalTable = true;
 				}
 			}
 
@@ -2699,7 +2713,7 @@ public class Var {
 	 *            HashMap that holds the Vars to delete
 	 */
 
-	public static void deleteVars(Interp interp, HashMap table) {
+	public static void deleteVars(Interp interp, HashMap<String, Var> table) {
 		int flags;
 		Namespace currNs = Namespace.getCurrentNamespace(interp);
 
@@ -2712,9 +2726,9 @@ public class Var {
 			flags |= TCL.NAMESPACE_ONLY;
 		}
 
-		for (Iterator iter = table.entrySet().iterator(); iter.hasNext();) {
-			Map.Entry entry = (Map.Entry) iter.next();
-			deleteVar(interp, (Var) entry.getValue(), flags);
+		for (Iterator<Entry<String, Var>> iter = table.entrySet().iterator(); iter.hasNext();) {
+			Entry<String, Var> entry = iter.next();
+			deleteVar(interp, entry.getValue(), flags);
 		}
 		table.clear();
 	}
@@ -2885,10 +2899,10 @@ public class Var {
 		deleteSearches(var);
 		Map<String, Var> table = var.getArrayMap();
 
-		for (Iterator iter = table.entrySet().iterator(); iter.hasNext();) {
-			Map.Entry entry = (Map.Entry) iter.next();
+		for (Iterator<Entry<String, Var>> iter = table.entrySet().iterator(); iter.hasNext();) {
+			Entry<String, Var> entry = iter.next();
 			// String key = (String) entry.getKey();
-			el = (Var) entry.getValue();
+			el = entry.getValue();
 
 			if (el.isVarScalar() && (el.getValue() != null)) {
 				obj = el.getValue();;
@@ -3088,13 +3102,13 @@ public class Var {
 		String varName;
 		CallFrame frame = interp.varFrame;
 
-		HashMap localVarTable = frame.varTable;
+		HashMap<String, Var> localVarTable = frame.varTable;
 		if (localVarTable != null) {
-			for (Iterator iter = localVarTable.entrySet().iterator(); iter
+			for (Iterator<Entry<String, Var>> iter = localVarTable.entrySet().iterator(); iter
 					.hasNext();) {
-				Map.Entry entry = (Map.Entry) iter.next();
-				varName = (String) entry.getKey();
-				var = (Var) entry.getValue();
+				Entry<String, Var> entry = iter.next();
+				varName = entry.getKey();
+				var = entry.getValue();
 				if (!var.isVarUndefined() && (includeLinks || !var.isVarLink())) {
 					if ((pattern == null) || Util.stringMatch(varName, pattern)) {
 						TclList.append(interp, list, TclString

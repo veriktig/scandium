@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /* 
  * PackageCmd.java --
  *
@@ -14,7 +30,6 @@
 package tcl.lang.cmd;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -351,7 +366,7 @@ public class PackageCmd implements Command {
 		String cmd;
 		String ver1, ver2;
 		StringBuffer sbuf;
-		Enumeration e;
+		//Enumeration e;
 		int i, opt, exact;
 		boolean once;
 
@@ -448,9 +463,9 @@ public class PackageCmd implements Command {
 			try {
 				sbuf = new StringBuffer();
 				once = false;
-				for (Iterator iter = interp.packageTable.entrySet().iterator(); iter
+				for (Iterator<Map.Entry<String, Package>> iter = interp.packageTable.entrySet().iterator(); iter
 						.hasNext();) {
-					Map.Entry entry = (Map.Entry) iter.next();
+					Map.Entry<String, Package> entry = iter.next();
 					key = (String) entry.getKey();
 					pkg = (Package) entry.getValue();
 					once = true;
@@ -811,7 +826,7 @@ public class PackageCmd implements Command {
 	 */
 
 	static String[] split(String in, char splitchar) {
-		ArrayList words;
+		ArrayList<String> words;
 		int i;
 		int len;
 		char[] str;
@@ -824,7 +839,7 @@ public class PackageCmd implements Command {
 		str = new char[len + 1];
 		in.getChars(0, len, str, 0);
 		str[len++] = splitchar;
-		words = new ArrayList(5);
+		words = new ArrayList<String>(5);
 
 		for (i = 0; i < len; i++) {
 
@@ -871,7 +886,7 @@ public class PackageCmd implements Command {
 	// the "packageTable" hash table in the interpreter, keyed by
 	// package name such as "Tk" (no version number).
 
-	static class Package {
+	public static class Package {
 		String version = null; // Version that has been supplied in this
 		// interpreter via "package provide"
 		// null means the package doesn't

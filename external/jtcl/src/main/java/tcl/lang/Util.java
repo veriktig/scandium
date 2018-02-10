@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /* 
  * Util.java --
  *
@@ -293,7 +309,7 @@ public class Util {
 	 * @return
 	 * @throws TclException
 	 */
-	public static long getWideInt(Interp interp, String str) throws TclException {
+	static long getWideInt(Interp interp, String str) throws TclException {
 		return getInt(interp, str);
 	}
 
@@ -387,7 +403,7 @@ public class Util {
 	 * 
 	 * @return
 	 */
-	public static final String checkBadOctal(Interp interp, String value) {
+	static final String checkBadOctal(Interp interp, String value) {
 		int p = 0;
 		final int len = value.length();
 
@@ -636,7 +652,7 @@ public class Util {
 	 * @return the double value
 	 * @throws TclException
 	 */
-	public static double getDouble(Interp interp, String s) throws TclException {
+	static double getDouble(Interp interp, String s) throws TclException {
 		int len = s.length();
 		int i = 0;
 		char c;
@@ -1041,7 +1057,7 @@ public class Util {
 	 * @return true if found.
 	 * @throws TclException
 	 */
-	public static final boolean findElement(Interp interp, String s, int i, int len, FindElemResult fer) throws TclException {
+	static final boolean findElement(Interp interp, String s, int i, int len, FindElemResult fer) throws TclException {
 		int openBraces = 0;
 		boolean inQuotes = false;
 		char c = '\0';
@@ -1236,7 +1252,7 @@ public class Util {
 	 * @return flags
 	 * @throws TclException
 	 */
-	public static int scanElement(Interp interp, String string) throws TclException {
+	static int scanElement(Interp interp, String string) throws TclException {
 		int flags, nestingLevel;
 		char c;
 		int len;
@@ -1373,7 +1389,7 @@ public class Util {
 	 * @param sbuf
 	 *            Buffer to write element to
 	 */
-	public static void convertElement(String s, int flags, StringBuffer sbuf) {
+	static void convertElement(String s, int flags, StringBuffer sbuf) {
 		int i = 0;
 		char c;
 		final int len = (s == null ? 0 : s.length());
@@ -1662,7 +1678,7 @@ public class Util {
 	 * 
 	 * @return Platform int
 	 */
-	public final static int getActualPlatform() {
+	final static int getActualPlatform() {
 		if (Util.isWindows()) {
 			return JACL.PLATFORM_WINDOWS;
 		}
@@ -1763,7 +1779,7 @@ public class Util {
 	 *            String to check
 	 * @return true if looks like an integer
 	 */
-	public static boolean looksLikeInt(String s) {
+	static boolean looksLikeInt(String s) {
 		return Expression.looksLikeInt(s, s.length(), 0, true);
 	}
 
@@ -1804,7 +1820,7 @@ public class Util {
 	 *            The number to format into a string
 	 * @return String rep
 	 */
-	public static String printDouble(double number) {
+	static String printDouble(double number) {
 		String s = FormatCmd.toString(number, precision, 10);
 		int length = s.length();
 		for (int i = 0; i < length; i++) {

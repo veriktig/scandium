@@ -1,4 +1,20 @@
 /*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * ProcCmd.java
  *
  * Copyright (c) 1997 Cornell University.
@@ -46,7 +62,6 @@ public class ProcCmd implements Command {
 	public void cmdProc(Interp interp, TclObject[] objv) throws TclException {
 		Procedure proc;
 		String fullName;
-		Command cmd;
 		FindCommandNamespaceResult result;
 
 		if (objv.length != 4) {
@@ -102,15 +117,13 @@ public class ProcCmd implements Command {
 	public static FindCommandNamespaceResult FindCommandNamespace(
 			Interp interp, String fullName) throws TclException {
 		String procName;
-		Namespace ns, altNs, cxtNs;
+		Namespace ns;
 		StringBuffer ds;
 
 		Namespace.GetNamespaceForQualNameResult gnfqnr = interp.getnfqnResult;
 		Namespace.getNamespaceForQualName(interp, fullName, null, 0, gnfqnr);
 
 		ns = gnfqnr.ns;
-		altNs = gnfqnr.altNs;
-		cxtNs = gnfqnr.actualCxt;
 		procName = gnfqnr.simpleName;
 
 		if (ns == null) {

@@ -1,6 +1,31 @@
+/*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package tcl.lang;
 
 import java.io.IOException;
+
+import org.jline.reader.Completer;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.impl.LineReaderImpl;
+import org.jline.reader.impl.completer.FileNameCompleter;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
+
+import com.veriktig.systemcompiler.api.state.InternalState;
 
 import tcl.lang.channel.Channel;
 import tcl.lang.channel.FileEvent;
@@ -39,6 +64,17 @@ public class ConsoleThread extends Thread {
 	 *  set to true to get extra debug output
 	 */
 	private static final boolean debug = false;
+	
+	/**
+	 * Prompt
+	 */
+	private static final String PROMPT = new String("sc_shell> ");
+	private static boolean line_editing = true;
+
+    /**
+     * User buffer length
+     */
+    private static final int BUFFER_SIZE = 256;
 
 	/**
 	 * Create a ConsoleThread.
@@ -47,7 +83,7 @@ public class ConsoleThread extends Thread {
 	{
 		setName("ConsoleThread");
 		interp = i;
-		sbuf = new StringBuffer(100);
+		sbuf = new StringBuffer(BUFFER_SIZE);
 
 		out = TclIO.getStdChannel(StdChannel.STDOUT);
 		err = TclIO.getStdChannel(StdChannel.STDERR);
@@ -64,13 +100,35 @@ public class ConsoleThread extends Thread {
 	 * them at "appropriate" times!
 	 */
 	public synchronized void run() {
+		LineReaderImpl lineReader = null;
+		
 		if (debug) {
 			System.out.println("entered ConsoleThread run() method");
 		}
 
 		FileEvent.setStdinUsedForCommandInput(true);
-		if (isInteractive()) put(out, "% ");
-
+		//if (isInteractive()) put(out, PROMPT);
+		
+		try {
+			Terminal terminal = TerminalBuilder.terminal();
+			lineReader = (LineReaderImpl) LineReaderBuilder.builder()
+				.terminal(terminal)
+				.build();
+			// XXX TODO Change to USER HOME
+			lineReader.setVariable("history-file", "/tmp/history.txt");
+			Completer completer = new FileNameCompleter();
+			lineReader.setCompleter(completer);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		/* TODO ???
+		 * */
+		//processCommand(new String("echo"));
+		//InternalState.clearUserVariables();
+		
+		
 		while (true) {
 			// Loop forever to collect user inputs in a StringBuffer.
 			// When we have a complete command, then execute it and print
@@ -79,159 +137,176 @@ public class ConsoleThread extends Thread {
 			// The loop is broken under two conditions: (1) when EOF is
 			// received inside getLine(). (2) when the "exit" command is
 			// executed in the script.
-
-			getLine();
+			String lle = InternalState.getAppVariable("sh_enable_line_editing");
+			if (lle.equals("true")) {
+				line_editing = true;
+			} else {
+				line_editing = false;
+			}
+			
+			if (line_editing && (lineReader != null)) {
+				String jlbuf = lineReader.readLine(PROMPT);
+				sbuf.insert(0, jlbuf);
+			} else {	
+				getLine();
+			}				
 
 			final String command = sbuf.toString();
+			processCommand(command);
+		}
+	}
 
-			if (debug) {
-				System.out.println("got line from console");
-				System.out.println("\"" + command + "\"");
-			}
+	private synchronized void processCommand(String command) {
+		if (debug) {
+			System.out.println("got line from console");
+			System.out.println("\"" + command + "\"");
+		}
 
-			// When interacting with the interpreter, one must
-			// be careful to never call a Tcl method from
-			// outside of the event loop thread. If we did
-			// something like just call interp.eval() it
-			// could crash the whole process because two
-			// threads might write over each other.
+		// When interacting with the interpreter, one must
+		// be careful to never call a Tcl method from
+		// outside of the event loop thread. If we did
+		// something like just call interp.eval() it
+		// could crash the whole process because two
+		// threads might write over each other.
 
-			// The only safe way to interact with Tcl is
-			// to create an event and add it to the thread
-			// safe event queue.
+		// The only safe way to interact with Tcl is
+		// to create an event and add it to the thread
+		// safe event queue.
 
-			TclEvent event = new TclEvent() {
-				public int processEvent(int flags) {
+		TclEvent event = new TclEvent() {
+			public int processEvent(int flags) {
 
-					// See if the command is a complete Tcl command
+				// See if the command is a complete Tcl command
 
-					if (Interp.commandComplete(command)) {
-						if (debug) {
-							System.out.println("line was a complete command");
-						}
+				if (Interp.commandComplete(command)) {
+					if (debug) {
+						System.out.println("line was a complete command");
+					}
 
-						boolean eval_exception = true;
-						TclObject commandObj = TclString.newInstance(command);
+					boolean eval_exception = true;
+					TclObject commandObj = TclString.newInstance(command);
 
-						try {
-							commandObj.preserve();
-							interp.recordAndEval(commandObj, 0);
-							eval_exception = false;
-						} catch (TclException e) {
-							if (debug) {
-								System.out
-										.println("eval returned exceptional condition");
-							}
-							
-							// copy result into errorInfo by using addErrorInfo
-							interp.addErrorInfo("");
-
-							int code = e.getCompletionCode();
-							switch (code) {
-							case TCL.ERROR:
-								// This really sucks. The getMessage() call on
-								// a TclException will not always return a msg.
-								// See TclException for super() problem.
-								putLine(err, interp.getResult().toString());
-								break;
-							case TCL.BREAK:
-								putLine(err,
-										"invoked \"break\" outside of a loop");
-								break;
-							case TCL.CONTINUE:
-								putLine(err,
-										"invoked \"continue\" outside of a loop");
-								break;
-							default:
-								putLine(err, "command returned bad code: "
-										+ code);
-							}
-						} finally {
-							commandObj.release();
-						}
-
-						if (!eval_exception) {
-							if (debug) {
-								System.out.println("eval returned normally");
-							}
-
-							String evalResult = interp.getResult().toString();
-
-							if (debug) {
-								System.out.println("eval result was \""
-										+ evalResult + "\"");
-							}
-
-							if (evalResult.length() > 0  && isInteractive()) {
-								putLine(out, evalResult);
-							}
-						}
-
-						// Empty out the incoming command buffer
-						sbuf.setLength(0);
-
-						// See if the user set a custom shell prompt for the
-						// next command
-
-						TclObject prompt;
-
-						try {
-							prompt = interp.getVar("tcl_prompt1",
-									TCL.GLOBAL_ONLY);
-						} catch (TclException e) {
-							prompt = null;
-						}
-						if (prompt != null) {
-							try {
-								interp.eval(prompt.toString(), TCL.EVAL_GLOBAL);
-							} catch (TclException e) {
-								if (isInteractive()) put(out, "% ");
-							}
-						} else {
-							if (isInteractive()) put(out, "% ");
-						}
-
-						return 1;
-					} else { // Interp.commandComplete() returned false
-
+					try {
+						commandObj.preserve();
+						interp.recordAndEval(commandObj, 0);
+						eval_exception = false;
+					} catch (TclException e) {
 						if (debug) {
 							System.out
-									.println("line was not a complete command");
+									.println("eval returned exceptional condition");
 						}
+							
+						// copy result into errorInfo by using addErrorInfo
+						interp.addErrorInfo("");
 
-						// We don't have a complete command yet. Print out a
-						// level 2
-						// prompt message and wait for further inputs.
-
-						TclObject prompt;
-
-						try {
-							prompt = interp.getVar("tcl_prompt2",
-									TCL.GLOBAL_ONLY);
-						} catch (TclException e) {
-							prompt = null;
+						int code = e.getCompletionCode();
+						if (debug) {
+							System.out.println(code + " " + interp.getResult().toString());
 						}
-						if (prompt != null) {
-							try {
-								interp.eval(prompt.toString(), TCL.EVAL_GLOBAL);
-							} catch (TclException e) {
-								if (isInteractive()) put(out, "");
-							}
-						} else {
-							if (isInteractive()) put(out, "");
+						switch (code) {
+						case TCL.ERROR:
+							// This really sucks. The getMessage() call on
+							// a TclException will not always return a msg.
+							// See TclException for super() problem.
+							putLine(err, interp.getResult().toString());
+							break;
+						case TCL.BREAK:
+							putLine(err,
+									"invoked \"break\" outside of a loop");
+							break;
+						case TCL.CONTINUE:
+							putLine(err,
+									"invoked \"continue\" outside of a loop");
+							break;
+						default:
+							putLine(err, "command returned bad code: "
+									+ code);
 						}
-
-						return 1;
+					} finally {
+						commandObj.release();
 					}
-				} // end processEvent method
-			}; // end TclEvent innerclass
 
-			// Add the event to the thread safe event queue
-			interp.getNotifier().queueEvent(event, TCL.QUEUE_TAIL);
+					if (!eval_exception) {
+						if (debug) {
+							System.out.println("eval returned normally");
+						}
 
-			// Tell this thread to wait until the event has been processed.
-			event.sync();
-		}
+						String evalResult = interp.getResult().toString();
+
+						if (debug) {
+							System.out.println("eval result was \""
+									+ evalResult + "\"");
+						}
+
+						if (evalResult.length() > 0  && isInteractive()) {
+							putLine(out, evalResult);
+						}
+					}
+
+					// Empty out the incoming command buffer
+					sbuf.setLength(0);
+
+					// See if the user set a custom shell prompt for the
+					// next command
+
+					TclObject prompt;
+
+					try {
+						prompt = interp.getVar("tcl_prompt1",
+								TCL.GLOBAL_ONLY);
+					} catch (TclException e) {
+						prompt = null;
+					}
+					if (prompt != null) {
+						try {
+							interp.eval(prompt.toString(), TCL.EVAL_GLOBAL);
+						} catch (TclException e) {
+							if (isInteractive() && !line_editing) put(out, PROMPT);
+						}
+					} else {
+						if (isInteractive() && !line_editing) put(out, PROMPT);
+					}
+
+					return 1;
+				} else { // Interp.commandComplete() returned false
+
+					if (debug) {
+						System.out
+								.println("line was not a complete command");
+					}
+
+					// We don't have a complete command yet. Print out a
+					// level 2
+					// prompt message and wait for further inputs.
+
+					TclObject prompt;
+
+					try {
+						prompt = interp.getVar("tcl_prompt2",
+								TCL.GLOBAL_ONLY);
+					} catch (TclException e) {
+						prompt = null;
+					}
+					if (prompt != null) {
+						try {
+							interp.eval(prompt.toString(), TCL.EVAL_GLOBAL);
+						} catch (TclException e) {
+							if (isInteractive() && !line_editing) put(out, "");
+						}
+					} else {
+						if (isInteractive() && !line_editing) put(out, "");
+					}
+
+					return 1;
+				}
+			} // end processEvent method
+		}; // end TclEvent innerclass
+
+		// Add the event to the thread safe event queue
+		interp.getNotifier().queueEvent(event, TCL.QUEUE_TAIL);
+
+		// Tell this thread to wait until the event has been processed.
+		event.sync();
 	}
 
 	/**
@@ -258,7 +333,7 @@ public class ConsoleThread extends Thread {
 				 * of ManagedSystemInStream, which replaces the original System.in with itself.
 				 */
 				int i = System.in.read();
-				
+
 				if (i == -1) {
 					if (sbuf.length() == 0) {
 						System.exit(0);
@@ -297,6 +372,7 @@ public class ConsoleThread extends Thread {
 						c = c2;
 					}
 				}
+
 			} catch (IOException e) {
 				// IOException shouldn't happen when reading from
 				// System.in. The only exceptional state is the EOF event,

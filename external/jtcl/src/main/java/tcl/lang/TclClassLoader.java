@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package tcl.lang;
 
 import java.io.File;
@@ -47,7 +63,7 @@ public class TclClassLoader extends ClassLoader {
 	 * different caches since the same class name could be loaded from two
 	 * different locations in different interps.
 	 */
-	private HashMap class_cache = new HashMap();
+	private HashMap<String, Class<?>> class_cache = new HashMap<String, Class<?>>();
 
 	/**
 	 * Each instance can have a list of additional paths to search. This needs
@@ -253,7 +269,7 @@ public class TclClassLoader extends ClassLoader {
 	 * 
 	 * @see java.lang.ClassLoader#loadClass(java.lang.String)
 	 */
-	public Class loadClass(String className) throws ClassNotFoundException, PackageNameException {
+	public Class<?> loadClass(String className) throws ClassNotFoundException, PackageNameException {
 		return loadClass(className, true);
 	}
 
@@ -268,16 +284,16 @@ public class TclClassLoader extends ClassLoader {
 	 * 
 	 * @see java.lang.ClassLoader#loadClass(java.lang.String, boolean)
 	 */
-	protected Class loadClass(String className, boolean resolveIt) throws ClassNotFoundException, PackageNameException,
+	protected Class<?> loadClass(String className, boolean resolveIt) throws ClassNotFoundException, PackageNameException,
 			SecurityException {
-		Class result; // The Class that is loaded.
+		Class<?> result; // The Class that is loaded.
 		byte[] classData = null; // The bytes that compose the class file.
 
 		final boolean printStack = false;
 
 		// Check our local cache of classes
 
-		result = (Class) class_cache.get(className);
+		result = class_cache.get(className);
 		if (result != null) {
 			return result;
 
@@ -317,15 +333,17 @@ public class TclClassLoader extends ClassLoader {
 		// Protect against attempts to load a class that contains the 'java'
 		// or 'tcl.lang' prefix, but is not in the corresponding file structure.
 
-		// FIXME: why??
+		// FIXME: why?? Felix dies, but Equinox seems OK?
 
 		if (!className.startsWith("tcl.lang.library.")) {
 			if ((className.startsWith("java.")) || (className.startsWith("tcl.lang."))) {
 				throw new PackageNameException("Java loader failed to load the class "
 						+ "and the TclClassLoader is not permitted to "
-						+ "load classes in the tcl or java package at runtime, " + "check your CLASSPATH.", className);
+						+ "load classes in the tcl or java package at runtime, "
+						+ "check your CLASSPATH.", className);
 			}
 		}
+
 
 		// Try to load class from -classpath if it exists
 
@@ -518,8 +536,8 @@ public class TclClassLoader extends ClassLoader {
 	 *            Binary data of the class structure.
 	 * @return A Class object or null if it could not be defined.
 	 */
-	public Class defineClass(String className, byte[] classData) {
-		Class result = null; // The Class object defined by classData.
+	public Class<?> defineClass(String className, byte[] classData) {
+		Class<?> result = null; // The Class object defined by classData.
 
 		// Create a class from the array of bytes
 
@@ -628,7 +646,7 @@ public class TclClassLoader extends ClassLoader {
 							// Set this so we can get the full name of the
 							// file we loaded the class from later
 							lastSearchedClassFile = file.toString();
-
+							fi.close();
 							return (classData);
 						}
 					}
@@ -781,7 +799,7 @@ public class TclClassLoader extends ClassLoader {
 	private int getEntrySize(String jarName, String className) throws IOException {
 		ZipEntry entry; // A file contained in the jar file.
 		ZipFile zip; // Used to get the enum of ZipEntries.
-		Enumeration e; // List of the contents of the jar file.
+		Enumeration<?> e; // List of the contents of the jar file.
 
 		zip = new ZipFile(jarName);
 		e = zip.entries();
@@ -796,6 +814,7 @@ public class TclClassLoader extends ClassLoader {
 				return ((int) entry.getSize());
 			}
 		}
+		zip.close();
 		return (-1);
 	}
 
@@ -860,7 +879,6 @@ public class TclClassLoader extends ClassLoader {
 		URL url = null;
 		String curDir; // The directory to search for the class file.
 		File file; // The class file.
-		int total; // Total number of bytes read from the stream
 
 		// Search through the list of "paths" for the resName.
 		// ".jar" or ".zip" files found in the path will also be
@@ -887,7 +905,7 @@ public class TclClassLoader extends ClassLoader {
 
 						file = new File(curDir, resName);
 						if (file.exists()) {
-							url = file.toURL();
+							url = file.toURI().toURL();
 							return (url);
 						}
 					}
@@ -972,9 +990,6 @@ public class TclClassLoader extends ClassLoader {
 	private URL extractURLFromJar(String jarName, String resName) throws IOException {
 		ZipInputStream zin; // The jar file input stream.
 		ZipEntry entry; // A file contained in the jar file.
-		URL result;
-		int size; // Uncompressed size of the class file.
-		int total; // Number of bytes read from class file.
 
 		zin = new ZipInputStream(new FileInputStream(jarName));
 
@@ -986,7 +1001,7 @@ public class TclClassLoader extends ClassLoader {
 
 				if (resName.equals(entry.getName())) {
 					File file = new File(jarName);
-					URL fileURL = file.toURL();
+					URL fileURL = file.toURI().toURL();
 					URL jarURL = new URL("jar:" + fileURL.toString() + "!/" + resName);
 					return jarURL;
 				}
