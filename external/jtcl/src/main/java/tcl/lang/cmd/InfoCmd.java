@@ -799,7 +799,7 @@ public class InfoCmd implements Command {
 
 			// add the top level class
 			execLine += interp.getShellClassName();
-			//execLine += "com.veriktig.systemcompiler.launcher.Main";
+			//execLine += "com.veriktig.scandium.launcher.Main";
 
 			// add shell parameters
 			execLine += (isWindows ? " %*" : " ${1+\"$@\"}") + eol;
@@ -908,7 +908,7 @@ public class InfoCmd implements Command {
 		}
 
 		// add the top level class
-		execLine += "com.veriktig.systemcompiler.launcher.Main";
+		execLine += "com.veriktig.scandium.launcher.Main";
 
 		// add shell parameters
 		execLine += (isWindows ? " %*" : " ${1+\"$@\"}") + eol;

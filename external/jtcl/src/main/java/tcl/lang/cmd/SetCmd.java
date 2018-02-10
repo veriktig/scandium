@@ -32,7 +32,7 @@
 
 package tcl.lang.cmd;
 
-import com.veriktig.systemcompiler.api.state.InternalState;
+import com.veriktig.scandium.api.state.InternalState;
 
 import tcl.lang.Command;
 import tcl.lang.Interp;

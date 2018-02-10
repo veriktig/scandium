@@ -25,7 +25,7 @@ import org.jline.reader.impl.completer.FileNameCompleter;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
-import com.veriktig.systemcompiler.api.state.InternalState;
+import com.veriktig.scandium.api.state.InternalState;
 
 import tcl.lang.channel.Channel;
 import tcl.lang.channel.FileEvent;
