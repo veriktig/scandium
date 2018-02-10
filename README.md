@@ -1,2 +1,2 @@
-![Alt text](./ScLogo128.png)
-# Scandium - Tcl meets microservices
+![Alt text](./assets/ScLogo128.png)
+# Project Scandium - Tcl meets microservices

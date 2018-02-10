@@ -16,20 +16,20 @@
 
 package tcl.lang.cmd;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-
 import tcl.lang.TclCmdTest;
 
-public class ErrorCmdTest  extends TclCmdTest {
-	public void testCmd() throws Exception {	LinkedList<String> expectedFailureList = new LinkedList<String>(Arrays.asList( new String[] {
-			// difference in 'invoked from within' and 'while executing'
-            /*
-            "error-1.3",
-            "error-2.6" 
-            */
-        }));
-		String resName = "/tcl/lang/cmd/error.test";
-		tclTestResource(resName, expectedFailureList);
+public class MiscBasicCmdTest extends TclCmdTest {
+	/*
+	public void testBasic() throws Exception {
+		
+		LinkedList<String> expectedFailureList = new LinkedList<String>(Arrays.asList( new String[] {
+		
+				"basic-24.3" // 'info commands' result in a different order; this is not a bug
+		
+			}));
+		
+		String resName = "/tcl/lang/cmd/basic.test";
+		tclTestResource(TCLTEST_NAMEOFEXECUTABLE, resName, expectedFailureList);
 	}
+	*/
 }

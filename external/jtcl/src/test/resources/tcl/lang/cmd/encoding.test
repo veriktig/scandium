@@ -1,3 +1,18 @@
+#
+#  Copyright 2018 Veriktig, Inc.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
 # This file contains a collection of tests for tclEncoding.c
 # Sourcing this file into Tcl runs the tests and generates output for
 # errors.  No output means no errors were found.
@@ -409,7 +424,7 @@ test encoding-24.2 {EscapeFreeProc on open channels} -constraints {
 } -body {
     viewable [exec [interpreter] $file]
 } -cleanup {
-    removeFile iso2022.tcl
+   removeFile iso2022.tcl
 } -result "ab\x1b\$B8C\x1b\$(DD%\x1b(Bg (ab\\u001b\$B8C\\u001b\$(DD%\\u001b(Bg)"
 
 test encoding-24.3 {EscapeFreeProc on open channels} {stdio} {
@@ -529,31 +544,375 @@ foreach enc {cp932 euc-jp iso2022-jp} {
 # shiftjis == cp932 for jisx0208.
 file copy -force cp932.chars shiftjis.chars
 
-set NUM 0
-foreach from {cp932 shiftjis euc-jp iso2022-jp} {
-    foreach to {cp932 shiftjis euc-jp iso2022-jp} {
-	test encoding-25.[incr NUM] "jisx0208 $from => $to" {
-	    cd [temporaryDirectory]
-	    set f [open $from.chars]
-	    fconfigure $f -encoding $from
-	    set out [open $from.$to.out w]
-	    fconfigure $out -encoding $to
-	    puts -nonewline $out [read $f]
-	    close $out
-	    close $f
-	    
-	    # then compare $to.chars <=> $from.to.out as binary.
-	    set fa [open $to.chars]
-	    fconfigure $fa -encoding binary
-	    set fb [open $from.$to.out]
-	    fconfigure $fb -encoding binary
-	    set diff [channel-diff $fa $fb]
-	    close $fa
-	    close $fb
-	    
-	    # Difference should be empty.
-	    set diff
-	} {}
+#set NUM 0
+#foreach from {cp932 shiftjis euc-jp iso2022-jp} {
+#    foreach to {cp932 shiftjis euc-jp iso2022-jp} {
+#        test encoding-25.[incr NUM] "jisx0208 $from => $to" {
+#            cd [temporaryDirectory]
+#            set f [open $from.chars]
+#            fconfigure $f -encoding $from
+#            set out [open $from.$to.out w]
+#            fconfigure $out -encoding $to
+#            puts -nonewline $out [read $f]
+#            close $out
+#            close $f
+#            
+            # then compare $to.chars <=> $from.to.out as binary.
+#            set fa [open $to.chars]
+#            fconfigure $fa -encoding binary
+#            set fb [open $from.$to.out]
+#            fconfigure $fb -encoding binary
+#            set diff [channel-diff $fa $fb]
+#            close $fa
+#            close $fb
+            
+            # Difference should be empty.
+#            set diff
+#        } {}
+#    }
+#}
+
+set from cp932
+set to cp932
+test encoding-25.1 "jisx0208 $from => $to" {
+    cd [temporaryDirectory]
+    set f [open $from.chars]
+    fconfigure $f -encoding $from
+    set out [open $from.$to.out w]
+    fconfigure $out -encoding $to
+    puts -nonewline $out [read $f]
+    close $out
+    close $f
+            
+   # then compare $to.chars <=> $from.to.out as binary.
+    set fa [open $to.chars]
+    fconfigure $fa -encoding binary
+    set fb [open $from.$to.out]
+    fconfigure $fb -encoding binary
+    set diff [channel-diff $fa $fb]
+    close $fa
+    close $fb
+            
+    # Difference should be empty.
+    set diff
+} {}
+
+set to shiftjis
+test encoding-25.2 "jisx0208 $from => $to" {knownBug} {
+    cd [temporaryDirectory]
+    set f [open $from.chars]
+    fconfigure $f -encoding $from
+    set out [open $from.$to.out w]
+    fconfigure $out -encoding $to
+    puts -nonewline $out [read $f]
+    close $out
+    close $f
+            
+   # then compare $to.chars <=> $from.to.out as binary.
+    set fa [open $to.chars]
+    fconfigure $fa -encoding binary
+    set fb [open $from.$to.out]
+    fconfigure $fb -encoding binary
+    set diff [channel-diff $fa $fb]
+    close $fa
+    close $fb
+            
+    # Difference should be empty.
+    set diff
+} {}
+
+set to euc-jp
+test encoding-25.3 "jisx0208 $from => $to" {knownBug} {
+    cd [temporaryDirectory]
+    set f [open $from.chars]
+    fconfigure $f -encoding $from
+    set out [open $from.$to.out w]
+    fconfigure $out -encoding $to
+    puts -nonewline $out [read $f]
+    close $out
+    close $f
+            
+   # then compare $to.chars <=> $from.to.out as binary.
+    set fa [open $to.chars]
+    fconfigure $fa -encoding binary
+    set fb [open $from.$to.out]
+    fconfigure $fb -encoding binary
+    set diff [channel-diff $fa $fb]
+    close $fa
+    close $fb
+            
+    # Difference should be empty.
+    set diff
+} {}
+
+set to iso2022-jp
+test encoding-25.4 "jisx0208 $from => $to" {knownBug} {
+    cd [temporaryDirectory]
+    set f [open $from.chars]
+    fconfigure $f -encoding $from
+    set out [open $from.$to.out w]
+    fconfigure $out -encoding $to
+    puts -nonewline $out [read $f]
+    close $out
+    close $f
+            
+   # then compare $to.chars <=> $from.to.out as binary.
+    set fa [open $to.chars]
+    fconfigure $fa -encoding binary
+    set fb [open $from.$to.out]
+    fconfigure $fb -encoding binary
+    set diff [channel-diff $fa $fb]
+    close $fa
+    close $fb
+            
+    # Difference should be empty.
+    set diff
+} {}
+
+set from shiftjis
+set to cp932
+test encoding-25.5 "jisx0208 $from => $to" {knownBug} {
+    cd [temporaryDirectory]
+    set f [open $from.chars]
+    fconfigure $f -encoding $from
+    set out [open $from.$to.out w]
+    fconfigure $out -encoding $to
+    puts -nonewline $out [read $f]
+    close $out
+    close $f
+            
+   # then compare $to.chars <=> $from.to.out as binary.
+    set fa [open $to.chars]
+    fconfigure $fa -encoding binary
+    set fb [open $from.$to.out]
+    fconfigure $fb -encoding binary
+    set diff [channel-diff $fa $fb]
+    close $fa
+    close $fb
+            
+    # Difference should be empty.
+    set diff
+} {}
+
+set to shiftjis
+test encoding-25.6 "jisx0208 $from => $to" {
+    cd [temporaryDirectory]
+    set f [open $from.chars]
+    fconfigure $f -encoding $from
+    set out [open $from.$to.out w]
+    fconfigure $out -encoding $to
+    puts -nonewline $out [read $f]
+    close $out
+    close $f
+            
+   # then compare $to.chars <=> $from.to.out as binary.
+    set fa [open $to.chars]
+    fconfigure $fa -encoding binary
+    set fb [open $from.$to.out]
+    fconfigure $fb -encoding binary
+    set diff [channel-diff $fa $fb]
+    close $fa
+    close $fb
+            
+    # Difference should be empty.
+    set diff
+} {}
+
+set to euc-jp
+test encoding-25.7 "jisx0208 $from => $to" {
+    cd [temporaryDirectory]
+    set f [open $from.chars]
+    fconfigure $f -encoding $from
+    set out [open $from.$to.out w]
+    fconfigure $out -encoding $to
+    puts -nonewline $out [read $f]
+    close $out
+    close $f
+            
+   # then compare $to.chars <=> $from.to.out as binary.
+    set fa [open $to.chars]
+    fconfigure $fa -encoding binary
+    set fb [open $from.$to.out]
+    fconfigure $fb -encoding binary
+    set diff [channel-diff $fa $fb]
+    close $fa
+    close $fb
+            
+    # Difference should be empty.
+    set diff
+} {}
+
+set to iso2022-jp
+test encoding-25.8 "jisx0208 $from => $to" {
+    cd [temporaryDirectory]
+    set f [open $from.chars]
+    fconfigure $f -encoding $from
+    set out [open $from.$to.out w]
+    fconfigure $out -encoding $to
+    puts -nonewline $out [read $f]
+    close $out
+    close $f
+            
+   # then compare $to.chars <=> $from.to.out as binary.
+    set fa [open $to.chars]
+    fconfigure $fa -encoding binary
+    set fb [open $from.$to.out]
+    fconfigure $fb -encoding binary
+    set diff [channel-diff $fa $fb]
+    close $fa
+    close $fb
+            
+    # Difference should be empty.
+    set diff
+} {}
+
+set from euc-jp
+set to cp932
+test encoding-25.9 "jisx0208 $from => $to" {knownBug} {
+    cd [temporaryDirectory]
+    set f [open $from.chars]
+    fconfigure $f -encoding $from
+    set out [open $from.$to.out w]
+    fconfigure $out -encoding $to
+    puts -nonewline $out [read $f]
+    close $out
+    close $f
+            
+   # then compare $to.chars <=> $from.to.out as binary.
+    set fa [open $to.chars]
+    fconfigure $fa -encoding binary
+    set fb [open $from.$to.out]
+    fconfigure $fb -encoding binary
+    set diff [channel-diff $fa $fb]
+    close $fa
+    close $fb
+            
+    # Difference should be empty.
+    set diff
+} {}
+
+set to shiftjis
+test encoding-25.10 "jisx0208 $from => $to" {
+    cd [temporaryDirectory]
+    set f [open $from.chars]
+    fconfigure $f -encoding $from
+    set out [open $from.$to.out w]
+    fconfigure $out -encoding $to
+    puts -nonewline $out [read $f]
+    close $out
+    close $f
+            
+   # then compare $to.chars <=> $from.to.out as binary.
+    set fa [open $to.chars]
+    fconfigure $fa -encoding binary
+    set fb [open $from.$to.out]
+    fconfigure $fb -encoding binary
+    set diff [channel-diff $fa $fb]
+    close $fa
+    close $fb
+            
+    # Difference should be empty.
+    set diff
+} {}
+
+set to euc-jp
+test encoding-25.11 "jisx0208 $from => $to" {
+    cd [temporaryDirectory]
+    set f [open $from.chars]
+    fconfigure $f -encoding $from
+    set out [open $from.$to.out w]
+    fconfigure $out -encoding $to
+    puts -nonewline $out [read $f]
+    close $out
+    close $f
+            
+   # then compare $to.chars <=> $from.to.out as binary.
+    set fa [open $to.chars]
+    fconfigure $fa -encoding binary
+    set fb [open $from.$to.out]
+    fconfigure $fb -encoding binary
+    set diff [channel-diff $fa $fb]
+    close $fa
+    close $fb
+            
+    # Difference should be empty.
+    set diff
+} {}
+
+set to iso2022-jp
+test encoding-25.12 "jisx0208 $from => $to" {
+    cd [temporaryDirectory]
+    set f [open $from.chars]
+    fconfigure $f -encoding $from
+    set out [open $from.$to.out w]
+    fconfigure $out -encoding $to
+    puts -nonewline $out [read $f]
+    close $out
+    close $f
+            
+   # then compare $to.chars <=> $from.to.out as binary.
+    set fa [open $to.chars]
+    fconfigure $fa -encoding binary
+    set fb [open $from.$to.out]
+    fconfigure $fb -encoding binary
+    set diff [channel-diff $fa $fb]
+    close $fa
+    close $fb
+            
+    # Difference should be empty.
+    set diff
+} {}
+
+set from iso2022-jp
+set to cp932
+test encoding-25.13 "jisx0208 $from => $to" {knownBug} {
+    cd [temporaryDirectory]
+    set f [open $from.chars]
+    fconfigure $f -encoding $from
+    set out [open $from.$to.out w]
+    fconfigure $out -encoding $to
+    puts -nonewline $out [read $f]
+    close $out
+    close $f
+            
+   # then compare $to.chars <=> $from.to.out as binary.
+    set fa [open $to.chars]
+    fconfigure $fa -encoding binary
+    set fb [open $from.$to.out]
+    fconfigure $fb -encoding binary
+    set diff [channel-diff $fa $fb]
+    close $fa
+    close $fb
+            
+    # Difference should be empty.
+    set diff
+} {}
+
+set NUM 14
+foreach from {iso2022-jp} {
+    foreach to {shiftjis euc-jp iso2022-jp} {
+        test encoding-25.[incr NUM] "jisx0208 $from => $to" {
+            cd [temporaryDirectory]
+            set f [open $from.chars]
+            fconfigure $f -encoding $from
+            set out [open $from.$to.out w]
+            fconfigure $out -encoding $to
+            puts -nonewline $out [read $f]
+            close $out
+            close $f
+            
+            # then compare $to.chars <=> $from.to.out as binary.
+            set fa [open $to.chars]
+            fconfigure $fa -encoding binary
+            set fb [open $from.$to.out]
+            fconfigure $fb -encoding binary
+            set diff [channel-diff $fa $fb]
+            close $fa
+            close $fb
+            
+            # Difference should be empty.
+            set diff
+        } {}
     }
 }
 

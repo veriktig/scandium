@@ -1,4 +1,18 @@
-# -*- tcl -*-
+#
+#  Copyright 2018 Veriktig, Inc.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
 # Functionality covered: operation of all IO commands, and all procedures
 # defined in generic/tclIO.c.
 #
@@ -44,6 +58,7 @@ testConstraint largefileSupport 1
 # Java forces stdin to be line buffered.  Some tests
 # require an exec'd tcl shell that doesn't line buffer
 # stdin for pipes.  We'll use tclsh.
+# Not in OSGi
 proc alt_interpreter {} {
     set p [auto_execok tclsh]
     if {[string length $p] > 0} {
@@ -491,7 +506,7 @@ test io-6.6 {Tcl_GetsObj: loop test} {
     close $f
     set x
 } [list 256 $a]
-test io-6.7 {Tcl_GetsObj: error in input} {stdio openpipe} {
+test io-6.7 {Tcl_GetsObj: error in input} {knownBug stdio openpipe} {
     # if (FilterInputBytes(chanPtr, &gs) != 0)
 
     #set f [open "|[list [interpreter] $path(cat)]" w+]
@@ -1070,7 +1085,7 @@ test io-6.55 {Tcl_GetsObj: overconverted} {
     close $f
     set x
 } [list 8 "there\u4e00ok" 11 "\u4e01more bytes" 4 "here"]
-test io-6.56 {Tcl_GetsObj: incomplete lines should disable file events} {stdio openpipe fileevent} {
+test io-6.56 {Tcl_GetsObj: incomplete lines should disable file events} {knownBug stdio openpipe fileevent} {
     update
     #set f [open "|[list [interpreter] $path(cat)]" w+]
     # See comment in alt_interpreter definition
@@ -1132,7 +1147,7 @@ test io-7.3 {FilterInputBytes: split up character at EOF} {testchannel} {
     close $f
     set x
 } [list 15 "1234567890123\uff10\uff11" 18 0 1 -1 ""]
-test io-7.4 {FilterInputBytes: recover from split up character} {stdio openpipe fileevent} {
+test io-7.4 {FilterInputBytes: recover from split up character} {knownBug stdio openpipe fileevent} {
     #set f [open "|[list [interpreter] $path(cat)]" w+]
     # See comment in alt_interpreter definition
     set f [open "|[list [alt_interpreter] $path(cat)]" w+]
@@ -5123,7 +5138,7 @@ test io-39.16 {Tcl_SetChannelOption: -encoding, errors} {
     close $f
     set result
 } {1 {unknown encoding "foobar"}}
-test io-39.17 {Tcl_SetChannelOption: -encoding, clearing CHANNEL_NEED_MORE_DATA} {stdio openpipe fileevent} {
+test io-39.17 {Tcl_SetChannelOption: -encoding, clearing CHANNEL_NEED_MORE_DATA} {knownBug stdio openpipe fileevent} {
     #set f [open "|[list [interpreter] $path(cat)]" r+]
     set f [open "|[list [alt_interpreter] $path(cat)]" r+]
     fconfigure $f -encoding binary

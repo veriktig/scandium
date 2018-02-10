@@ -1,3 +1,18 @@
+/*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package tcl.lang.cmd;
 
@@ -8,9 +23,7 @@ import tcl.lang.TclCmdTest;
 
 public class UpvarCmdTest extends TclCmdTest {
 	public void testCmd() throws Exception {
-		LinkedList expectedFailureList = new LinkedList(Arrays.asList( new String[] {
-				// these test pass, except order of list returned by "array names" if different
-				"upvar-3.5", "upvar-3.6"
+		LinkedList<String> expectedFailureList = new LinkedList<String>(Arrays.asList( new String[] {
 			}));
 		
 		String resName = "/tcl/lang/cmd/upvar.test";

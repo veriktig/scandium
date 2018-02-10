@@ -1,5 +1,19 @@
-# Commands covered:  incr
 #
+#  Copyright 2018 Veriktig, Inc.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+# Commands covered:  incr
 # This file contains a collection of tests for one or more of the Tcl
 # built-in commands.  Sourcing this file into Tcl runs the tests and
 # generates output for errors.  No output means no errors were found.
@@ -181,7 +195,7 @@ test incr-1.19 {TclCompileIncrCmd: increment given, but erroneous} {
 } {wrong # args: should be "set varName ?newValue?"
     while executing
 "set"
-    while executing
+    invoked from within
 "incr i [set]"}
 test incr-1.20 {TclCompileIncrCmd: increment given, in quotes} {
     set i 25
@@ -223,7 +237,7 @@ test incr-1.27 {TclCompileIncrCmd: runtime error, bad variable name} {
 } {1 {wrong # args: should be "set varName ?newValue?"} {wrong # args: should be "set varName ?newValue?"
     while executing
 "set"
-    while executing
+    invoked from within
 "incr [set]"}}
 test incr-1.28 {TclCompileIncrCmd: runtime error, readonly variable} {
     proc readonly args {error "variable is read-only"}
@@ -434,7 +448,7 @@ test incr-2.19 {incr command (not compiled): increment given, but erroneous} {
 } {wrong # args: should be "set varName ?newValue?"
     while executing
 "set"
-    while executing
+    invoked from within
 "$z i [set]"}
 test incr-2.20 {incr command (not compiled): increment given, in quotes} {
     set z incr
@@ -484,7 +498,7 @@ test incr-2.27 {incr command (not compiled): runtime error, bad variable name} {
 } {1 {wrong # args: should be "set varName ?newValue?"} {wrong # args: should be "set varName ?newValue?"
     while executing
 "set"
-    while executing
+    invoked from within
 "$z [set]"}}
 test incr-2.28 {incr command (not compiled): runtime error, readonly variable} {
     set z incr

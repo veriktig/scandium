@@ -1,5 +1,19 @@
-# The file tests the tclCmdAH.c file.
 #
+#  Copyright 2018 Veriktig, Inc.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+# The file tests the tclCmdAH.c file.
 # This file contains a collection of tests for one or more of the Tcl
 # built-in commands.  Sourcing this file into Tcl runs the tests and
 # generates output for errors.  No output means no errors were found.
@@ -1183,7 +1197,7 @@ set file [makeFile "data" touch.me]
 test cmdAH-20.1 {Tcl_FileObjCmd: atime} {
     list [catch {file atime a b c} msg] $msg
 } {1 {wrong # args: should be "file atime name ?time?"}}
-test cmdAH-20.2 {Tcl_FileObjCmd: atime} {
+test cmdAH-20.2 {Tcl_FileObjCmd: atime} {knownBug} {
     catch {unset stat}
     file stat $gorpfile stat
     list [expr {[file mtime $gorpfile] == $stat(mtime)}] \
@@ -1354,7 +1368,7 @@ test cmdAH-24.2 {Tcl_FileObjCmd: mtime} {
 	"file:($fileOld=>$fileNew) clock:($clockOld=>$clockNew)"
     }
 } {1}
-test cmdAH-24.3 {Tcl_FileObjCmd: mtime} {
+test cmdAH-24.3 {Tcl_FileObjCmd: mtime} {knownBug} {
     catch {unset stat}
     file stat $gorpfile stat
     list [expr {[file mtime $gorpfile] == $stat(mtime)}] \
@@ -1528,12 +1542,12 @@ test cmdAH-28.1 {Tcl_FileObjCmd: stat} {
 test cmdAH-28.2 {Tcl_FileObjCmd: stat} {
     list [catch {file stat _bogus_ a b} msg] $msg $errorCode
 } {1 {wrong # args: should be "file stat name varName"} NONE}
-test cmdAH-28.3 {Tcl_FileObjCmd: stat} {
+test cmdAH-28.3 {Tcl_FileObjCmd: stat} {knownBug} {
     catch {unset stat}
     file stat $gorpfile stat
     lsort [array names stat]
 } {atime ctime dev gid ino mode mtime nlink size type uid}
-test cmdAH-28.4 {Tcl_FileObjCmd: stat} {
+test cmdAH-28.4 {Tcl_FileObjCmd: stat} {knownBug} {
     catch {unset stat}
     file stat $gorpfile stat
     list $stat(nlink) $stat(size) $stat(type)
@@ -1552,7 +1566,7 @@ test cmdAH-28.7 {Tcl_FileObjCmd: stat} {
     set x 44
     list [catch {file stat $gorpfile x} msg] $msg $errorCode
 } {1 {can't set "x(dev)": variable isn't array} NONE}
-test cmdAH-28.8 {Tcl_FileObjCmd: stat} {
+test cmdAH-28.8 {Tcl_FileObjCmd: stat} {knownBug} {
     # Sign extension of purported unsigned short to int.
 
     set filename [makeFile "" foo.text]
@@ -1595,7 +1609,7 @@ test cmdAH-28.11 {Tcl_FileObjCmd: stat} {winOnly nonPortable} {
     cd $old
     expr {$stat(dev) == 2}
 } 0
-test cmdAH-28.12 {Tcl_FileObjCmd: stat} {
+test cmdAH-28.12 {Tcl_FileObjCmd: stat} {knownBug} {
     # stat(mode) with S_IFREG flag was returned as a negative number
     # if mode_t was a short instead of an unsigned short.
 
@@ -1641,7 +1655,7 @@ if {[string equal $tcl_platform(platform) "windows"]} {
 } else {
     tcltest::testConstraint linkDirectory 1
 }
-test cmdAH-29.4.1 {Tcl_FileObjCmd: type} {linkDirectory} {
+test cmdAH-29.4.1 {Tcl_FileObjCmd: type} {knownBug linkDirectory} {
     set tempdir [makeDirectory temp]
     set linkdir [file join [temporaryDirectory] link.dir]
     file link -symbolic $linkdir $tempdir

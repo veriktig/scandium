@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package tcl.lang;
 
 import java.io.BufferedReader;
@@ -6,17 +22,27 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import org.osgi.framework.Bundle;
+
+import com.veriktig.scandium.internal.test.state.TestInternalState;
+
 import junit.framework.TestCase;
+
+import tcl.lang.Interp;
+import tcl.lang.NonInteractiveShell;
+import tcl.lang.TclException;
 
 public class TclCmdTest extends TestCase {
 
 	public static final String EXEC_NAME = "jtcltest.bat";
-	public static final Class SHELL_CLASS = tcl.lang.NonInteractiveShell.class;
+	public static final Class<NonInteractiveShell> SHELL_CLASS = tcl.lang.NonInteractiveShell.class;
 	public static final String SHELL = SHELL_CLASS.getName();
 	public static final String TCLTEST_VERBOSE = "tcltest::configure -verbose {start pass body error skip}";
 	public static String TCLTEST_NAMEOFEXECUTABLE = "MISSING";
@@ -78,7 +104,7 @@ public class TclCmdTest extends TestCase {
 	 * @throws Exception
 	 */
 	public void tclTestResource(String resName) throws Exception {
-		tclTestResource(resName, Collections.EMPTY_LIST);
+		tclTestResource(resName, Collections.emptyList());
 	}
 	
 	/**
@@ -89,7 +115,7 @@ public class TclCmdTest extends TestCase {
 	 * @param expectedFailureCases The list of expected test case failures (List of String).
 	 * @throws Exception
 	 */
-	public void tclTestResource(String resName, List expectedFailureCases) throws Exception {
+	public void tclTestResource(String resName, List<String> expectedFailureCases) throws Exception {
 		tclTestResource(null, resName, expectedFailureCases);
 	}
 	
@@ -103,8 +129,8 @@ public class TclCmdTest extends TestCase {
 	 * @param expectedFailureCases The list of expected test case failures (List of String).
 	 * @throws Exception
 	 */
-	public void tclTestResource(String preTestCode, String resName, List expectedFailureCases) throws Exception {
-		List unexpectedFailures = new LinkedList();
+	public void tclTestResource(String preTestCode, String resName, List<String> expectedFailureCases) throws Exception {
+		List<String> unexpectedFailures = new LinkedList<String>();
 		
 		// set up temporary file for tcltest output
 		File tmpFile = File.createTempFile("tclCmdTest", ".txt");
@@ -144,9 +170,20 @@ public class TclCmdTest extends TestCase {
 			}
 		}
 		
+		String testResource = null;
 		// run the test case 
 		try {
-			interp.evalResource(resName);
+			Collection<String> tests = TestInternalState.getTestResources();
+			for (String test : tests) {
+				if (test.contains(resName)) {
+					testResource = test;
+					break;
+				}
+			}
+			Bundle bundle = TestInternalState.getBundle();
+			URL url = bundle.getResource(testResource);
+			
+			interp.evalResource(resName, url.openStream());
 		} catch (TclException e) {
 			String errStr = interp.getVar("errorInfo", 0).toString()
 				+ "\nwhile running tcltest\ncontents of test output:\n"
@@ -159,7 +196,6 @@ public class TclCmdTest extends TestCase {
 			//tmpFile.delete();
 			throw new Exception(errStr, e);
 		}
-		
 				
 		// for failures that are expected, remove failed cases from expected list,
 		// and record any unexpected failed test cases.

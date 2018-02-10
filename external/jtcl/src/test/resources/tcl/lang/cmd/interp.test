@@ -1,5 +1,19 @@
-# This file tests the multiple interpreter facility of Tcl
 #
+#  Copyright 2018 Veriktig, Inc.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+# This file tests the multiple interpreter facility of Tcl
 # This file contains a collection of tests for one or more of the Tcl
 # built-in commands.  Sourcing this file into Tcl runs the tests and
 # generates output for errors.  No output means no errors were found.
@@ -22,7 +36,7 @@ if {[lsearch [namespace children] ::tcltest] == -1} {
 if {"$tcl_platform(platform)" == "macintosh"} {
     set hidden_cmds {beep cd echo encoding exit fconfigure file glob load ls open pwd socket source}
 } else {
-    set hidden_cmds {cd encoding exec exit fconfigure file glob load open pwd socket source}
+    set hidden_cmds {auto_execok auto_import auto_load auto_load_index auto_qualify cd encoding exec exit fconfigure file glob open pwd socket source}
 }
 
 foreach i [interp slaves] {
@@ -760,7 +774,7 @@ if {[info commands testinterpdelete] == ""} {
 	list [catch {a eval foo} msg] $msg
     } {1 {attempt to call eval in deleted interpreter}}
 }
-test interp-18.9 {eval in deleted interp, bug 495830} {knownBug} {
+test interp-18.9 {eval in deleted interp, bug 495830} {
     interp create tst
     interp alias tst suicide {} interp delete tst
     list [catch {tst eval {suicide; set a 5}} msg] $msg
@@ -2048,7 +2062,7 @@ test interp-26.3 {result code transmission : aliases} {
 } {-1 0 1 2 3 4 5}
 
 test interp-26.4 {result code transmission: invoke hidden direct--bug 1637} \
-	{knownBug} {
+    {
     # The known bug is that code 2 is returned, not the -code argument
     catch {interp delete a}
     interp create a
@@ -2712,7 +2726,7 @@ test interp-29.4.1 {recursion limit inheritance} {
     }]
    interp delete $i
    set r
-} 49
+} 48
 
 test interp-29.4.2 {recursion limit inheritance} {
     set i [interp create]
@@ -2726,7 +2740,7 @@ test interp-29.4.2 {recursion limit inheritance} {
     }]
    interp delete $i
    set r
-} 49
+} 48
 
 test interp-29.5.1 {does slave recursion limit affect master?} {
     set before [interp recursionlimit {}]

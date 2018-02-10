@@ -1,5 +1,19 @@
-# Commands covered:  if
 #
+#  Copyright 2018 Veriktig, Inc.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+# Commands covered:  if
 # This file contains a collection of tests for one or more of the Tcl
 # built-in commands.  Sourcing this file into Tcl runs the tests and
 # generates output for errors.  No output means no errors were found.
@@ -30,7 +44,7 @@ test if-1.3 {TclCompileIfCmd: error in if/elseif test} {
     list [catch {if {1+}} msg] $msg $errorInfo
 } {1 {syntax error in expression "1+": premature end of expression} {syntax error in expression "1+": premature end of expression
     ("if" test expression)
-    while executing
+    invoked from within
 "if {1+}"}}
 test if-1.4 {TclCompileIfCmd: if/elseif test in braces} {
     set a {}
@@ -70,7 +84,7 @@ test if-1.10 {TclCompileIfCmd: error in "then" body} {
     while executing
 "set"
     ("if" then script line 1)
-    while executing
+    invoked from within
 "if {$a!="xxx"} then {set}"}}
 test if-1.11 {TclCompileIfCmd: error in "then" body} {
     list [catch {if 2 then {[error "error in then clause"]}} msg] $msg
@@ -182,7 +196,7 @@ test if-2.4 {TclCompileIfCmd: error in expression after "elseif"} {
     list [catch {if 3>4 {set a 1} elseif {1>}} msg] $msg $errorInfo
 } {1 {syntax error in expression "1>": premature end of expression} {syntax error in expression "1>": premature end of expression
     ("if" test expression)
-    while executing
+    invoked from within
 "if 3>4 {set a 1} elseif {1>}"}}
 test if-2.5 {TclCompileIfCmd: test jumpFalse instruction replacement after long "elseif" body} {
     catch {unset i}
@@ -312,7 +326,7 @@ test if-3.4 {TclCompileIfCmd: error compiling body after "else"} {
     while executing
 "set"
     ("if" else script line 1)
-    while executing
+    invoked from within
 "if 2<1 {set a 1} else {set}"}
 test if-3.5 {TclCompileIfCmd: extra arguments after "else" argument} {
     set a {}
@@ -513,7 +527,8 @@ test if-5.3 {if cmd with computed command names: error in if/elseif test} {
     set z if
     list [catch {$z {1+}} msg] $msg $errorInfo
 } {1 {syntax error in expression "1+": premature end of expression} {syntax error in expression "1+": premature end of expression
-    while executing
+    ("if" test expression)
+    invoked from within
 "$z {1+}"}}
 test if-5.4 {if cmd with computed command names: if/elseif test in braces} {
     set z if
@@ -559,6 +574,7 @@ test if-5.10 {if cmd with computed command names: error in "then" body} {
 } {1 {wrong # args: should be "set varName ?newValue?"} {wrong # args: should be "set varName ?newValue?"
     while executing
 "set"
+    ("if" then script line 1)
     invoked from within
 "$z {$a!="xxx"} then {set}"}}
 test if-5.11 {if cmd with computed command names: error in "then" body} {
@@ -681,7 +697,8 @@ test if-6.4 {if cmd with computed command names: error in expression after "else
     set a {}
     list [catch {$z 3>4 {set a 1} elseif {1>}} msg] $msg $errorInfo
 } {1 {syntax error in expression "1>": premature end of expression} {syntax error in expression "1>": premature end of expression
-    while executing
+    ("if" test expression)
+    invoked from within
 "$z 3>4 {set a 1} elseif {1>}"}}
 test if-6.5 {if cmd with computed command names: test jumpFalse instruction replacement after long "elseif" body} {
     set z if
@@ -815,6 +832,7 @@ test if-7.4 {if cmd with computed command names: error compiling body after "els
 } {wrong # args: should be "set varName ?newValue?"
     while executing
 "set"
+    ("if" else script line 1)
     invoked from within
 "$z 2<1 {set a 1} else {set}"}
 test if-7.5 {if cmd with computed command names: extra arguments after "else" argument} {
@@ -1108,7 +1126,7 @@ test if-10.6 {double invocation of variable traces} {
     list [catch {if "$iftracevar + 20" {}} a] $a \
         [catch {if "$iftracevar + 20" {}} b] $b \
         [unset iftracevar iftracecounter]
-} {1 {syntax error in expression "1 oops 10 + 20": extra tokens at end of expression} 0 {} {}}
+} {1 {syntax error in expression "1 oops 10 + 20": variable references require preceding $} 0 {} {}}
 
 # cleanup
 ::tcltest::cleanupTests

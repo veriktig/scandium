@@ -21,15 +21,13 @@ import java.util.LinkedList;
 
 import tcl.lang.TclCmdTest;
 
-public class ErrorCmdTest  extends TclCmdTest {
-	public void testCmd() throws Exception {	LinkedList<String> expectedFailureList = new LinkedList<String>(Arrays.asList( new String[] {
-			// difference in 'invoked from within' and 'while executing'
-            /*
-            "error-1.3",
-            "error-2.6" 
-            */
-        }));
-		String resName = "/tcl/lang/cmd/error.test";
-		tclTestResource(resName, expectedFailureList);
+public class MiscIoCmdTest extends TclCmdTest {
+	public void testIo() throws Exception {
+		LinkedList<String> expectedFailureList = new LinkedList<String>(Arrays.asList( new String[] {
+				//  previously failing test now seems to be working in Java 1.6.0_31
+				//  "io-14.9" // test requires that we can exec a new tcltest environment
+			}));
+		String resName = "/tcl/lang/cmd/io.test";
+		tclTestResource(TCLTEST_NAMEOFEXECUTABLE, resName, expectedFailureList);
 	}
 }

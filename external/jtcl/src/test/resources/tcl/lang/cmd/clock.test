@@ -1,5 +1,19 @@
-# Commands covered:  clock
 #
+#  Copyright 2018 Veriktig, Inc.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+# Commands covered:  clock
 # This file contains a collection of tests for one or more of the Tcl
 # built-in commands.  Sourcing this file into Tcl runs the tests and
 # generates output for errors.  No output means no errors were found.
@@ -277,7 +291,7 @@ test clock-4.26 {clock scan, DST for days} {
 test clock-4.27 {clock scan, DST for days} {
     clock scan "yesterday" -base [clock scan "19991101 00:00:00"]
 } [clock scan "19991031 00:00:00"]
-test clock-4.28 {clock scan, day} knownBug {
+test clock-4.28 {clock scan, day} {
     clock format [clock scan "Monday" -gmt true -base 946627200] \
 	    -format {%b %d, %Y %H:%M:%S} -gmt true
 } "Jan 03, 2000 00:00:00"

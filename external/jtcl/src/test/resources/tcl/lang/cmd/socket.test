@@ -1,3 +1,18 @@
+#
+#  Copyright 2018 Veriktig, Inc.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+  
 # Commands tested in this file: socket.
 #
 # This file contains a collection of tests for one or more of the Tcl
@@ -536,7 +551,7 @@ test socket-2.9 {socket conflict} {socket stdio} {
     lappend x $msg
     close $s
     set x
-} {1 {couldn't open socket: address already in use}}
+} {1 {couldn't open socket: address already in use (bind failed)}}
 test socket-2.10 {close on accept, accepted socket lives} {socket} {
     set done 0
     set timer [after 20000 "set done timed_out"]
@@ -619,7 +634,7 @@ test socket-3.1 {socket conflict} {socket stdio} {
     puts $f bye
     close $f
     set x
-} {1 {couldn't open socket: address already in use}}
+} {1 {couldn't open socket: address already in use (bind failed)}}
 test socket-3.2 {server with several clients} {socket stdio} {
     file delete $path(script)
     set f [open $path(script) w]
@@ -680,7 +695,7 @@ test socket-3.2 {server with several clients} {socket stdio} {
     set x
 } {ready done}
 
-test socket-4.1 {server with several clients} {socket stdio} {
+test socket-4.1 {server with several clients} {knownBug socket stdio} {
     file delete $path(script)
     set f [open $path(script) w]
     puts $f {
@@ -780,7 +795,7 @@ test socket-5.3 {byte order problems, socket numbers, htons} \
     set x
 } {couldn't open socket: not owner}
 
-test socket-6.1 {accept callback error} {socket stdio} {
+test socket-6.1 {accept callback error} {knownBug socket stdio} {
     file delete $path(script)
     set f [open $path(script) w]
     puts $f {

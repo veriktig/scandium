@@ -1,5 +1,19 @@
-# Commands covered:  apply
 #
+#  Copyright 2018 Veriktig, Inc.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+# Commands covered:  apply
 # This file contains a collection of tests for one or more of the Tcl
 # built-in commands.  Sourcing this file into Tcl runs the tests and
 # generates output for errors.  No output means no errors were found.
@@ -121,26 +135,27 @@ test apply-4.4 {error in arguments to lambda expression} {
     interp alias {} foo {} ::apply $lambda a
     set res [catch {foo b} msg]
     list $res $msg [rename foo {}]
-} {1 {wrong # args: should be "foo"} {}}
-test apply-4.5 {error in arguments to lambda expression} {
+} {1 {wrong # args: should be "foo x"} {}}
+# XXX namespace ensemble not supported
+test apply-4.5 {error in arguments to lambda expression} {knownBug} {
     set lambda [list x {set x 1}]
     namespace eval a {
-	namespace ensemble create -command ::bar -map {id {::a::const foo}}
-	proc const val { return $val }
-	proc alias {object slot = command args} {
-	    set map [namespace ensemble configure $object -map]
-	    dict set map $slot [linsert $args 0 $command]
-	    namespace ensemble configure $object -map $map
-	}
-	proc method {object name params body} {
-	    set params [linsert $params 0 self]
-	    alias $object $name = ::apply [list $params $body] $object
-	}
-	method ::bar boo x {return "[expr {$x*$x}] - $self"}
-    }
-    set res [catch {bar boo} msg]
-    list $res $msg [namespace delete ::a]
-} {1 {wrong # args: should be "bar boo x"} {}}
+  	namespace ensemble create -command ::bar -map {id {::a::const foo}}
+  	proc const val { return $val }
+  	proc alias {object slot = command args} {
+  	    set map [namespace ensemble configure $object -map]
+  	    dict set map $slot [linsert $args 0 $command]
+  	    namespace ensemble configure $object -map $map
+  	}
+  	proc method {object name params body} {
+  	    set params [linsert $params 0 self]
+  	    alias $object $name = ::apply [list $params $body] $object
+  	}
+  	method ::bar boo x {return "[expr {$x*$x}] - $self"}
+     }
+     set res [catch {bar boo} msg]
+     list $res $msg [namespace delete ::a]
+ } {1 {wrong # args: should be "bar boo x"} {}}
 
 test apply-5.1 {runtime error in lambda expression} {
     set lambda [list {} {error foo}]
@@ -149,7 +164,7 @@ test apply-5.1 {runtime error in lambda expression} {
 } {1 {foo
     while executing
 "error foo"
-    (lambda term "{} {error foo}" line 1)
+    (lambda term "apply {{} {error foo}}" line 1)
     invoked from within
 "apply $lambda"}}
 
@@ -233,10 +248,10 @@ test apply-8.1 {args treatment} {
 } {{args {1 2 3}}}
 test apply-8.2 {args treatment} {
     apply [list {x args} $applyBody] 1 2
-} {{x 1} {args 2}}
+} {{args 2} {x 1}}
 test apply-8.3 {args treatment} {
     apply [list {x args} $applyBody] 1 2 3
-} {{x 1} {args {2 3}}}
+} {{args {2 3}} {x 1}}
 test apply-8.4 {default values} {
     apply [list {{x 1} {y 2}} $applyBody]
 } {{x 1} {y 2}}
@@ -254,10 +269,10 @@ test apply-8.8 {default values} {
 } {{x 1} {y 3}}
 test apply-8.9 {default values} {
     apply [list {x {y 2} args} $applyBody] 1
-} {{x 1} {y 2} {args {}}}
+} {{args {}} {x 1} {y 2}}
 test apply-8.10 {default values} {
     apply [list {x {y 2} args} $applyBody] 1 3
-} {{x 1} {y 3} {args {}}}
+} {{args {}} {x 1} {y 3}}
 
 # Tests for leaks
 
