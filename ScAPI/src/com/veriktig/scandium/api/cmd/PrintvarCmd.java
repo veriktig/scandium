@@ -88,47 +88,47 @@ public class PrintvarCmd implements Command {
         if (cmd.hasOption("null")) {
             String pattern = cmd.getOptionValue("null");
             if (cmd.hasOption("application")) {
-            	for (Map.Entry<String, String> var : app_variables.entrySet()) {
-            		if (SCAPI.match(var.getKey(), pattern)) {
-            			System.out.println(var.getKey() + " = " + var.getValue());
-            		}
-            	}
+                for (Map.Entry<String, String> var : app_variables.entrySet()) {
+                    if (SCAPI.match(var.getKey(), pattern)) {
+                        System.out.println(var.getKey() + " = " + var.getValue());
+                    }
+                }
             } else if (cmd.hasOption("user_defined")) {
-            	for (Map.Entry<String, String> var : user_variables.entrySet()) {
-            		if (SCAPI.match(var.getKey(), pattern)) {
-            			System.out.println(var.getKey() + " = " + var.getValue());
-            		}
-            	}
+                for (Map.Entry<String, String> var : user_variables.entrySet()) {
+                    if (SCAPI.match(var.getKey(), pattern)) {
+                        System.out.println(var.getKey() + " = " + var.getValue());
+                    }
+                }
             } else {
-            	for (Map.Entry<String, String> var : app_variables.entrySet()) {
-            		if (SCAPI.match(var.getKey(), pattern)) {
-            			System.out.println(var.getKey() + " = " + var.getValue());
-            		}
-            	}
-            	for (Map.Entry<String, String> var : user_variables.entrySet()) {
-            		if (SCAPI.match(var.getKey(), pattern)) {
-            			System.out.println(var.getKey() + " = " + var.getValue());
-            		}
-            	}
+                for (Map.Entry<String, String> var : app_variables.entrySet()) {
+                    if (SCAPI.match(var.getKey(), pattern)) {
+                        System.out.println(var.getKey() + " = " + var.getValue());
+                    }
+                }
+                for (Map.Entry<String, String> var : user_variables.entrySet()) {
+                    if (SCAPI.match(var.getKey(), pattern)) {
+                        System.out.println(var.getKey() + " = " + var.getValue());
+                    }
+                }
             }
             System.out.flush();
         } else {
             // No arguments, print all variables
             if (cmd.hasOption("application")) {
-            	for (Map.Entry<String, String> var : app_variables.entrySet()) {
-            		System.out.println(var.getKey() + " = " + var.getValue());
-            	}
+                for (Map.Entry<String, String> var : app_variables.entrySet()) {
+                    System.out.println(var.getKey() + " = " + var.getValue());
+                }
             } else if (cmd.hasOption("user_defined")) {
-            	for (Map.Entry<String, String> var : user_variables.entrySet()) {
-            		System.out.println(var.getKey() + " = " + var.getValue());
-            	}
+                for (Map.Entry<String, String> var : user_variables.entrySet()) {
+                    System.out.println(var.getKey() + " = " + var.getValue());
+                }
             } else {
-            	for (Map.Entry<String, String> var : app_variables.entrySet()) {
-            		System.out.println(var.getKey() + " = " + var.getValue());
-            	}
-            	for (Map.Entry<String, String> var : user_variables.entrySet()) {
-            		System.out.println(var.getKey() + " = " + var.getValue());
-            	}
+                for (Map.Entry<String, String> var : app_variables.entrySet()) {
+                    System.out.println(var.getKey() + " = " + var.getValue());
+                }
+                for (Map.Entry<String, String> var : user_variables.entrySet()) {
+                    System.out.println(var.getKey() + " = " + var.getValue());
+                }
             }
             System.out.flush();
         }

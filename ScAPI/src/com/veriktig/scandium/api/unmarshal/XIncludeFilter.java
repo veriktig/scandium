@@ -33,22 +33,22 @@ import tcl.lang.Interp;
 import java.util.ArrayList;
 
 class XIncludeFilter {
-	private Interp interp;
+    private Interp interp;
     private PrintWriter out;
     private int recursion_level;
     private List<Linenumber> linenumbers = new ArrayList<Linenumber>();
 
     public XIncludeFilter(File fdout) throws ScException {
-    	this.interp = InternalState.getInterp();
+        this.interp = InternalState.getInterp();
         try {
             if (fdout.exists()) {
                 fdout.delete();
             }
             out = new PrintWriter(new BufferedWriter(new FileWriter(fdout)));
         } catch (IOException ioe) {
-          	Object[] objs = new Object[1];
-        	objs[0] = fdout.getAbsolutePath();
-        	throw new ScException("API-1010", objs);
+              Object[] objs = new Object[1];
+            objs[0] = fdout.getAbsolutePath();
+            throw new ScException("API-1010", objs);
         }
         recursion_level = 0;
     }
@@ -63,9 +63,9 @@ class XIncludeFilter {
         BufferedReader include = null;
 
         if (!fd.exists()) {
-          	Object[] objs = new Object[1];
-        	objs[0] = fd.getAbsolutePath();
-        	throw new ScException("API-1003", objs);
+              Object[] objs = new Object[1];
+            objs[0] = fd.getAbsolutePath();
+            throw new ScException("API-1003", objs);
         }
 
         recursion_level++;
@@ -132,29 +132,29 @@ class XIncludeFilter {
             }
             in.close();
         } catch (IOException e) {
-          	Object[] objs = new Object[1];
-        	objs[0] = fd.getAbsolutePath();
-        	throw new ScException("API-1003", objs);
+              Object[] objs = new Object[1];
+            objs[0] = fd.getAbsolutePath();
+            throw new ScException("API-1003", objs);
         }
         finally {
-        	if (in != null) {
-        		try {
-					in.close();
-				} catch (IOException e) {
-		          	Object[] objs = new Object[1];
-		        	objs[0] = fd.getAbsolutePath();
-					throw new ScException("API-1011", objs);
-				}
-        	}
-        	if (include != null) {
-        		try {
-					include.close();
-				} catch (IOException e) {
-		          	Object[] objs = new Object[1];
-		        	objs[0] = filename_r;
-					throw new ScException("API-1011", objs);
-				}
-        	}
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                      Object[] objs = new Object[1];
+                    objs[0] = fd.getAbsolutePath();
+                    throw new ScException("API-1011", objs);
+                }
+            }
+            if (include != null) {
+                try {
+                    include.close();
+                } catch (IOException e) {
+                      Object[] objs = new Object[1];
+                    objs[0] = filename_r;
+                    throw new ScException("API-1011", objs);
+                }
+            }
         }
         recursion_level--;
         return (linenumbers);

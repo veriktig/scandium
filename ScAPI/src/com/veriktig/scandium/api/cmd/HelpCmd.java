@@ -75,15 +75,15 @@ public class HelpCmd implements Command {
         String[] command_list = cmd.getOptionValues("null");
         List<String> commands = SCAPI.expandLists(command_list);
         
-    	boolean foundHelp = false;
+        boolean foundHelp = false;
         for (String ss : commands) {
             String help = InternalState.getHelp(ss);
             if (help != null) {
-            	System.out.println(ss + ": " + help);
-            	foundHelp = true;
+                System.out.println(ss + ": " + help);
+                foundHelp = true;
             } else {
-            	System.out.println(ss + ": Unknown command.");
-            	continue;
+                System.out.println(ss + ": Unknown command.");
+                continue;
             }
         }
         

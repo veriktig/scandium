@@ -24,16 +24,16 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.wiring.BundleWiring;
 
 abstract public class HelpFinder {
-	protected final static String HELP_FILE = "Help";
+    protected final static String HELP_FILE = "Help";
 
     public static ResourceBundle findHelp(Bundle bundle, String base_name) {
-    	Locale currentLocale = Locale.getDefault();
-		BundleWiring bundleWiring = bundle.adapt(BundleWiring.class);
-		ClassLoader cl = bundleWiring.getClassLoader();
-		String bundleName = new String(base_name + ".help." + HELP_FILE);
-		ResourceBundle.Control rbc = ResourceBundle.Control.getControl(Control.FORMAT_CLASS);
+        Locale currentLocale = Locale.getDefault();
+        BundleWiring bundleWiring = bundle.adapt(BundleWiring.class);
+        ClassLoader cl = bundleWiring.getClassLoader();
+        String bundleName = new String(base_name + ".help." + HELP_FILE);
+        ResourceBundle.Control rbc = ResourceBundle.Control.getControl(Control.FORMAT_CLASS);
         ResourceBundle rb = ResourceBundle.getBundle(bundleName, currentLocale, cl, rbc);
         return rb;
-	}
-	
+    }
+    
 }

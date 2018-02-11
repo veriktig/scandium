@@ -87,14 +87,14 @@ public class ScHelpFormatter extends HelpFormatter
 
         if (!option.getOpt().equals(SCAPI.NULL_OPTION))
         {
-        	if (option.getOpt() != null)
-        	{
-        		buff.append("-").append(option.getOpt());
-        	}
-        	else 
-        	{
-        		buff.append("--").append(option.getLongOpt());
-        	}
+            if (option.getOpt() != null)
+            {
+                buff.append("-").append(option.getOpt());
+            }
+            else 
+            {
+                buff.append("--").append(option.getLongOpt());
+            }
         }
         
         // if the Option has a value and a non blank argname
@@ -151,7 +151,7 @@ public class ScHelpFormatter extends HelpFormatter
 
             if (option.getOpt().equals(SCAPI.NULL_OPTION))
             {
-            	optBuf.append(lpad);
+                optBuf.append(lpad);
             } 
             else if (option.getOpt() == null)
             {

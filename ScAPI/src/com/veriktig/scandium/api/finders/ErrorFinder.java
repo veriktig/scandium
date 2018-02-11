@@ -24,16 +24,16 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.wiring.BundleWiring;
 
 abstract public class ErrorFinder {
-	protected final static String ERROR_FILE = "Errors";
+    protected final static String ERROR_FILE = "Errors";
 
     public static ResourceBundle findErrors(Bundle bundle, String base_name) {
-    	Locale currentLocale = Locale.getDefault();
-		BundleWiring bundleWiring = bundle.adapt(BundleWiring.class);
-		ClassLoader cl = bundleWiring.getClassLoader();
-		String bundleName = new String(base_name + ".errors." + ERROR_FILE);
-		ResourceBundle.Control rbc = ResourceBundle.Control.getControl(Control.FORMAT_CLASS);
+        Locale currentLocale = Locale.getDefault();
+        BundleWiring bundleWiring = bundle.adapt(BundleWiring.class);
+        ClassLoader cl = bundleWiring.getClassLoader();
+        String bundleName = new String(base_name + ".errors." + ERROR_FILE);
+        ResourceBundle.Control rbc = ResourceBundle.Control.getControl(Control.FORMAT_CLASS);
         ResourceBundle rb = ResourceBundle.getBundle(bundleName, currentLocale, cl, rbc);
         return rb;
-	}
-	
+    }
+    
 }

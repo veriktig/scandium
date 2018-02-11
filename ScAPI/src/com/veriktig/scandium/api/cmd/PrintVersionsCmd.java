@@ -37,15 +37,15 @@ public class PrintVersionsCmd implements Command {
     public void cmdProc(Interp interp, TclObject[] argv) throws ScException {
 // START AUTOMATICALLY GENERATED SECTION
 // END AUTOMATICALLY GENERATED SECTION
-    	Map<String, String> result = new LinkedHashMap<String, String>();
-    	Map<String, String> bundle_versions = InternalState.getBundleVersions();
-    	
+        Map<String, String> result = new LinkedHashMap<String, String>();
+        Map<String, String> bundle_versions = InternalState.getBundleVersions();
+        
         bundle_versions.entrySet().stream()
         .sorted(Map.Entry.<String, String>comparingByKey())
         .forEachOrdered(x -> result.put(x.getKey(), x.getValue()));
 
-    	for (Map.Entry<String, String> entry : result.entrySet()) {
-    		System.out.println(entry.getKey() + " " + entry.getValue());
-    	}
+        for (Map.Entry<String, String> entry : result.entrySet()) {
+            System.out.println(entry.getKey() + " " + entry.getValue());
+        }
     }
 }

@@ -53,14 +53,14 @@ public class Linenumber {
             return (null);
         }
         finally {
-        	if (in != null) {
-        		try {
-					in.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-        	}
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
         }
         return (null);
     }

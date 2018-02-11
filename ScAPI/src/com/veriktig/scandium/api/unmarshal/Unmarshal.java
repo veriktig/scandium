@@ -33,7 +33,7 @@ import com.veriktig.scandium.api.errors.ScException;
 import tcl.lang.Interp;
 
 public class Unmarshal {
-	private Interp interp;
+    private Interp interp;
     private Schema schema;
     private File inputPath;
     private String gensrcPath;
@@ -43,7 +43,7 @@ public class Unmarshal {
 
     public Unmarshal(Interp interp, ClassLoader ldr, Schema schema, File inputPath, String gensrcPath, boolean bootstrap) {
         this.interp = interp;
-    	this.schema = schema;
+        this.schema = schema;
         this.inputPath = inputPath;
         this.gensrcPath = gensrcPath;
         this.bootstrap = bootstrap;
@@ -96,10 +96,10 @@ public class Unmarshal {
             //xif.cleanup(out);
             return element.getValue();
         } catch (Exception ee) {
-        	Object[] args = new Object[2];
-        	args[0] = inputPath.getAbsolutePath();
-        	args[1] = ee.getMessage();
+            Object[] args = new Object[2];
+            args[0] = inputPath.getAbsolutePath();
+            args[1] = ee.getMessage();
             throw new ScException("API-1002", args);
         }
-	}
+    }
 }

@@ -24,5 +24,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @Documented @interface TclCommandName {
-	String value();
+    String value();
 }

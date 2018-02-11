@@ -35,42 +35,42 @@ import com.veriktig.scandium.api.state.InternalState;
 /**
  * 
  */
-public class Activator implements BundleActivator {	
-	ServiceRegistration<?> apiServiceRegistration;
-	/*
-	 * (non-Javadoc)
-	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
-	 */
-	public void start(BundleContext context) throws Exception {
+public class Activator implements BundleActivator {    
+    ServiceRegistration<?> apiServiceRegistration;
+    /*
+     * (non-Javadoc)
+     * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
+     */
+    public void start(BundleContext context) throws Exception {
         // Get the base package name
         String BASE_PACKAGE = this.getClass().getPackage().getName();
 
-		// Find commands
-    	Collection<TclCommand> commands = CommandFinder.findCommands(context.getBundle(), BASE_PACKAGE);
-    	ClassLoader cl = context.getBundle().adapt(BundleWiring.class).getClassLoader();
+        // Find commands
+        Collection<TclCommand> commands = CommandFinder.findCommands(context.getBundle(), BASE_PACKAGE);
+        ClassLoader cl = context.getBundle().adapt(BundleWiring.class).getClassLoader();
 
-    	// Save bundle and classloader for use by commands
-    	//InternalState.setClassLoader(cl);
-		//InternalState.setBundle(context.getBundle());
-		
-		// Errors
-		ListResourceBundle erb = (ListResourceBundle) ErrorFinder.findErrors(context.getBundle(), BASE_PACKAGE);
-		InternalState.addErrors(erb);
-		
+        // Save bundle and classloader for use by commands
+        //InternalState.setClassLoader(cl);
+        //InternalState.setBundle(context.getBundle());
+        
+        // Errors
+        ListResourceBundle erb = (ListResourceBundle) ErrorFinder.findErrors(context.getBundle(), BASE_PACKAGE);
+        InternalState.addErrors(erb);
+        
         // Help
         ListResourceBundle rb = (ListResourceBundle) HelpFinder.findHelp(context.getBundle(), BASE_PACKAGE);
         InternalState.addHelp(rb);
-		
-		// Now start the service
-    	TclCommandService scc = new TclCommandService(cl, commands);
-		apiServiceRegistration = context.registerService(TclCommandProvider.class.getName(), scc, null);
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
-	 */
-	public void stop(BundleContext context) throws Exception {
-		apiServiceRegistration.unregister();
-	}
+        
+        // Now start the service
+        TclCommandService scc = new TclCommandService(cl, commands);
+        apiServiceRegistration = context.registerService(TclCommandProvider.class.getName(), scc, null);
+    }
+    
+    /*
+     * (non-Javadoc)
+     * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
+     */
+    public void stop(BundleContext context) throws Exception {
+        apiServiceRegistration.unregister();
+    }
 }

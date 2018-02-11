@@ -23,21 +23,21 @@ import com.veriktig.scandium.api.TclCommand;
 import com.veriktig.scandium.api.providers.TclCommandProvider;
 
 public class TclCommandService implements TclCommandProvider {
-	private Collection<TclCommand> commands = new HashSet<TclCommand>();
-	private ClassLoader cl;
-	
-	public TclCommandService(ClassLoader cl, Collection<TclCommand> cmds) {
-		this.cl = cl;
-		this.commands.addAll(cmds);
-	}
+    private Collection<TclCommand> commands = new HashSet<TclCommand>();
+    private ClassLoader cl;
+    
+    public TclCommandService(ClassLoader cl, Collection<TclCommand> cmds) {
+        this.cl = cl;
+        this.commands.addAll(cmds);
+    }
 
-	@Override
-	public Collection<TclCommand> getCommands() {
-    	return commands;	
-	}
+    @Override
+    public Collection<TclCommand> getCommands() {
+        return commands;    
+    }
 
-	@Override
-	public ClassLoader getClassLoader() {
-		return cl;
-	}
+    @Override
+    public ClassLoader getClassLoader() {
+        return cl;
+    }
 }

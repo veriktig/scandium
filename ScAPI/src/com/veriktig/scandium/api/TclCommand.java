@@ -19,29 +19,29 @@ package com.veriktig.scandium.api;
  * Convenience class for use with tcl.lang.Extension
  */
 public class TclCommand {
-	protected final String command;
-	protected final String clsName;
-	
-	/**
-	 * Default constructor. Requires a Tcl command name and the 
-	 * dot representation of the class that implements the command.
-	 * 
-	 * @param command
-	 * 		Tcl command name
-	 * @param clsName
-	 * 		Dot representation of class, e.g.
-	 * 		myservice.cmd.HelloWorldCmd	
-	 */
-	public TclCommand(String command, String clsName) {
-		this.command = command;
-		this.clsName = clsName;
-	}
-	
-	public String getName() {
-		return command;
-	}
-	
-	public String getImplClass() {
-		return clsName;
-	}
+    protected final String command;
+    protected final String clsName;
+    
+    /**
+     * Default constructor. Requires a Tcl command name and the 
+     * dot representation of the class that implements the command.
+     * 
+     * @param command
+     *         Tcl command name
+     * @param clsName
+     *         Dot representation of class, e.g.
+     *         myservice.cmd.HelloWorldCmd    
+     */
+    public TclCommand(String command, String clsName) {
+        this.command = command;
+        this.clsName = clsName;
+    }
+    
+    public String getName() {
+        return command;
+    }
+    
+    public String getImplClass() {
+        return clsName;
+    }
 }

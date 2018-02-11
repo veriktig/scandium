@@ -44,8 +44,8 @@ import com.veriktig.scandium.api.SCAPI;
  */
 public class ScParser implements CommandLineParser
 {
-	protected boolean first_time = true;
-	
+    protected boolean first_time = true;
+    
     /** The command-line instance. */
     protected CommandLine cmd;
     
@@ -378,15 +378,15 @@ public class ScParser implements CommandLineParser
 
         // Everything has an option, but NULL_OPTION is hidden
         if (first_time) {
-        	handleToken("-" + SCAPI.NULL_OPTION);
-        	handleToken(token);
-        	first_time = false;
+            handleToken("-" + SCAPI.NULL_OPTION);
+            handleToken(token);
+            first_time = false;
         } else {
-        	cmd.addArg(token);
-        	if (stopAtNonOption)
-        	{
-        		skipParsing = true;
-        	}
+            cmd.addArg(token);
+            if (stopAtNonOption)
+            {
+                skipParsing = true;
+            }
         }
     }
 

@@ -29,30 +29,30 @@ import com.veriktig.scandium.api.annotations.TclCommandName;
 abstract public class CommandFinder {
 
     public static Collection<TclCommand> findCommands(Bundle bundle, String base_name) {
-    	Collection<TclCommand> commands = new HashSet<TclCommand>();
-		BundleWiring bundleWiring = bundle.adapt(BundleWiring.class);
+        Collection<TclCommand> commands = new HashSet<TclCommand>();
+        BundleWiring bundleWiring = bundle.adapt(BundleWiring.class);
         String pkg = new String(base_name + ".cmd");
 
-		Collection<String> classes = bundleWiring.listResources(pkg.replace('.','/'), "*.class", BundleWiring.FINDENTRIES_RECURSE);
-		for (String klass : classes) {
-			try {
-				String klsName = klass.replaceAll(".class", "");
-				String clsName = klsName.replace('/', '.');
-				Class<?> commandClass = bundle.loadClass(clsName);
-				if (commandClass.isAnnotationPresent(TclCommandName.class)) {
-					Annotation annotation = commandClass.getAnnotation(TclCommandName.class);
-					TclCommandName name = (TclCommandName) annotation;
-					TclCommand command = new TclCommand(name.value(), clsName);
-					boolean success = commands.add(command);
-					if (!success) System.err.println("Unable to add command (" + name.value() + ")");
-				}
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+        Collection<String> classes = bundleWiring.listResources(pkg.replace('.','/'), "*.class", BundleWiring.FINDENTRIES_RECURSE);
+        for (String klass : classes) {
+            try {
+                String klsName = klass.replaceAll(".class", "");
+                String clsName = klsName.replace('/', '.');
+                Class<?> commandClass = bundle.loadClass(clsName);
+                if (commandClass.isAnnotationPresent(TclCommandName.class)) {
+                    Annotation annotation = commandClass.getAnnotation(TclCommandName.class);
+                    TclCommandName name = (TclCommandName) annotation;
+                    TclCommand command = new TclCommand(name.value(), clsName);
+                    boolean success = commands.add(command);
+                    if (!success) System.err.println("Unable to add command (" + name.value() + ")");
+                }
+            } catch (ClassNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
 
-		}
-		return commands;
-	}
-	
+        }
+        return commands;
+    }
+    
 }

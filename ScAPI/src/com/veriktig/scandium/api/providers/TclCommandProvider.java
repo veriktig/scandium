@@ -21,6 +21,6 @@ import java.util.Collection;
 import com.veriktig.scandium.api.TclCommand;
 
 public interface TclCommandProvider {
-	public ClassLoader getClassLoader();
-	public Collection<TclCommand> getCommands();
+    public ClassLoader getClassLoader();
+    public Collection<TclCommand> getCommands();
 }

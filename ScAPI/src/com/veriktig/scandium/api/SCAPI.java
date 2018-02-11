@@ -32,11 +32,11 @@ import tcl.lang.TclException;
  */
 public class SCAPI {
     // Return values from commands
-	public static final int ERROR = 0;
-	public static final int SUCCESS = 1;
-	
-	// Used for arguments without and option name in commands.
-	public static final String NULL_OPTION = "null";
+    public static final int ERROR = 0;
+    public static final int SUCCESS = 1;
+    
+    // Used for arguments without and option name in commands.
+    public static final String NULL_OPTION = "null";
 
     // Error types
     public static enum ErrorType {
@@ -61,14 +61,14 @@ public class SCAPI {
      * @return void
      */
     public static void setAppVariable(String key, String value) {
-    	try {
-    		Interp interp = InternalState.getInterp();
-    		InternalState.addAppVariable(key, value);
-			interp.setVar(key, value, TCL.GLOBAL_ONLY);
-		} catch (TclException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        try {
+            Interp interp = InternalState.getInterp();
+            InternalState.addAppVariable(key, value);
+            interp.setVar(key, value, TCL.GLOBAL_ONLY);
+        } catch (TclException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
     
     /**
@@ -80,25 +80,25 @@ public class SCAPI {
      * @return List<String> of the expanded args
      */
     public static List<String> expandLists(String[] args) {
-    	List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<String>();
 
-    	if (args == null) {
-    		return list;
-    	} else {
-    		if (args.length == 1) {
-    			Scanner ws = new Scanner(args[0]);
-    			while (ws.hasNext()) {
-    				list.add(ws.next());
-    			}
-    			ws.close();
-    			return list;
-    		} else {
-    			for (String ss : args) {
-    				list.add(ss);
-    			}
-    			return list;
-    		}
-    	}
+        if (args == null) {
+            return list;
+        } else {
+            if (args.length == 1) {
+                Scanner ws = new Scanner(args[0]);
+                while (ws.hasNext()) {
+                    list.add(ws.next());
+                }
+                ws.close();
+                return list;
+            } else {
+                for (String ss : args) {
+                    list.add(ss);
+                }
+                return list;
+            }
+        }
     }
     
     /**
@@ -109,6 +109,6 @@ public class SCAPI {
      * @return true if the text matches the pattern
      */
     public static boolean match(String text, String pattern) {
-    	return text.matches(pattern.replace("?", ".?").replace("*", ".*?"));
+        return text.matches(pattern.replace("?", ".?").replace("*", ".*?"));
     }
 }

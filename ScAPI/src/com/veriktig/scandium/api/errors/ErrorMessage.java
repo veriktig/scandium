@@ -23,19 +23,19 @@ import com.veriktig.scandium.api.SCAPI;
  *
  */
 public class ErrorMessage {
-	private SCAPI.ErrorType severity;
-	private String message;
-	
-	public ErrorMessage(SCAPI.ErrorType severity, String message) {
-		this.severity = severity;
-		this.message = message;
-	}
-	
-	public SCAPI.ErrorType getSeverity() {
-		return severity;
-	}
-	
-	public String getMessage() {
-		return message;
-	}
+    private SCAPI.ErrorType severity;
+    private String message;
+    
+    public ErrorMessage(SCAPI.ErrorType severity, String message) {
+        this.severity = severity;
+        this.message = message;
+    }
+    
+    public SCAPI.ErrorType getSeverity() {
+        return severity;
+    }
+    
+    public String getMessage() {
+        return message;
+    }
 }
