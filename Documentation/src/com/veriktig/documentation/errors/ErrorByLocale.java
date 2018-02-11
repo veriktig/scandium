@@ -29,21 +29,21 @@ import com.veriktig.documentation.errors.generated.Error;
  *
  */
 public class ErrorByLocale {
-	private String locale;
-	private List<SError> errors = new ArrayList<SError>();
-	
-	public ErrorByLocale(String prefix, String locale, List<Error> errors) {
-		this.locale = locale;
-		for (Error ee : errors) {
-			this.errors.add(new SError(prefix, ee));
-		}
-	}
-	
-	public String getLocale() {
-		return locale;
-	}
-	
-	public List<SError> getErrors() {
-		return errors;
-	}
+    private String locale;
+    private List<SError> errors = new ArrayList<SError>();
+    
+    public ErrorByLocale(String prefix, String locale, List<Error> errors) {
+        this.locale = locale;
+        for (Error ee : errors) {
+            this.errors.add(new SError(prefix, ee));
+        }
+    }
+    
+    public String getLocale() {
+        return locale;
+    }
+    
+    public List<SError> getErrors() {
+        return errors;
+    }
 }

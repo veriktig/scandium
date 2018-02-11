@@ -26,19 +26,19 @@ import com.veriktig.documentation.help.generated.HelpPackage;
  *
  */
 public class HelpByBundle {
-	private String bundle;
-	private HelpPackage help;
-	
-	public HelpByBundle(String bundle, HelpPackage help) {
-		this.bundle = bundle;
-		this.help = help;
-	}
-	
-	public String getBundle() {
-		return bundle;
-	}
-	
-	public HelpPackage getHelp() {
-		return help;
-	}
+    private String bundle;
+    private HelpPackage help;
+    
+    public HelpByBundle(String bundle, HelpPackage help) {
+        this.bundle = bundle;
+        this.help = help;
+    }
+    
+    public String getBundle() {
+        return bundle;
+    }
+    
+    public HelpPackage getHelp() {
+        return help;
+    }
 }

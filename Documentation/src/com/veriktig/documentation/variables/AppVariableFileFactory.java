@@ -34,14 +34,14 @@ import com.veriktig.documentation.Main;
 public class AppVariableFileFactory extends FileFactory {
     static Map<String, String> result = new LinkedHashMap<String, String>();
 
-	public static void make(Set<VariableByBundle> xmlSet) throws FactoryException {
+    public static void make(Set<VariableByBundle> xmlSet) throws FactoryException {
         boolean file_exists = true;
         Map<String, String> all_variables = new HashMap<String, String>();
 
-		for (VariableByBundle vb : xmlSet) {
-			Map<String, String> variables = vb.getVariables();
+        for (VariableByBundle vb : xmlSet) {
+            Map<String, String> variables = vb.getVariables();
             all_variables.putAll(variables); 
-		}
+        }
 
         // Sort by key
         all_variables.entrySet().stream()
@@ -61,29 +61,29 @@ public class AppVariableFileFactory extends FileFactory {
         } else {
             updateFile(fd);
         }
-	}
+    }
 
-	private static void buildTemplate(File fd) {
-		
-		FileFactory ff = new FileFactory();
-		ff.createOut(fd, false);
-		ff.printIndented(0, FileFactory.copyright);
-		ff.printIndented(0, "");
-		ff.printIndented(0, "package " + Main.uiPackage + ";");
-		ff.printIndented(0, "");
-		ff.printIndented(0, "import com.veriktig.scandium.api.SCAPI;");
-		ff.printIndented(0, "");
-		ff.printIndented(0, "public class AppVariables {");
-		ff.printIndented(1, "public static void create() {");
-		ff.printIndented(0, FileFactory.startSection);
-		buildVariables(ff);
-		ff.printIndented(0, FileFactory.endSection);
-		ff.printIndented(1, "}");
-		ff.printIndented(0, "}");
+    private static void buildTemplate(File fd) {
+        
+        FileFactory ff = new FileFactory();
+        ff.createOut(fd, false);
+        ff.printIndented(0, FileFactory.copyright);
+        ff.printIndented(0, "");
+        ff.printIndented(0, "package " + Main.uiPackage + ";");
+        ff.printIndented(0, "");
+        ff.printIndented(0, "import com.veriktig.scandium.api.SCAPI;");
+        ff.printIndented(0, "");
+        ff.printIndented(0, "public class AppVariables {");
+        ff.printIndented(1, "public static void create() {");
+        ff.printIndented(0, FileFactory.startSection);
+        buildVariables(ff);
+        ff.printIndented(0, FileFactory.endSection);
+        ff.printIndented(1, "}");
+        ff.printIndented(0, "}");
         ff.done();
-	}
-	
-	private static void updateFile(File fd) {
+    }
+    
+    private static void updateFile(File fd) {
         List<String> precache = new ArrayList<String>();
         List<String> postcache = new ArrayList<String>();
         boolean preFlag = true;
@@ -94,7 +94,7 @@ public class AppVariableFileFactory extends FileFactory {
         try {
             BufferedReader in = new BufferedReader(new FileReader(fd));
             String inLine;
-			while ((inLine = in.readLine()) != null) {
+            while ((inLine = in.readLine()) != null) {
                 if (inLine.contains(FileFactory.startSection)) {
                     preFlag = false;
                     precache.add(inLine);
@@ -111,7 +111,7 @@ public class AppVariableFileFactory extends FileFactory {
             }
             ff.createOut(fd, false);
             for (String pre : precache) {
-            	ff.print(pre);
+                ff.print(pre);
             }
             buildVariables(ff);
             for (String post : postcache) {
@@ -122,11 +122,11 @@ public class AppVariableFileFactory extends FileFactory {
         } catch (IOException e) {
             System.err.println("ERROR: IOException processing " + fd.getName());
         }
-	}
-	
-	private static void buildVariables(FileFactory ff) {
+    }
+    
+    private static void buildVariables(FileFactory ff) {
         for (Map.Entry<String, String> entry : result.entrySet()) {
             ff.printIndented(2, "SCAPI.setAppVariable(\"" + entry.getKey() + "\", \"" + entry.getValue() + "\");");
         }
-	}
+    }
 }

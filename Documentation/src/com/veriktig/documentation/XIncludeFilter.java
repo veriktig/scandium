@@ -127,22 +127,22 @@ public class XIncludeFilter {
             return (null);
         }
         finally {
-        	if (in != null) {
-        		try {
-					in.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-        	}
-        	if (include != null) {
-        		try {
-					include.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-        	}
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+            if (include != null) {
+                try {
+                    include.close();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
         }
         recursion_level--;
         return (linenumbers);

@@ -24,25 +24,25 @@ package com.veriktig.documentation.errors;
  *
  */
 public class Summary {
-	private String name;
+    private String name;
     private String severity;
-	private String summary;
-	
-	public Summary(String name, String severity, String summary) {
-		this.name = name;
+    private String summary;
+    
+    public Summary(String name, String severity, String summary) {
+        this.name = name;
         this.severity = severity;
-		this.summary = summary;
-	}
-	
-	public String getName() {
-		return name;
-	}
+        this.summary = summary;
+    }
+    
+    public String getName() {
+        return name;
+    }
 
     public String getSeverity() {
         return severity;
     }
-	
-	public String getSummary() {
-		return summary;
-	}
+    
+    public String getSummary() {
+        return summary;
+    }
 }

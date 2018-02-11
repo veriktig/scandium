@@ -44,33 +44,33 @@ import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
 import org.w3c.dom.Node;
 
 public class CommonStyles {
-	private static final String FONT = "Source Sans Pro";
-	private static final String CODE = "Source Code Pro";
-	private static TextDocument outputDocument = null;
-	private static OdfContentDom contentDom = null;
-	private static OdfStylesDom stylesDom = null;
-	private static boolean indented = false;
-	
-	public static void init(TextDocument doc) {
-		outputDocument = doc;
-		try {
-			contentDom = outputDocument.getContentDom();
-			stylesDom = outputDocument.getStylesDom();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public static boolean indent() {
-		indented = true;
-		return indented;
-	}
-	
-	public static boolean unindent() {
-		indented = false;
-		return indented;
-	}
+    private static final String FONT = "Source Sans Pro";
+    private static final String CODE = "Source Code Pro";
+    private static TextDocument outputDocument = null;
+    private static OdfContentDom contentDom = null;
+    private static OdfStylesDom stylesDom = null;
+    private static boolean indented = false;
+    
+    public static void init(TextDocument doc) {
+        outputDocument = doc;
+        try {
+            contentDom = outputDocument.getContentDom();
+            stylesDom = outputDocument.getStylesDom();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+    
+    public static boolean indent() {
+        indented = true;
+        return indented;
+    }
+    
+    public static boolean unindent() {
+        indented = false;
+        return indented;
+    }
 
     public static void addStyles() {
         // Replace font-face-decl in content.xml
@@ -104,9 +104,9 @@ public class CommonStyles {
     }
 
     public static void addPageStyles(OdfStylesDom stylesDom) {
-    	StylePageLayoutElement style;
-    	
-    	Node documentContent = stylesDom.getFirstChild();
+        StylePageLayoutElement style;
+        
+        Node documentContent = stylesDom.getFirstChild();
         OfficeDocumentStylesElement styleRoot = stylesDom.getRootElement();
         
         OfficeAutomaticStylesElement styleAutoStyles = styleRoot.newOfficeAutomaticStylesElement();
@@ -114,57 +114,57 @@ public class CommonStyles {
         styleAutoStyles = (OfficeAutomaticStylesElement) autoNode;
         
         style = styleAutoStyles.newStylePageLayoutElement("LetterLayout");
-    	style.setProperty(StylePageLayoutPropertiesElement.MarginTop, "0.54in");
-    	style.setProperty(StylePageLayoutPropertiesElement.MarginBottom, "0.54in");
-    	style.setProperty(StylePageLayoutPropertiesElement.MarginLeft, "0.96in");
-    	style.setProperty(StylePageLayoutPropertiesElement.MarginRight, "1.04in");
-    	style.setProperty(StylePageLayoutPropertiesElement.PageHeight, "11.0in");
-    	style.setProperty(StylePageLayoutPropertiesElement.PageWidth, "8.5in");
-    	style.setProperty(StylePageLayoutPropertiesElement.PrintOrientation, "portrait");
-    	
+        style.setProperty(StylePageLayoutPropertiesElement.MarginTop, "0.54in");
+        style.setProperty(StylePageLayoutPropertiesElement.MarginBottom, "0.54in");
+        style.setProperty(StylePageLayoutPropertiesElement.MarginLeft, "0.96in");
+        style.setProperty(StylePageLayoutPropertiesElement.MarginRight, "1.04in");
+        style.setProperty(StylePageLayoutPropertiesElement.PageHeight, "11.0in");
+        style.setProperty(StylePageLayoutPropertiesElement.PageWidth, "8.5in");
+        style.setProperty(StylePageLayoutPropertiesElement.PrintOrientation, "portrait");
+        
         style = styleAutoStyles.newStylePageLayoutElement("LetterLayoutLeft");
         style.setStylePageUsageAttribute("left");
-    	style.setProperty(StylePageLayoutPropertiesElement.MarginTop, "0.54in");
-    	style.setProperty(StylePageLayoutPropertiesElement.MarginBottom, "0.54in");
-    	style.setProperty(StylePageLayoutPropertiesElement.MarginLeft, "0.96in");
-    	style.setProperty(StylePageLayoutPropertiesElement.MarginRight, "1.04in");
-    	style.setProperty(StylePageLayoutPropertiesElement.PageHeight, "11.0in");
-    	style.setProperty(StylePageLayoutPropertiesElement.PageWidth, "8.5in");
-    	style.setProperty(StylePageLayoutPropertiesElement.PrintOrientation, "portrait");
-    	 
+        style.setProperty(StylePageLayoutPropertiesElement.MarginTop, "0.54in");
+        style.setProperty(StylePageLayoutPropertiesElement.MarginBottom, "0.54in");
+        style.setProperty(StylePageLayoutPropertiesElement.MarginLeft, "0.96in");
+        style.setProperty(StylePageLayoutPropertiesElement.MarginRight, "1.04in");
+        style.setProperty(StylePageLayoutPropertiesElement.PageHeight, "11.0in");
+        style.setProperty(StylePageLayoutPropertiesElement.PageWidth, "8.5in");
+        style.setProperty(StylePageLayoutPropertiesElement.PrintOrientation, "portrait");
+         
         style = styleAutoStyles.newStylePageLayoutElement("LetterLayoutRight");
         style.setStylePageUsageAttribute("right");
-    	style.setProperty(StylePageLayoutPropertiesElement.MarginTop, "0.54in");
-    	style.setProperty(StylePageLayoutPropertiesElement.MarginBottom, "0.54in");
-    	style.setProperty(StylePageLayoutPropertiesElement.MarginLeft, "1.04in");
-    	style.setProperty(StylePageLayoutPropertiesElement.MarginRight, "0.86in");
-    	style.setProperty(StylePageLayoutPropertiesElement.PageHeight, "11.0in");
-    	style.setProperty(StylePageLayoutPropertiesElement.PageWidth, "8.5in");
-    	style.setProperty(StylePageLayoutPropertiesElement.PrintOrientation, "portrait");
-    	
-    	OfficeMasterStylesElement masterStyles = styleRoot.newOfficeMasterStylesElement();
-    	Node masterNode = OdfElement.findFirstChildNode(masterStyles.getClass(), documentContent);
-    	masterStyles = (OfficeMasterStylesElement) masterNode;
-    	
-    	StyleMasterPageElement standard = masterStyles.newStyleMasterPageElement("", "");
-    	Node standardNode = OdfElement.findFirstChildNode(standard.getClass(), masterNode);
-    	standard  = (StyleMasterPageElement) standardNode;
-    	String name = standard.getStyleNameAttribute();
-    	if (name.equals("Standard")) {
-    		standard.setStylePageLayoutNameAttribute("LetterLayout");
-    	} else {
-    		System.err.println("Standard is not the first child of master-style.");
-    	}
-    	
-    	// XXX Need Header and Footer support here too.
-    	
-    	// Need to change Left Page and Right Page?
-    	//master = masterStyles.newStyleMasterPageElement("Left Page", "LetterLayoutLeft");
-    	//master = masterStyles.newStyleMasterPageElement("Right Page", "LetterLayoutRight");
+        style.setProperty(StylePageLayoutPropertiesElement.MarginTop, "0.54in");
+        style.setProperty(StylePageLayoutPropertiesElement.MarginBottom, "0.54in");
+        style.setProperty(StylePageLayoutPropertiesElement.MarginLeft, "1.04in");
+        style.setProperty(StylePageLayoutPropertiesElement.MarginRight, "0.86in");
+        style.setProperty(StylePageLayoutPropertiesElement.PageHeight, "11.0in");
+        style.setProperty(StylePageLayoutPropertiesElement.PageWidth, "8.5in");
+        style.setProperty(StylePageLayoutPropertiesElement.PrintOrientation, "portrait");
+        
+        OfficeMasterStylesElement masterStyles = styleRoot.newOfficeMasterStylesElement();
+        Node masterNode = OdfElement.findFirstChildNode(masterStyles.getClass(), documentContent);
+        masterStyles = (OfficeMasterStylesElement) masterNode;
+        
+        StyleMasterPageElement standard = masterStyles.newStyleMasterPageElement("", "");
+        Node standardNode = OdfElement.findFirstChildNode(standard.getClass(), masterNode);
+        standard  = (StyleMasterPageElement) standardNode;
+        String name = standard.getStyleNameAttribute();
+        if (name.equals("Standard")) {
+            standard.setStylePageLayoutNameAttribute("LetterLayout");
+        } else {
+            System.err.println("Standard is not the first child of master-style.");
+        }
+        
+        // XXX Need Header and Footer support here too.
+        
+        // Need to change Left Page and Right Page?
+        //master = masterStyles.newStyleMasterPageElement("Left Page", "LetterLayoutLeft");
+        //master = masterStyles.newStyleMasterPageElement("Right Page", "LetterLayoutRight");
     }
     
     public static void addParagraphStyles(OdfOfficeAutomaticStyles contentAutoStyles) {
-    	OdfStyle style;
+        OdfStyle style;
 
         style = contentAutoStyles.newStyle(OdfStyleFamily.Paragraph);
         style.setStyleNameAttribute("P_NAME_HEADER_PAGE");
@@ -265,8 +265,8 @@ public class CommonStyles {
     }
      
     public static void addTextStyles(OdfOfficeAutomaticStyles contentAutoStyles) {
-    	OdfStyle style;
-    	
+        OdfStyle style;
+        
         style = contentAutoStyles.newStyle(OdfStyleFamily.Text);
         style.setStyleNameAttribute("T_BOLD");
         style.setProperty(StyleTextPropertiesElement.FontWeight, "bold");
@@ -307,9 +307,9 @@ public class CommonStyles {
         the.setTextContent(section);
         the.setTextOutlineLevelAttribute(1);
         if (pagebreak) {
-        	the.setStyleName("P_NAME_HEADER_PAGE");
+            the.setStyleName("P_NAME_HEADER_PAGE");
         } else {
-        	the.setStyleName("P_NAME_HEADER_PARAGRAPH");
+            the.setStyleName("P_NAME_HEADER_PARAGRAPH");
         }
         Paragraph paragraph = Paragraph.getInstanceof(the);
         currentParagraph = CommonStyles.addParagraph(currentParagraph, paragraph);

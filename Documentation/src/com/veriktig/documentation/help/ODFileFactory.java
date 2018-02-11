@@ -40,14 +40,14 @@ import com.veriktig.documentation.help.generated.Help;
 import com.veriktig.documentation.help.generated.SeeAlso;
 
 public class ODFileFactory extends FileFactory {
-	private static final String NULL_OPTION = "null"; // SCAPI
+    private static final String NULL_OPTION = "null"; // SCAPI
     private static OdfContentDom contentDom;
     private static TextDocument outputDocument;
     private static int currentParagraph = 0;
     private static boolean indented = false;
 
     public static void make(File file, List<Help> list) throws FactoryException {
-    	try {
+        try {
             outputDocument = TextDocument.newTextDocument();
             CommonStyles.init(outputDocument);
             contentDom = outputDocument.getContentDom();
@@ -62,7 +62,7 @@ public class ODFileFactory extends FileFactory {
         } catch (Exception e) {
             throw new FactoryException(e);
         }
-    	return;
+        return;
     }
 
     private static void output(Help help) {
@@ -102,23 +102,23 @@ public class ODFileFactory extends FileFactory {
             currentParagraph = CommonStyles.createHeader(currentParagraph, "ARGUMENTS");
             Iterator<Option> iter = combined_options.iterator();
             while (iter.hasNext()) {
-            	Option arg = iter.next();
-            	createArgument(arg);
-            	if (iter.hasNext()) {
-            		currentParagraph = CommonStyles.addEmptyParagraph(currentParagraph);
-            	}
+                Option arg = iter.next();
+                createArgument(arg);
+                if (iter.hasNext()) {
+                    currentParagraph = CommonStyles.addEmptyParagraph(currentParagraph);
+                }
             }
             currentParagraph = CommonStyles.addEmptyParagraph(currentParagraph);
         }
         List<Description> descs = help.getDesc();
         if (descs.size() > 0) {
-        	currentParagraph = CommonStyles.createHeader(currentParagraph, "DESCRIPTION");
-        	Iterator<Description> iter2 = descs.iterator();
-        	while (iter2.hasNext()) {
-        		currentParagraph = CommonStyles.createDescription(currentParagraph, iter2.next().getP());
-        	}
-        	currentParagraph = CommonStyles.addEmptyParagraph(currentParagraph);
-        }	
+            currentParagraph = CommonStyles.createHeader(currentParagraph, "DESCRIPTION");
+            Iterator<Description> iter2 = descs.iterator();
+            while (iter2.hasNext()) {
+                currentParagraph = CommonStyles.createDescription(currentParagraph, iter2.next().getP());
+            }
+            currentParagraph = CommonStyles.addEmptyParagraph(currentParagraph);
+        }    
         List<Example> examples = help.getExample();
         if (examples.size() > 0) {
             currentParagraph = CommonStyles.createHeader(currentParagraph, "EXAMPLES");
@@ -169,43 +169,43 @@ public class ODFileFactory extends FileFactory {
                 tab.setTextTabRefAttribute(1);
                 tse = tpe.newTextSpanElement();
                 if (Arg.getArgName().equals("")) {
-                	if (Arg.isRequired()) {
-                		if (Arg.getOption().equals(NULL_OPTION)) {
-                			tse.setTextContent("");
-                		} else {
-                			tse.setTextContent("-" + Arg.getOption() + " ");
-                		}
-                	} else {
-                		if (Arg.getOption().equals(NULL_OPTION)) {
-                			tse.setTextContent("[");
-                		} else {
-                			tse.setTextContent("[-" + Arg.getOption() + " ");
-                		}
-                	}
+                    if (Arg.isRequired()) {
+                        if (Arg.getOption().equals(NULL_OPTION)) {
+                            tse.setTextContent("");
+                        } else {
+                            tse.setTextContent("-" + Arg.getOption() + " ");
+                        }
+                    } else {
+                        if (Arg.getOption().equals(NULL_OPTION)) {
+                            tse.setTextContent("[");
+                        } else {
+                            tse.setTextContent("[-" + Arg.getOption() + " ");
+                        }
+                    }
                 } else {
-                	if (Arg.isRequired()) {
-                		if (Arg.getOption().equals(NULL_OPTION)) {
-                			tse.setTextContent("");
-                		} else {
-                			tse.setTextContent("-" + Arg.getOption() + " ");
-                		}
-                	} else {
-                		if (Arg.getOption().equals(NULL_OPTION)) {
-                			tse.setTextContent("[");
-                		} else {
-                			tse.setTextContent("[-" + Arg.getOption() + " ");
-                		}
-                	}
-                	tse.setStyleName("T_NORMAL");
-                	tse2 = tpe.newTextSpanElement();
-                	tse2.setTextContent(Arg.getArgName());
-                	tse2.setStyleName("T_ITALIC");
-            	}
+                    if (Arg.isRequired()) {
+                        if (Arg.getOption().equals(NULL_OPTION)) {
+                            tse.setTextContent("");
+                        } else {
+                            tse.setTextContent("-" + Arg.getOption() + " ");
+                        }
+                    } else {
+                        if (Arg.getOption().equals(NULL_OPTION)) {
+                            tse.setTextContent("[");
+                        } else {
+                            tse.setTextContent("[-" + Arg.getOption() + " ");
+                        }
+                    }
+                    tse.setStyleName("T_NORMAL");
+                    tse2 = tpe.newTextSpanElement();
+                    tse2.setTextContent(Arg.getArgName());
+                    tse2.setStyleName("T_ITALIC");
+                }
 
                 if (!Arg.isRequired()) {
-                	tse3 = tpe.newTextSpanElement();
-                	tse3.setTextContent("]");
-                	tse3.setStyleName("T_NORMAL");
+                    tse3 = tpe.newTextSpanElement();
+                    tse3.setTextContent("]");
+                    tse3.setStyleName("T_NORMAL");
                 }
                 
                 paragraph = Paragraph.getInstanceof(tpe);
@@ -241,29 +241,29 @@ public class ODFileFactory extends FileFactory {
                     tab = tpe.newTextTabElement();
                     tab.setTextTabRefAttribute(1);
                     tse = tpe.newTextSpanElement();
-                	if (!first_time) {
-                		tse.setTextContent("|-" + Arg.getOption() + " ");
-                	} else {
-                		tse.setTextContent("[-" + Arg.getOption() + " ");
-                	}
+                    if (!first_time) {
+                        tse.setTextContent("|-" + Arg.getOption() + " ");
+                    } else {
+                        tse.setTextContent("[-" + Arg.getOption() + " ");
+                    }
                     if (!Arg.getArgName().equals("")) {
-                    	tse.setStyleName("T_NORMAL");
-                    	tse2 = tpe.newTextSpanElement();
-                    	tse2.setTextContent(Arg.getArgName());
-                    	tse2.setStyleName("T_ITALIC");
-                	}
+                        tse.setStyleName("T_NORMAL");
+                        tse2 = tpe.newTextSpanElement();
+                        tse2.setTextContent(Arg.getArgName());
+                        tse2.setStyleName("T_ITALIC");
+                    }
                     
                     if (!iter3.hasNext()) {
-                    	tse3 = tpe.newTextSpanElement();
-                    	tse3.setTextContent("]");
-                    	tse3.setStyleName("T_NORMAL");
+                        tse3 = tpe.newTextSpanElement();
+                        tse3.setTextContent("]");
+                        tse3.setStyleName("T_NORMAL");
                     }
                     
                     paragraph = Paragraph.getInstanceof(tpe);
                     currentParagraph = CommonStyles.addParagraph(currentParagraph, paragraph);
                     first_time = false;
                 } else {
-                	String close = null;
+                    String close = null;
                     tpe = new TextPElement(contentDom);
                     tpe.setStyleName(indented ? "P_FIXED_INDENTED" : "P_FIXED");
                     tab = tpe.newTextTabElement();
@@ -271,9 +271,9 @@ public class ODFileFactory extends FileFactory {
                     tse = tpe.newTextSpanElement();
                     tse.setStyleName("T_NORMAL");
                     if (first_time) {
-                    	tse.setTextContent("[");
+                        tse.setTextContent("[");
                     } else {
-                    	tse.setTextContent("|");
+                        tse.setTextContent("|");
                     }
                     tse2 = tpe.newTextSpanElement();
                     tse2.setStyleName("T_ITALIC");
@@ -304,19 +304,19 @@ public class ODFileFactory extends FileFactory {
         TextSpanElement tse2;
         Paragraph paragraph;
 
-    	tpe = new TextPElement(contentDom);
-    	tpe.setStyleName(indented ? "P_DEFAULT_INDENTED" : "P_DEFAULT");
-    	tse = tpe.newTextSpanElement();
+        tpe = new TextPElement(contentDom);
+        tpe.setStyleName(indented ? "P_DEFAULT_INDENTED" : "P_DEFAULT");
+        tse = tpe.newTextSpanElement();
  
-    	if (option.getArgName().equals("")) {
-        	tse.setTextContent("-" + option.getOption());
-        	tse.setStyleName("T_BOLD");
+        if (option.getArgName().equals("")) {
+            tse.setTextContent("-" + option.getOption());
+            tse.setStyleName("T_BOLD");
         } else {
-        	tse.setTextContent(option.getArgName() + " ");
+            tse.setTextContent(option.getArgName() + " ");
             tse.setStyleName("T_BOLDITALIC");
-        	tse2 = tpe.newTextSpanElement();
-        	tse2.setTextContent("(" + option.getType() + ")");
-        	tse2.setStyleName("T_FIXEDBOLD");
+            tse2 = tpe.newTextSpanElement();
+            tse2.setTextContent("(" + option.getType() + ")");
+            tse2.setStyleName("T_FIXEDBOLD");
         }
         paragraph = Paragraph.getInstanceof(tpe);
         currentParagraph = CommonStyles.addParagraph(currentParagraph, paragraph);

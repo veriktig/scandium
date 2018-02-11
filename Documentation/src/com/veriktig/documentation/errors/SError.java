@@ -32,38 +32,38 @@ import com.veriktig.documentation.errors.generated.WhatNext;
  *
  */
 public class SError extends Error {
-	private String prefix;
-	private Error error;
-	
-	public SError(String prefix, Error error) {
-		this.prefix = prefix;
-		this.error = error;
-	}
-	public String getName() {
-		return(new String(prefix + error.getNumber()));
-	}
-	@Override
-	public String getHelp() {
-		return error.getHelp();
-	}
-	@Override
-	public List<Description> getDesc() {
-		return error.getDesc();
-	}
-	@Override
-	public List<WhatNext> getWhatNext() {
-		return error.getWhatNext();
-	}
-	@Override
-	public List<SeeAlso> getSeeAlso() {
-		return error.getSeeAlso();
-	}
-	@Override
-	public int getNumber() {
-		return error.getNumber();
-	}
-	@Override
-	public SeverityType getSeverity() {
-		return error.getSeverity();
-	}
+    private String prefix;
+    private Error error;
+    
+    public SError(String prefix, Error error) {
+        this.prefix = prefix;
+        this.error = error;
+    }
+    public String getName() {
+        return(new String(prefix + error.getNumber()));
+    }
+    @Override
+    public String getHelp() {
+        return error.getHelp();
+    }
+    @Override
+    public List<Description> getDesc() {
+        return error.getDesc();
+    }
+    @Override
+    public List<WhatNext> getWhatNext() {
+        return error.getWhatNext();
+    }
+    @Override
+    public List<SeeAlso> getSeeAlso() {
+        return error.getSeeAlso();
+    }
+    @Override
+    public int getNumber() {
+        return error.getNumber();
+    }
+    @Override
+    public SeverityType getSeverity() {
+        return error.getSeverity();
+    }
 }

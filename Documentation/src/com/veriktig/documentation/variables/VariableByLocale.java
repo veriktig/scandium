@@ -29,19 +29,19 @@ import com.veriktig.documentation.variables.generated.Variable;
  *
  */
 public class VariableByLocale {
-	private String locale;
-	private List<Variable> variables = new ArrayList<Variable>();
-	
-	public VariableByLocale(String prefix, String locale, List<Variable> variables) {
-		this.locale = locale;
+    private String locale;
+    private List<Variable> variables = new ArrayList<Variable>();
+    
+    public VariableByLocale(String prefix, String locale, List<Variable> variables) {
+        this.locale = locale;
         this.variables = variables;
-	}
-	
-	public String getLocale() {
-		return locale;
-	}
-	
-	public List<Variable> getVariables() {
-		return variables;
-	}
+    }
+    
+    public String getLocale() {
+        return locale;
+    }
+    
+    public List<Variable> getVariables() {
+        return variables;
+    }
 }

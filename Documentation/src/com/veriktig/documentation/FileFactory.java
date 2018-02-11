@@ -139,11 +139,11 @@ public class FileFactory {
     }
     
     public void print(String line) {
-    	out.println(line);
+        out.println(line);
     }
 
     @SuppressWarnings("resource")
-	public void addComments(boolean sw, int level, String comments) {
+    public void addComments(boolean sw, int level, String comments) {
         String word;
         String line = new String();
 

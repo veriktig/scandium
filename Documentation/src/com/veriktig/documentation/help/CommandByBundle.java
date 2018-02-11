@@ -26,19 +26,19 @@ import java.util.Set;
  *
  */
 public class CommandByBundle {
-	private String bundle;
-	private Set<String> commands;
-	
-	public CommandByBundle(String bundle, Set<String> commands) {
-		this.bundle = bundle;
-		this.commands = commands;
-	}
-	
-	public String getBundle() {
-		return bundle;
-	}
-	
-	public Set<String> getCommands() {
-		return commands;
-	}
+    private String bundle;
+    private Set<String> commands;
+    
+    public CommandByBundle(String bundle, Set<String> commands) {
+        this.bundle = bundle;
+        this.commands = commands;
+    }
+    
+    public String getBundle() {
+        return bundle;
+    }
+    
+    public Set<String> getCommands() {
+        return commands;
+    }
 }

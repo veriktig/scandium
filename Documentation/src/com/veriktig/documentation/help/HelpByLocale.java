@@ -28,19 +28,19 @@ import com.veriktig.documentation.help.generated.Help;
  *
  */
 public class HelpByLocale {
-	private String locale;
-	private List<Help> help;
-	
-	public HelpByLocale(String locale, List<Help> help) {
-		this.locale = locale;
-		this.help = help;
-	}
-	
-	public String getLocale() {
-		return locale;
-	}
-	
-	public List<Help> getHelp() {
-		return help;
-	}
+    private String locale;
+    private List<Help> help;
+    
+    public HelpByLocale(String locale, List<Help> help) {
+        this.locale = locale;
+        this.help = help;
+    }
+    
+    public String getLocale() {
+        return locale;
+    }
+    
+    public List<Help> getHelp() {
+        return help;
+    }
 }

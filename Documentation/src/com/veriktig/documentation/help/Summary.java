@@ -24,19 +24,19 @@ package com.veriktig.documentation.help;
  *
  */
 public class Summary {
-	private String name;
-	private String summary;
-	
-	public Summary(String name, String summary) {
-		this.name = name;
-		this.summary = summary;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public String getSummary() {
-		return summary;
-	}
+    private String name;
+    private String summary;
+    
+    public Summary(String name, String summary) {
+        this.name = name;
+        this.summary = summary;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public String getSummary() {
+        return summary;
+    }
 }

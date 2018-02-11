@@ -26,19 +26,19 @@ import java.util.Map;
  *
  */
 public class VariableByBundle {
-	private String bundle;
-	private Map<String, String> variables;
-	
-	public VariableByBundle(String bundle, Map<String, String> variables) {
-		this.bundle = bundle;
-		this.variables = variables;
-	}
-	
-	public String getBundle() {
-		return bundle;
-	}
-	
-	public Map<String, String> getVariables() {
-		return variables;
-	}
+    private String bundle;
+    private Map<String, String> variables;
+    
+    public VariableByBundle(String bundle, Map<String, String> variables) {
+        this.bundle = bundle;
+        this.variables = variables;
+    }
+    
+    public String getBundle() {
+        return bundle;
+    }
+    
+    public Map<String, String> getVariables() {
+        return variables;
+    }
 }

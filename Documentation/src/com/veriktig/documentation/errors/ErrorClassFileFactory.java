@@ -27,42 +27,42 @@ import com.veriktig.documentation.FactoryException;
 import com.veriktig.documentation.FileFactory;
 
 public class ErrorClassFileFactory extends FileFactory {
-	public static void make(File file, String package_name, String class_name, Set<Summary> set) throws FactoryException {
-		String comma = null;
+    public static void make(File file, String package_name, String class_name, Set<Summary> set) throws FactoryException {
+        String comma = null;
 
         // Sort by error code
         List<Summary> list = new ArrayList<Summary>(set);
         Collections.sort(list, (o1, o2) -> o1.getName().compareTo(o2.getName()));
-		
-		FileFactory ff = new FileFactory();
-		ff.createOut(file, false);
-		ff.printIndented(0, FileFactory.copyright);
-		ff.printIndented(0, "");
-		ff.printIndented(0,  FileFactory.doNotEdit);
-		ff.printIndented(0,  "");
-		ff.printIndented(0, "package " + package_name + ";");
-		ff.printIndented(0,  "");
-		ff.printIndented(0,  "import java.util.ListResourceBundle;");
-		ff.printIndented(0,  "");
-		ff.printIndented(0,  "import com.veriktig.scandium.api.errors.ErrorMessage;");
-		ff.printIndented(0,  "import com.veriktig.scandium.api.SCAPI;");
-		ff.printIndented(0,  "");
-		ff.printIndented(0,  "public class " + class_name + " extends ListResourceBundle {");
-		ff.printIndented(1,  "protected Object[][] getContents() {");
-		ff.printIndented(2,  "return new Object[][] {");
+        
+        FileFactory ff = new FileFactory();
+        ff.createOut(file, false);
+        ff.printIndented(0, FileFactory.copyright);
+        ff.printIndented(0, "");
+        ff.printIndented(0,  FileFactory.doNotEdit);
+        ff.printIndented(0,  "");
+        ff.printIndented(0, "package " + package_name + ";");
+        ff.printIndented(0,  "");
+        ff.printIndented(0,  "import java.util.ListResourceBundle;");
+        ff.printIndented(0,  "");
+        ff.printIndented(0,  "import com.veriktig.scandium.api.errors.ErrorMessage;");
+        ff.printIndented(0,  "import com.veriktig.scandium.api.SCAPI;");
+        ff.printIndented(0,  "");
+        ff.printIndented(0,  "public class " + class_name + " extends ListResourceBundle {");
+        ff.printIndented(1,  "protected Object[][] getContents() {");
+        ff.printIndented(2,  "return new Object[][] {");
         Iterator<Summary> iter = list.iterator();
         while (iter.hasNext()) {
-            Summary ss	 = iter.next();
+            Summary ss     = iter.next();
             if (iter.hasNext()) {
-            	comma = new String(",");
+                comma = new String(",");
             } else {
-            	comma = new String("");
+                comma = new String("");
             }
             ff.printIndented(3, "{\"" + ss.getName() + "\", new ErrorMessage(SCAPI.ErrorType." + ss.getSeverity().toUpperCase() + ", \"" + ss.getSummary() + "\")}" + comma);
         }
         ff.printIndented(2,  "};");
-		ff.printIndented(1,  "}");
-		ff.printIndented(0,  "}");
+        ff.printIndented(1,  "}");
+        ff.printIndented(0,  "}");
         ff.done();
-	}
+    }
 }

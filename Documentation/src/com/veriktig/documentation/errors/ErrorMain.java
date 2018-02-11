@@ -64,12 +64,12 @@ public class ErrorMain {
             // Validate the XML against the schema
             Unmarshal um = new Unmarshal(schemaFile, file, genPath, Main.tmpPath);
             ErrorPackage pkg = null;
-			try {
-				pkg = (ErrorPackage)um.unmarshal();
-			} catch (FactoryException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+            try {
+                pkg = (ErrorPackage)um.unmarshal();
+            } catch (FactoryException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
 
             String base_name = file.getName().replace(".xml", "");
             int underscore = base_name.indexOf("_");
@@ -94,138 +94,138 @@ public class ErrorMain {
                 
                 // Use bundle and getPackage to create file path
                 File fd2 = new File(Main.workPath + "/" + bundle + "/src/" + pkg.getPackage().replace(".", "/") + "/" + java_filename);
-            	ErrorClassFileFactory.make(fd2, pkg.getPackage(), java_class, summaries);
-            	Set<String> commands = new HashSet<String>();
-            	for (Summary summary : summaries) {
-            		commands.add(summary.getName());
-            	}
+                ErrorClassFileFactory.make(fd2, pkg.getPackage(), java_class, summaries);
+                Set<String> commands = new HashSet<String>();
+                for (Summary summary : summaries) {
+                    commands.add(summary.getName());
+                }
                 xmlSet.addAll(commands);
                 System.out.println("Built error document and Java class for " + bundle.toString() + ".");
             } catch (Exception e) {
                 System.err.println("ERROR: Unable to create output from: " + file.getName());
-             	return;
+                 return;
             }
         }
 
         // Find all the locales.
         Set<String> localeSet = new HashSet<String>();        
         for (ErrorByLocale hh : localeList) {
-        	localeSet.add(hh.getLocale());
+            localeSet.add(hh.getLocale());
         }
         // Go through the locales and combine the commands
         for (String ll : localeSet) {
-        	List<SError> errorList = new ArrayList<SError>();
-        	for (ErrorByLocale gg : localeList) {
-        		if (gg.getLocale().equals(ll)) {
-        			errorList.addAll(gg.getErrors());
-        		}
-        	}
-        	String document = new String("Errors" + ll + ".odt");
-        	File fd = new File(Main.outputPath + "/" + document);
-        	try {
-				fd.createNewFile();
-	        	ODFileFactory.make(fd, errorList);
-        	} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+            List<SError> errorList = new ArrayList<SError>();
+            for (ErrorByLocale gg : localeList) {
+                if (gg.getLocale().equals(ll)) {
+                    errorList.addAll(gg.getErrors());
+                }
+            }
+            String document = new String("Errors" + ll + ".odt");
+            File fd = new File(Main.outputPath + "/" + document);
+            try {
+                fd.createNewFile();
+                ODFileFactory.make(fd, errorList);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
         
         // cd to workPath and search for Java files
         File work = new File(Main.workPath);
 
         FilenameFilter bundleFilter = new FilenameFilter() {
-         	public boolean accept(File dir, String name) {
-             	if (name.startsWith("Sc")) {
-                 	return true;
-             	} else {
-                 	return false;
-             	}
-         	}
-     	};
+             public boolean accept(File dir, String name) {
+                 if (name.startsWith("Sc")) {
+                     return true;
+                 } else {
+                     return false;
+                 }
+             }
+         };
 
-     	File[] bundles = work.listFiles(bundleFilter);
-     	for (File bundle : bundles) {
+         File[] bundles = work.listFiles(bundleFilter);
+         for (File bundle : bundles) {
             // Skip bundles with no commands
-     		if (bundle.toString().contains("Test")) continue;
-     		if (bundle.toString().contains("Launcher")) continue;
-     		// Walk the tree looking for Java source files
-     		Path start = bundle.toPath();
-     		try {
-				Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
-					boolean look_here;
-					
-				    @Override
-				    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-				    	if (look_here) {
+             if (bundle.toString().contains("Test")) continue;
+             if (bundle.toString().contains("Launcher")) continue;
+             // Walk the tree looking for Java source files
+             Path start = bundle.toPath();
+             try {
+                Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
+                    boolean look_here;
+                    
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        if (look_here) {
                             if (file.toString().endsWith(".java")) {
                                 Set<String> error = grep(file);
                                 workSet.addAll(error);
                             }
-				    	}
-				        return FileVisitResult.CONTINUE;
-				    }
-				    @Override
-				    public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-				    	if (dir.toString().contains("/src/") && !dir.toString().contains("tcl")) {
-				    		look_here = true;
-				    	} else {
-				    		look_here = false;
-				    	}
-				    	return FileVisitResult.CONTINUE;
-				    }
-				});
-			} catch (IOException e) {
-				System.err.println("ERROR: Walking " + bundle.toString());
-				return;
-			}
-     	}
-     	
-     	compare(workSet, xmlSet);
-     	
-     	System.out.println("");
-     		
+                        }
+                        return FileVisitResult.CONTINUE;
+                    }
+                    @Override
+                    public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                        if (dir.toString().contains("/src/") && !dir.toString().contains("tcl")) {
+                            look_here = true;
+                        } else {
+                            look_here = false;
+                        }
+                        return FileVisitResult.CONTINUE;
+                    }
+                });
+            } catch (IOException e) {
+                System.err.println("ERROR: Walking " + bundle.toString());
+                return;
+            }
+         }
+         
+         compare(workSet, xmlSet);
+         
+         System.out.println("");
+             
         return;
     }
     
     private static Set<String> grep(Path file) {
-    	try {
+        try {
             Set<String> errors = new HashSet<String>();
-			List<String> lines = Files.readAllLines(file);
-			for (String line : lines) {
-				if (line.contains("new ScException(")) {
+            List<String> lines = Files.readAllLines(file);
+            for (String line : lines) {
+                if (line.contains("new ScException(")) {
                     int start = line.indexOf("\"");
                     int end = line.indexOf("\"", start + 1);
                     String ee = line.substring(start + 1, end);
-					errors.add(ee);
-				}
-			}
+                    errors.add(ee);
+                }
+            }
             return errors;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	return null;
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
     }
     
     private static void compare(Set<String> work, Set<String> xml) {
-    	Set<String> intersect = new HashSet<String>();
-    	
-    	// In workspace but not in XML
-    	intersect = new HashSet<String>(work);
-    	intersect.removeAll(xml);
-    	if (intersect.size() != 0) {
-    		for (String ss : intersect) {
-    			System.out.println("WARNING: " + ss + " in workspace but not in XML.");
-    		}
-    	}
-    	// In XML but not in workspace
-    	intersect = new HashSet<String>(xml);
-    	intersect.removeAll(work);
-    	if (intersect.size() != 0) {
-    		for (String ss : intersect) {
-    			System.out.println("WARNING: " + ss + " in XML but not in workspace.");
-    		}
-    	}
+        Set<String> intersect = new HashSet<String>();
+        
+        // In workspace but not in XML
+        intersect = new HashSet<String>(work);
+        intersect.removeAll(xml);
+        if (intersect.size() != 0) {
+            for (String ss : intersect) {
+                System.out.println("WARNING: " + ss + " in workspace but not in XML.");
+            }
+        }
+        // In XML but not in workspace
+        intersect = new HashSet<String>(xml);
+        intersect.removeAll(work);
+        if (intersect.size() != 0) {
+            for (String ss : intersect) {
+                System.out.println("WARNING: " + ss + " in XML but not in workspace.");
+            }
+        }
     }
 }

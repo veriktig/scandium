@@ -35,7 +35,7 @@ public class ODFileFactory extends FileFactory {
     private static int currentParagraph = 0;
 
     public static void make(File file, List<SError> list) throws FactoryException {
-    	try {
+        try {
             outputDocument = TextDocument.newTextDocument();
             CommonStyles.init(outputDocument);
             CommonStyles.addStyles();
@@ -50,7 +50,7 @@ public class ODFileFactory extends FileFactory {
         } catch (Exception e) {
             throw new FactoryException(e);
         }
-    	return;
+        return;
     }
 
     private static void output(SError error) {
@@ -61,13 +61,13 @@ public class ODFileFactory extends FileFactory {
         currentParagraph = CommonStyles.addEmptyParagraph(currentParagraph);
         List<Description> descs = error.getDesc();
         if (descs.size() > 0) {
-        	currentParagraph = CommonStyles.createHeader(currentParagraph, "DESCRIPTION");
-        	Iterator<Description> iter2 = descs.iterator();
-        	while (iter2.hasNext()) {
-        		currentParagraph = CommonStyles.createDescription(currentParagraph, iter2.next().getP());
-        	}
-        	currentParagraph = CommonStyles.addEmptyParagraph(currentParagraph);
-        }	
+            currentParagraph = CommonStyles.createHeader(currentParagraph, "DESCRIPTION");
+            Iterator<Description> iter2 = descs.iterator();
+            while (iter2.hasNext()) {
+                currentParagraph = CommonStyles.createDescription(currentParagraph, iter2.next().getP());
+            }
+            currentParagraph = CommonStyles.addEmptyParagraph(currentParagraph);
+        }    
         List<WhatNext> examples = error.getWhatNext();
         if (examples.size() > 0) {
             currentParagraph = CommonStyles.createHeader(currentParagraph, "WHAT NEXT");

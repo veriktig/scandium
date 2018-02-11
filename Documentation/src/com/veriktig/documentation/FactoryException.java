@@ -20,11 +20,11 @@ import java.io.PrintWriter;
 
 public final class FactoryException extends Exception {
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	public FactoryException(Exception e) {
+    public FactoryException(Exception e) {
         e.printStackTrace();
         System.exit(-1);
     }
