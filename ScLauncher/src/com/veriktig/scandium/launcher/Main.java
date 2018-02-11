@@ -226,9 +226,9 @@ public class Main
                 scriptFile = args[i];
             }
             if (args[i].equals(COMMAND_SWITCH)) {
-            	expectCommands = true;
+                expectCommands = true;
             } else if (expectCommands) {
-            	commands = args[i];
+                commands = args[i];
             }
         }
         if (((args.length == 2) && expectScriptFile && (scriptFile == null)) || (args.length > 2)) {
@@ -244,7 +244,7 @@ public class Main
             script.put("file", scriptFile);
         }
         if (args.length == 2 && expectCommands) {
-        	script.put("command",  commands);
+            script.put("command",  commands);
         }
     }
 
