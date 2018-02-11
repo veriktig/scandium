@@ -28,38 +28,38 @@ import org.osgi.framework.Bundle;
  * Create a singleton with an enum.
  */
 public enum TestInternalState {
-	INSTANCE;
-	
-	// These are internal.
-	private static Bundle bundle;
-	private static ClassLoader classLoader;
-	private static Collection<String> testClasses = new HashSet<String>();
-	private static Collection<String> testResources = new HashSet<String>();
-	
-	public static void setBundle(Bundle bnd) {
-		bundle = bnd;
-	}
-	public static Bundle getBundle() {
-		return bundle;
-	}
-	public static void setClassLoader(ClassLoader ldr) {
-		classLoader = ldr;
-	}
-	public static ClassLoader getClassLoader() {
-		return classLoader;
-	}
-	public static void setTestClasses(Collection<String> classes) {
-		testClasses.addAll(classes);
-	}
-	public static void setTestResources(Collection<String> resources) {
-		testResources.addAll(resources);
-	}
-	public static Collection<String> getTestClasses() {
-		List<String> list = new ArrayList<String>(testClasses);
-		Collections.sort(list);
-		return (list);
-	}
-	public static Collection<String> getTestResources() {
-		return (testResources);
-	}
+    INSTANCE;
+    
+    // These are internal.
+    private static Bundle bundle;
+    private static ClassLoader classLoader;
+    private static Collection<String> testClasses = new HashSet<String>();
+    private static Collection<String> testResources = new HashSet<String>();
+    
+    public static void setBundle(Bundle bnd) {
+        bundle = bnd;
+    }
+    public static Bundle getBundle() {
+        return bundle;
+    }
+    public static void setClassLoader(ClassLoader ldr) {
+        classLoader = ldr;
+    }
+    public static ClassLoader getClassLoader() {
+        return classLoader;
+    }
+    public static void setTestClasses(Collection<String> classes) {
+        testClasses.addAll(classes);
+    }
+    public static void setTestResources(Collection<String> resources) {
+        testResources.addAll(resources);
+    }
+    public static Collection<String> getTestClasses() {
+        List<String> list = new ArrayList<String>(testClasses);
+        Collections.sort(list);
+        return (list);
+    }
+    public static Collection<String> getTestResources() {
+        return (testResources);
+    }
 }

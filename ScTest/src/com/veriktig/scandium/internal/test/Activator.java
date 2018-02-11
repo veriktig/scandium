@@ -34,49 +34,49 @@ import com.veriktig.scandium.internal.test.state.TestInternalState;
  * 
  */
 public class Activator implements BundleActivator {
-	ServiceRegistration<?> sccServiceRegistration;
-	
-	/*
-	 * (non-Javadoc)
-	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
-	 */
-	public void start(BundleContext context) throws Exception {
+    ServiceRegistration<?> sccServiceRegistration;
+    
+    /*
+     * (non-Javadoc)
+     * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
+     */
+    public void start(BundleContext context) throws Exception {
         // Get the base package name
         String BASE_PACKAGE = this.getClass().getPackage().getName();
 
-		// Find commands
+        // Find commands
         Bundle bundle = context.getBundle();
         TestInternalState.setBundle(bundle);
-    	Collection<TclCommand> commands = CommandFinder.findCommands(bundle, BASE_PACKAGE);
-    	ClassLoader cl = context.getBundle().adapt(BundleWiring.class).getClassLoader();
+        Collection<TclCommand> commands = CommandFinder.findCommands(bundle, BASE_PACKAGE);
+        ClassLoader cl = context.getBundle().adapt(BundleWiring.class).getClassLoader();
 
-    	// Find test classes
-    	BundleWiring bundleWiring = bundle.adapt(BundleWiring.class);
+        // Find test classes
+        BundleWiring bundleWiring = bundle.adapt(BundleWiring.class);
         String pkg = new String("tcl.lang.cmd");
         Collection<String> classes = bundleWiring.listResources(pkg.replace('.','/'), "*.class", BundleWiring.FINDENTRIES_RECURSE);
-		TestInternalState.setTestClasses(classes);
+        TestInternalState.setTestClasses(classes);
 
-    	// Find test resources
-		pkg = new String("resources.tcl.lang.cmd");
-		Collection<String> tests = bundleWiring.listResources(pkg.replace('.','/'), "*.test", BundleWiring.FINDENTRIES_RECURSE);
-    	TestInternalState.setTestResources(tests);
-    	
-    	// Save bundle and classloader for use by commands
-    	TestInternalState.setClassLoader(cl);
-		TestInternalState.setBundle(context.getBundle());
-		
-		// Now start the service
-    	TclCommandService scc = new TclCommandService(cl, commands);
-		sccServiceRegistration = context.registerService(TclCommandProvider.class.getName(), scc, null);
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
-	 */
-	public void stop(BundleContext context) throws Exception {
-		sccServiceRegistration.unregister();
-	}
+        // Find test resources
+        pkg = new String("resources.tcl.lang.cmd");
+        Collection<String> tests = bundleWiring.listResources(pkg.replace('.','/'), "*.test", BundleWiring.FINDENTRIES_RECURSE);
+        TestInternalState.setTestResources(tests);
+        
+        // Save bundle and classloader for use by commands
+        TestInternalState.setClassLoader(cl);
+        TestInternalState.setBundle(context.getBundle());
+        
+        // Now start the service
+        TclCommandService scc = new TclCommandService(cl, commands);
+        sccServiceRegistration = context.registerService(TclCommandProvider.class.getName(), scc, null);
+    }
+    
+    /*
+     * (non-Javadoc)
+     * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
+     */
+    public void stop(BundleContext context) throws Exception {
+        sccServiceRegistration.unregister();
+    }
 
 
 }
