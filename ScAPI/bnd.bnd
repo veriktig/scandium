@@ -35,5 +35,5 @@ Private-Package: \
 	org.jline.utils,\
 	tcl.lang.channel,\
 	tcl.lang.process
-Bundle-Vendor: Veriktig
+Bundle-Vendor: Veriktig, Inc.
 Bundle-Activator: com.veriktig.scandium.api.Activator

@@ -4,9 +4,6 @@ Private-Package: \
 	com.veriktig.scandium.ui.cmd
 Bundle-Version: 1.0.0
 Bundle-Activator: com.veriktig.scandium.ui.Activator
--runrepos:  \
-	Workspace,\
-	Release
 -runfw: org.apache.felix.framework;version='[5.7.0.SNAPSHOT,5.7.0.SNAPSHOT]'
 -runee: JavaSE-1.8
 -runbundles:  \
@@ -16,4 +13,4 @@ Export-Package: com.veriktig.scandium.ui.state
 -runrequires: \
 	osgi.identity;filter:='(osgi.identity=ScAPI)',\
 	osgi.identity;filter:='(osgi.identity=ScUI)'
--sources: false
+Bundle-Vendor: Veriktig, Inc.
