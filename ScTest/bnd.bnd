@@ -4,9 +4,9 @@ Bundle-Version: 1.0.0
 Private-Package: \
 	com.veriktig.scandium.internal.test,\
 	com.veriktig.scandium.internal.test.state,\
-	com.veriktig.scandium.internal.test.tcl.lang,\
-	com.veriktig.scandium.internal.test.tcl.lang.cmd,\
-	com.veriktig.scandium.internal.test.resources.tcl.lang.cmd,\
+	tcl.lang,\
+	tcl.lang.cmd,\
+	resources.tcl.lang.cmd,\
 	org.junit,\
 	org.junit.function,\
 	org.junit.internal,\
