@@ -41,71 +41,71 @@ import com.veriktig.scandium.launcher.Main;
 import tcl.lang.Interp;
 
 public class Activator implements BundleActivator {
-	ServiceRegistration<?> scsServiceRegistration;
-	TclCommandTracker tracker;
+    ServiceRegistration<?> scsServiceRegistration;
+    TclCommandTracker tracker;
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
-	 */
-	public void start(BundleContext context) throws Exception {
-		String scriptFile = null;
-		String cli_commands = null;
-		
-		// Start the UI last
-		context.getBundle().adapt(BundleStartLevel.class).setStartLevel(Integer.MAX_VALUE);
+    /*
+     * (non-Javadoc)
+     * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
+     */
+    public void start(BundleContext context) throws Exception {
+        String scriptFile = null;
+        String cli_commands = null;
+        
+        // Start the UI last
+        context.getBundle().adapt(BundleStartLevel.class).setStartLevel(Integer.MAX_VALUE);
 
         // Get the base package name
         String BASE_PACKAGE = this.getClass().getPackage().getName();
-		
-		// Get the command line arguments
-		ServiceReference<?> ref = context.getServiceReference("com.veriktig.scandium.launcher.Main");
-		if (ref != null) {
-			Main temp = (Main) context.getService(ref);
-			Hashtable<String, Object> cli = temp.getCommandLineArguments();
-			if (cli != null) {
-				scriptFile = (String) cli.get("file");
-				cli_commands = (String) cli.get("command");
-			}
-		}
-		Interp interp = new Interp();
-		Interp.context = context;
-		InternalState.setInterp(interp);
-		
-		// Create application variables
-		AppVariables.create();
-		
-		// Find my own commands and start a TclCommandProvider service.
-    	Collection<TclCommand> commands = CommandFinder.findCommands(context.getBundle(), BASE_PACKAGE);
-    	ClassLoader cl = context.getBundle().adapt(BundleWiring.class).getClassLoader();
+        
+        // Get the command line arguments
+        ServiceReference<?> ref = context.getServiceReference("com.veriktig.scandium.launcher.Main");
+        if (ref != null) {
+            Main temp = (Main) context.getService(ref);
+            Hashtable<String, Object> cli = temp.getCommandLineArguments();
+            if (cli != null) {
+                scriptFile = (String) cli.get("file");
+                cli_commands = (String) cli.get("command");
+            }
+        }
+        Interp interp = new Interp();
+        Interp.context = context;
+        InternalState.setInterp(interp);
+        
+        // Create application variables
+        AppVariables.create();
+        
+        // Find my own commands and start a TclCommandProvider service.
+        Collection<TclCommand> commands = CommandFinder.findCommands(context.getBundle(), BASE_PACKAGE);
+        ClassLoader cl = context.getBundle().adapt(BundleWiring.class).getClassLoader();
 
-    	// Now start the service
-    	TclCommandService scs = new TclCommandService(cl, commands);
-		scsServiceRegistration = context.registerService(TclCommandProvider.class.getName(), scs, null);
-		
-		// Start the ServiceTracker to monitor TclCommandProvider's
-		tracker = new TclCommandTracker(context, TclCommandProvider.class.getName());
-		tracker.setInterp(interp);
-		tracker.open();
-		
-		// Store the bundles and their versions
-		Bundle[] bundles = context.getBundles();
-		Map<String, String> bundle_versions = new HashMap<String, String>();
-		for (Bundle bb : bundles) {
-			bundle_versions.put(bb.getSymbolicName(), bb.getVersion().toString());
-		}
-		InternalState.setBundleVersions(bundle_versions);
-		
-		// Now start the shell.
-		new TclShell(interp, scriptFile, cli_commands);
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
-	 */
-	public void stop(BundleContext context) throws Exception {
-		scsServiceRegistration.unregister();
-	}
+        // Now start the service
+        TclCommandService scs = new TclCommandService(cl, commands);
+        scsServiceRegistration = context.registerService(TclCommandProvider.class.getName(), scs, null);
+        
+        // Start the ServiceTracker to monitor TclCommandProvider's
+        tracker = new TclCommandTracker(context, TclCommandProvider.class.getName());
+        tracker.setInterp(interp);
+        tracker.open();
+        
+        // Store the bundles and their versions
+        Bundle[] bundles = context.getBundles();
+        Map<String, String> bundle_versions = new HashMap<String, String>();
+        for (Bundle bb : bundles) {
+            bundle_versions.put(bb.getSymbolicName(), bb.getVersion().toString());
+        }
+        InternalState.setBundleVersions(bundle_versions);
+        
+        // Now start the shell.
+        new TclShell(interp, scriptFile, cli_commands);
+    }
+    
+    /*
+     * (non-Javadoc)
+     * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
+     */
+    public void stop(BundleContext context) throws Exception {
+        scsServiceRegistration.unregister();
+    }
 
 }

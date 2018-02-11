@@ -29,45 +29,45 @@ import tcl.lang.Extension;
 import tcl.lang.Interp;
 
 public class TclCommandTracker extends ServiceTracker<Object, Object> {
-	private Interp interp;
-	private Collection<TclCommand> commands;
-	
-	public TclCommandTracker(BundleContext context, String klass) {
-		super(context, klass, null);
-	}
-	
-	public void setInterp(Interp interp) {
-		this.interp = interp;
-	}
-	
-    @SuppressWarnings("rawtypes")
-	@Override
-    public Object addingService(final ServiceReference reference) {
-    	
-    	// Get the ClassLoader and the name of the package which contains Command's.
-		@SuppressWarnings("unchecked")
-		TclCommandProvider newService = (TclCommandProvider) context.getService(reference);
-
-    	// Get the ClassLoader for the commands.
-    	ClassLoader cl = newService.getClassLoader();
-    	
-    	// Load all the commands.
-    	commands = newService.getCommands();
-    	for (TclCommand command : commands) {
-    		Extension.loadOnDemand(cl, interp, command.getName(), command.getImplClass());
-    	}
-
-		return reference;  // XXX    	
+    private Interp interp;
+    private Collection<TclCommand> commands;
+    
+    public TclCommandTracker(BundleContext context, String klass) {
+        super(context, klass, null);
+    }
+    
+    public void setInterp(Interp interp) {
+        this.interp = interp;
     }
     
     @SuppressWarnings("rawtypes")
-	@Override
+    @Override
+    public Object addingService(final ServiceReference reference) {
+        
+        // Get the ClassLoader and the name of the package which contains Command's.
+        @SuppressWarnings("unchecked")
+        TclCommandProvider newService = (TclCommandProvider) context.getService(reference);
+
+        // Get the ClassLoader for the commands.
+        ClassLoader cl = newService.getClassLoader();
+        
+        // Load all the commands.
+        commands = newService.getCommands();
+        for (TclCommand command : commands) {
+            Extension.loadOnDemand(cl, interp, command.getName(), command.getImplClass());
+        }
+
+        return reference;  // XXX        
+    }
+    
+    @SuppressWarnings("rawtypes")
+    @Override
     public void removedService(final ServiceReference reference, final Object service) {
-    	System.err.println("removedService");
-    	// Remove the commands from interp
-    	for (TclCommand command : commands) {
-    		interp.deleteCommand(command.getName());
-    	}
-    	context.ungetService(reference);
+        System.err.println("removedService");
+        // Remove the commands from interp
+        for (TclCommand command : commands) {
+            interp.deleteCommand(command.getName());
+        }
+        context.ungetService(reference);
     }
 }
