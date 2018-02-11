@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Apache Felix Framework
 Bundle-Description: OSGi R6 framework implementation.
 Bundle-Version: 1.0.0
-Bundle-Vendor: Veriktig
+Bundle-Vendor: Veriktig, Inc.
 Bundle-SymbolicName: com.veriktig.scandium.launcher
 Main-Class: com.veriktig.scandium.launcher.Main
 Embed-Dependency: *;artifactId=org.apache.felix.framework;inline=true
