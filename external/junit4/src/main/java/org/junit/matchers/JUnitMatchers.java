@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.junit.matchers;
 
 import org.hamcrest.CoreMatchers;
@@ -37,7 +53,8 @@ public class JUnitMatchers {
      * @return A matcher matching any collection containing every element in elements
      * @deprecated Please use {@link CoreMatchers#hasItems(Object...)} instead.
      */
-    @Deprecated
+    @SafeVarargs
+	@Deprecated
     public static <T> Matcher<Iterable<T>> hasItems(T... elements) {
         return CoreMatchers.hasItems(elements);
     }
@@ -48,7 +65,8 @@ public class JUnitMatchers {
      *         or different elements matching each matcher)
      * @deprecated Please use {@link CoreMatchers#hasItems(Matcher...)} instead.
      */
-    @Deprecated
+    @SafeVarargs
+	@Deprecated
     public static <T> Matcher<Iterable<T>> hasItems(Matcher<? super T>... elementMatchers) {
         return CoreMatchers.hasItems(elementMatchers);
     }
@@ -56,11 +74,12 @@ public class JUnitMatchers {
     /**
      * @return A matcher matching any collection in which every element matches elementMatcher
      * @deprecated Please use {@link CoreMatchers#everyItem(Matcher)} instead.
-     */
+     
     @Deprecated
     public static <T> Matcher<Iterable<T>> everyItem(final Matcher<T> elementMatcher) {
         return CoreMatchers.everyItem(elementMatcher);
     }
+    */
 
     /**
      * @return a matcher matching any string that contains substring
