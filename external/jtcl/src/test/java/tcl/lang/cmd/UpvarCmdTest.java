@@ -19,7 +19,7 @@ package tcl.lang.cmd;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-import com.veriktig.scandium.internal.test.TclCmdTest
+import com.veriktig.scandium.internal.test.TclCmdTest;
 
 public class UpvarCmdTest extends TclCmdTest {
 	public void testCmd() throws Exception {
