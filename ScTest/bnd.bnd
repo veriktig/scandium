@@ -4,7 +4,6 @@ Bundle-Version: 1.0.0
 Private-Package: \
 	com.veriktig.scandium.internal.test,\
 	com.veriktig.scandium.internal.test.state,\
-	tcl.lang,\
 	tcl.lang.cmd,\
 	resources.tcl.lang.cmd,\
 	org.junit,\
@@ -31,15 +30,8 @@ Private-Package: \
 	junit.framework,\
 	junit.runner,\
 	org.hamcrest,\
-	org.hamcrest.beans,\
-	org.hamcrest.collection,\
 	org.hamcrest.core,\
-	org.hamcrest.internal,\
-	org.hamcrest.number,\
-	org.hamcrest.comparator,\
-	org.hamcrest.object,\
-	org.hamcrest.text,\
-	org.hamcrest.xml
+	org.hamcrest.internal
 Export-Package: com.veriktig.scandium.internal.test.cmd;version=1.0.0
 Bundle-Vendor: Veriktig, Inc.
 Bundle-Activator: com.veriktig.scandium.internal.test.Activator
