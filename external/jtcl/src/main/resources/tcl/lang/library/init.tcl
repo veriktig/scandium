@@ -1,3 +1,18 @@
+#
+#  Copyright 2018 Veriktig, Inc.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
 # init.tcl --
 #
 # Default system startup file for Tcl-based applications.  Defines
@@ -72,9 +87,10 @@ namespace eval tcl {
     # }
 	
     # jtcl - set known package directories - add additional as needed, e.g. tcllib, etc.
-    set ::tcl_pkgPath [list resource:/tcl/lang/library/http resource:/tcl/lang/library/http10 \
+#    set ::tcl_pkgPath [list resource:/tcl/lang/library/http resource:/tcl/lang/library/http10 \
 		    resource:/tcl/lang/library/msgcat resource:/tcl/lang/library/opt \
 		    resource:/tcl/lang/library/tcltest]
+    set ::tcl_pkgPath [list resource:/tcl/lang/library/tcltest]
 
     if {[info exists ::tcl_pkgPath]} {
 	foreach Dir $::tcl_pkgPath {
@@ -85,14 +101,14 @@ namespace eval tcl {
     }
 	
     # jtcl - source tcllib main pkgIndex.tcl
-    set dir resource:/tcl/pkg/tcllib/library
-    source $dir/pkgIndex.tcl
-    unset dir
+#    set dir resource:/tcl/pkg/tcllib/library
+#    source $dir/pkgIndex.tcl
+#    unset dir
 
     # jtcl - source jtcllib main pkgIndex.tcl
-    set dir resource:/tcl/pkg/jtcllib/library
-    source $dir/pkgIndex.tcl
-    unset dir
+#    set dir resource:/tcl/pkg/jtcllib/library
+#    source $dir/pkgIndex.tcl
+#    unset dir
 
     # jtcl - note that 'dict' package is provided via DictCmd & TclDict
     package provide dict 8.5
@@ -319,7 +335,6 @@ proc unknown args {
 		    set redir ">&@stdout <@stdin"
 		}
 		return [uplevel 1 exec $redir $new [lrange $args 1 end]]
-		
 	    }
 	}
 	set errorCode $savedErrorCode
