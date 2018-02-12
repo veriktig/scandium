@@ -16,7 +16,7 @@
 
 package tcl.lang.cmd;
 
-import tcl.lang.TclCmdTest;
+import com.veriktig.scandium.internal.test.TclCmdTest
 
 public class MiscBasicCmdTest extends TclCmdTest {
 	/*

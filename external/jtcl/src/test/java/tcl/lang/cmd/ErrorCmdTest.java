@@ -19,7 +19,7 @@ package tcl.lang.cmd;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-import tcl.lang.TclCmdTest;
+import com.veriktig.scandium.internal.test.TclCmdTest
 
 public class ErrorCmdTest  extends TclCmdTest {
 	public void testCmd() throws Exception {	LinkedList<String> expectedFailureList = new LinkedList<String>(Arrays.asList( new String[] {

@@ -18,7 +18,7 @@ package tcl.lang.cmd;
 
 import java.util.Collections;
 
-import tcl.lang.TclCmdTest;
+import com.veriktig.scandium.internal.test.TclCmdTest
 
 public class SubstCmdTest extends TclCmdTest {
 	public void testCmd() throws Exception {
