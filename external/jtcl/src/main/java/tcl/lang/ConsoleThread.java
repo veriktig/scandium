@@ -114,8 +114,8 @@ public class ConsoleThread extends Thread {
 			lineReader = (LineReaderImpl) LineReaderBuilder.builder()
 				.terminal(terminal)
 				.build();
-			// XXX TODO Change to USER HOME
-			lineReader.setVariable("history-file", "/tmp/history.txt");
+			// Stash in current directory
+			lineReader.setVariable("history-file", "./.scandium_history");
 			Completer completer = new FileNameCompleter();
 			lineReader.setCompleter(completer);
 		} catch (IOException e1) {
