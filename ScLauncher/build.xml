@@ -15,7 +15,7 @@
                 <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="${dir.buildfile}/bin"/>
-            <fileset dir="${dir.buildfile}/src" excludes="**/default.properties"/>
+            <fileset dir="${dir.buildfile}/src" excludes="**/default.properties,**/Felix.properties"/>
         </jar>
     </target>
 </project>
