@@ -85,15 +85,27 @@ You will need the following to build:
 * Bndtools from Eclipse Marketplace
 * make
 * ant
+* Maven
 
 By default, Eclipse builds the bundles. You use Bndtools to release the bundles. You also may need to run ant from ScLauncher to create the executable jar under generated.
 
 ### Setup
 
-1. Create a Bnd workspace.
-2. Read the existing projects into Eclipse (ScLauncher, ScAPI, ScUI, ScTest).
-3. Use Bndtools release bundles.
-4. Use ant to generate the ScLauncher executable jar.
+1. Build the ODF jar.
+```c
+cd external
+mvn package
+```
+2. Start Eclipse and open the Bntools perspective.
+3. Create a new Bnd OSGi Workspace.
+4. Open Projects from File System (ScLauncher, ScAPI, ScUI, ScTest).
+5. Eclipse automatically builds the projects.
+6. Use Bndtools to release bundles.
+7. Use ant to generate the ScLauncher executable jar.
+```c
+cd ScLauncher
+ant
+```
 
 ### Creating a New Bundle
 
