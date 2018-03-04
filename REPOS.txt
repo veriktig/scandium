@@ -45,3 +45,9 @@ git fetch junit4_remote
 git checkout -b junit4_branch junit4_remote/master
 git checkout master
 git read-tree --prefix=external/junit4/ -u junit4_branch
+
+git remote add antlr4_remote https://github.com/antlr/antlr4.git
+git fetch antlr4_remote
+git checkout -b antlr4_branch antlr4_remote/master
+git checkout master
+git read-tree --prefix=external/antlr4/ -u antlr4_branch
