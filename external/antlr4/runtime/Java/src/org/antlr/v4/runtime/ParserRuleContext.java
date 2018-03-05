@@ -1,4 +1,20 @@
 /*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * Copyright (c) 2012-2017 The ANTLR Project. All rights reserved.
  * Use of this file is governed by the BSD 3-clause license that
  * can be found in the LICENSE.txt file in the project root.
@@ -261,6 +277,30 @@ public class ParserRuleContext extends RuleContext {
 					}
 					tokens.add(tnode);
 				}
+			}
+		}
+
+		if ( tokens==null ) {
+			return Collections.emptyList();
+		}
+
+		return tokens;
+	}
+
+	public List<TerminalNode> getTokens() {
+		if ( children==null ) {
+			return Collections.emptyList();
+		}
+
+		List<TerminalNode> tokens = null;
+		for (ParseTree o : children) {
+			if ( o instanceof TerminalNode ) {
+				TerminalNode tnode = (TerminalNode)o;
+				Token symbol = tnode.getSymbol();
+                if ( tokens==null ) {
+                    tokens = new ArrayList<TerminalNode>();
+                }
+                tokens.add(tnode);
 			}
 		}
 

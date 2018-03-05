@@ -1,4 +1,20 @@
 /*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * Copyright (c) 2012-2017 The ANTLR Project. All rights reserved.
  * Use of this file is governed by the BSD 3-clause license that
  * can be found in the LICENSE.txt file in the project root.
@@ -42,12 +58,14 @@ public class LexerATNSimulator extends ATNSimulator {
 	 */
 	protected static class SimState {
 		protected int index = -1;
+        protected String file = new String("");
 		protected int line = 0;
 		protected int charPos = -1;
 		protected DFAState dfaState;
 
 		protected void reset() {
 			index = -1;
+            file = new String("");
 			line = 0;
 			charPos = -1;
 			dfaState = null;
@@ -66,6 +84,9 @@ public class LexerATNSimulator extends ATNSimulator {
 
 	/** line number 1..n within the input */
 	protected int line = 1;
+
+	/** file name for input */
+    protected String file = new String("");
 
 	/** The index of the character relative to the beginning of the line 0..n-1 */
 	protected int charPositionInLine = 0;
@@ -97,6 +118,7 @@ public class LexerATNSimulator extends ATNSimulator {
 
 	public void copyState(LexerATNSimulator simulator) {
 		this.charPositionInLine = simulator.charPositionInLine;
+		this.file = simulator.file;
 		this.line = simulator.line;
 		this.mode = simulator.mode;
 		this.startIndex = simulator.startIndex;
@@ -126,6 +148,7 @@ public class LexerATNSimulator extends ATNSimulator {
 	public void reset() {
 		prevAccept.reset();
 		startIndex = -1;
+        file = new String("");
 		line = 1;
 		charPositionInLine = 0;
 		mode = Lexer.DEFAULT_MODE;
@@ -300,7 +323,7 @@ public class LexerATNSimulator extends ATNSimulator {
 		if (prevAccept.dfaState != null) {
 			LexerActionExecutor lexerActionExecutor = prevAccept.dfaState.lexerActionExecutor;
 			accept(input, lexerActionExecutor, startIndex,
-				prevAccept.index, prevAccept.line, prevAccept.charPos);
+				prevAccept.index, prevAccept.file, prevAccept.line, prevAccept.charPos);
 			return prevAccept.dfaState.prediction;
 		}
 		else {
@@ -354,7 +377,7 @@ public class LexerATNSimulator extends ATNSimulator {
 	}
 
 	protected void accept(CharStream input, LexerActionExecutor lexerActionExecutor,
-						  int startIndex, int index, int line, int charPos)
+						  int startIndex, int index, String file, int line, int charPos)
 	{
 		if ( debug ) {
 			System.out.format(Locale.getDefault(), "ACTION %s\n", lexerActionExecutor);
@@ -362,6 +385,7 @@ public class LexerATNSimulator extends ATNSimulator {
 
 		// seek to after last char in token
 		input.seek(index);
+        this.file = file;
 		this.line = line;
 		this.charPositionInLine = charPos;
 
@@ -588,6 +612,7 @@ public class LexerATNSimulator extends ATNSimulator {
 		}
 
 		int savedCharPositionInLine = charPositionInLine;
+		String savedFile = file;
 		int savedLine = line;
 		int index = input.index();
 		int marker = input.mark();
@@ -597,6 +622,7 @@ public class LexerATNSimulator extends ATNSimulator {
 		}
 		finally {
 			charPositionInLine = savedCharPositionInLine;
+			file = savedFile;
 			line = savedLine;
 			input.seek(index);
 			input.release(marker);
@@ -608,6 +634,7 @@ public class LexerATNSimulator extends ATNSimulator {
 								   DFAState dfaState)
 	{
 		settings.index = input.index();
+		settings.file = file;
 		settings.line = line;
 		settings.charPos = charPositionInLine;
 		settings.dfaState = dfaState;
@@ -715,6 +742,14 @@ public class LexerATNSimulator extends ATNSimulator {
 	public String getText(CharStream input) {
 		// index is first lookahead char, don't include.
 		return input.getText(Interval.of(startIndex, input.index()-1));
+	}
+
+	public String getFile() {
+		return file;
+	}
+
+	public void setFile(String file) {
+		this.file = file;
 	}
 
 	public int getLine() {

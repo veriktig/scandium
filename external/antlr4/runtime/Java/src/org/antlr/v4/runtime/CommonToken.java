@@ -1,4 +1,20 @@
 /*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * Copyright (c) 2012-2017 The ANTLR Project. All rights reserved.
  * Use of this file is governed by the BSD 3-clause license that
  * can be found in the LICENSE.txt file in the project root.
@@ -22,6 +38,11 @@ public class CommonToken implements WritableToken, Serializable {
 	 * This is the backing field for {@link #getType} and {@link #setType}.
 	 */
 	protected int type;
+
+	/**
+	 * This is the backing field for {@link #getFile} and {@link #setFile}.
+	 */
+	protected String file;
 
 	/**
 	 * This is the backing field for {@link #getLine} and {@link #setLine}.
@@ -96,6 +117,7 @@ public class CommonToken implements WritableToken, Serializable {
 		this.start = start;
 		this.stop = stop;
 		if (source.a != null) {
+			this.file = source.a.getFile();
 			this.line = source.a.getLine();
 			this.charPositionInLine = source.a.getCharPositionInLine();
 		}
@@ -130,6 +152,7 @@ public class CommonToken implements WritableToken, Serializable {
 	 */
 	public CommonToken(Token oldToken) {
 		type = oldToken.getType();
+		file = oldToken.getFile();
 		line = oldToken.getLine();
 		index = oldToken.getTokenIndex();
 		charPositionInLine = oldToken.getCharPositionInLine();
@@ -150,6 +173,11 @@ public class CommonToken implements WritableToken, Serializable {
 	@Override
 	public int getType() {
 		return type;
+	}
+
+	@Override
+	public void setFile(String file) {
+		this.file = file;
 	}
 
 	@Override
@@ -186,6 +214,11 @@ public class CommonToken implements WritableToken, Serializable {
 	@Override
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	@Override
+	public String getFile() {
+		return file;
 	}
 
 	@Override

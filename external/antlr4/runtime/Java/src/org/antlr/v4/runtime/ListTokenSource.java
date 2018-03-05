@@ -1,4 +1,20 @@
 /*
+ * Copyright 2018 Veriktig, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * Copyright (c) 2012-2017 The ANTLR Project. All rights reserved.
  * Use of this file is governed by the BSD 3-clause license that
  * can be found in the LICENSE.txt file in the project root.
@@ -144,6 +160,29 @@ public class ListTokenSource implements TokenSource {
 
 		i++;
 		return t;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getFile() {
+		if (i < tokens.size()) {
+			return tokens.get(i).getFile();
+		}
+		else if (eofToken != null) {
+			return eofToken.getFile();
+		}
+		else if (tokens.size() > 0) {
+			// have to calculate the result from the line/column of the previous
+			// token, along with the text of the token.
+			Token lastToken = tokens.get(tokens.size() - 1);
+			return lastToken.getFile();
+		}
+
+		// only reach this if tokens is empty, meaning EOF occurs at the first
+		// position in the input
+		return new String("");
 	}
 
 	/**
