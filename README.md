@@ -24,7 +24,7 @@ ScLauncher-1.0.0.jar
 conf
     config.properties
 bundle
-    ScAPI-1.0.0.jar
+    ScAPI-1.1.0.jar
     ScUI-1.0.0.jar
     ScTest-1.0.0.jar
 ```
@@ -121,6 +121,7 @@ ant
 ## Other Projects
 Project Scandium stands on the shoulders of giants to provide its functionality.
 ### ScLauncher and ScAPI:
+* [ANTLR](http://www.antlr.org) ANother Tool for Language Recognition. BSD-3-clause license
 * [Apache Felix](http://felix.apache.org) OSGi Release 6 layer. Apache-2.0 license
 * [JTcl Project](http://jtcl-project.github.io/jtcl/) Tcl. Sun Labs license
 * [Apache Commons CLI](https://commons.apache.org/proper/commons-cli/) CLI support. Apache-2.0 license
@@ -138,3 +139,7 @@ Project Scandium stands on the shoulders of giants to provide its functionality.
 The original source code for all the other projects is contained in branches.
 It was created using the commands in REPOS.txt.
 Any file modifications are stored under the external directory.
+
+### Change Log
+1.1.0 Added ANTLR v4 to ScAPI
+1.0.0 Initial Release
