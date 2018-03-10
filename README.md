@@ -141,5 +141,5 @@ It was created using the commands in REPOS.txt.
 Any file modifications are stored under the external directory.
 
 ### Change Log
-1.1.0 Added ANTLR v4 to ScAPI
-1.0.0 Initial Release
+* 1.1.0 Added ANTLR v4 to ScAPI
+* 1.0.0 Initial Release
