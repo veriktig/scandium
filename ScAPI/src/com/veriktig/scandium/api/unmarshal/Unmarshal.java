@@ -27,7 +27,7 @@ import javax.xml.bind.ValidationEventHandler;
 import javax.xml.bind.ValidationEventLocator;
 import javax.xml.validation.Schema;
 
-import com.sun.xml.internal.bind.api.ClassResolver;
+import com.veriktig.scandium.api.unmarshal.ClassResolver;
 import com.veriktig.scandium.api.errors.ScException;
 
 import tcl.lang.Interp;
@@ -73,7 +73,7 @@ public class Unmarshal {
 
             // create an Unmarshaller
             Unmarshaller u = jc.createUnmarshaller();
-            u.setProperty(ClassResolver.class.getName(), new ClassResolverImpl());
+            u.setProperty(ClassResolver.class.getName(), new ClassResolver());
             u.setSchema(schema);
             u.setEventHandler(
                 new ValidationEventHandler() {

@@ -24,7 +24,7 @@ ScLauncher-1.0.0.jar
 conf
     config.properties
 bundle
-    ScAPI-1.1.0.jar
+    ScAPI-1.2.0.jar
     ScUI-1.0.0.jar
     ScTest-1.0.0.jar
 ```
@@ -141,5 +141,6 @@ It was created using the commands in REPOS.txt.
 Any file modifications are stored under the external directory.
 
 ### Change Log
+* 1.2.0 Changed ClassResolver for Java9
 * 1.1.0 Added ANTLR v4 to ScAPI
 * 1.0.0 Initial Release

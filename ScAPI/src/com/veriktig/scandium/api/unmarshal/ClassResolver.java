@@ -16,20 +16,17 @@
 
 package com.veriktig.scandium.api.unmarshal;
 
-import com.sun.xml.internal.bind.api.ClassResolver;
-
 /**
  * 
  */
-public class ClassResolverImpl extends ClassResolver {
+public class ClassResolver {
 
-    public ClassResolverImpl() {
+    public ClassResolver() {
     }
     
     /* (non-Javadoc)
      * @see com.sun.xml.internal.bind.api.ClassResolver#resolveElementName(java.lang.String, java.lang.String)
      */
-    @Override
     public Class<?> resolveElementName(String arg0, String arg1)
             throws Exception {
         System.out.println(arg0 + " " + arg1);
