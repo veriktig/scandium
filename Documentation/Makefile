@@ -39,10 +39,10 @@ GENERATED = \
 
 .PHONY: all
 all:
-	/bin/make help
-	/bin/make errors
-	/bin/make variables
-	/bin/make docs
+	$(MAKE) help
+	$(MAKE) errors
+	$(MAKE) variables
+	$(MAKE) docs
 
 help: SRC_PACKAGE=$(BASE_PACKAGE).help
 help: SRC_PATH=$(BASE_SRC)/help

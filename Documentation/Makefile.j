@@ -17,12 +17,12 @@ GENSRC = *.java
 GENERATED = generated
 GENSRCS = $(GENSRC:%=$(BASE_PATH)/$(GENERATED)/%)
 
-JAVA_HOME = /usr/java/default
+JAVA_HOME = /usr
 
 JAVA = $(JAVA_HOME)/bin/java
 JAVAC = $(JAVA_HOME)/bin/javac
 JAVADOC = $(JAVA_HOME)/bin/javadoc
-XJC = $(JAVA_HOME)/bin/xjc
+XJC = java -jar ../external/jaxb-ri/jaxb-ri/bundles/xjc/target/jaxb-xjc-2.3.2-SNAPSHOT.jar
 LINT = -Xlint:deprecation -Xlint:unchecked
 
 ODFDOM = ../external/odftoolkit/odfdom/target/odfdom-java-0.9.0-incubating-SNAPSHOT-jar-with-dependencies.jar
