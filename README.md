@@ -136,8 +136,6 @@ Project Scandium stands on the shoulders of giants to provide its functionality.
 * [Hamcrest](http://hamcrest.org/) JUnit support. BSD-3-clause license
 
 ### Branches
-The original source code for all the other projects is contained in branches.
-It was created using the commands in REPOS.txt.
 Any file modifications are stored under the external directory.
 
 ### Change Log
