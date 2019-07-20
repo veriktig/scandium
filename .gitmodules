@@ -1,0 +1,30 @@
+[submodule "external/antlr4"]
+	path = external/antlr4
+	url = https://github.com/veriktig/antlr4
+[submodule "external/commons-cli"]
+	path = external/commons-cli
+	url = https://github.com/veriktig/commons-cli
+[submodule "external/felix"]
+	path = external/felix
+	url = https://github.com/veriktig/felix
+[submodule "external/JavaHamcrest"]
+	path = external/JavaHamcrest
+	url = https://github.com/veriktig/JavaHamcrest
+[submodule "external/jline3"]
+	path = external/jline3
+	url = https://github.com/veriktig/jline3
+[submodule "external/jna"]
+	path = external/jna
+	url = https://github.com/veriktig/jna
+[submodule "external/jtcl"]
+	path = external/jtcl
+	url = https://github.com/veriktig/jtcl
+[submodule "external/junit4"]
+	path = external/junit4
+	url = https://github.com/veriktig/junit4
+[submodule "external/odftoolkit"]
+	path = external/odftoolkit
+	url = https://github.com/veriktig/odftoolkit
+[submodule "external/osgi-r7"]
+	path = external/osgi-r7
+	url = https://github.com/veriktig/osgi-r7
