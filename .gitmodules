@@ -28,3 +28,6 @@
 [submodule "external/osgi-r7"]
 	path = external/osgi-r7
 	url = https://github.com/veriktig/osgi-r7
+[submodule "external/jaxb-ri"]
+	path = external/jaxb-ri
+	url = https://github.com/eclipse-ee4j/jaxb-ri.git
