@@ -70,11 +70,11 @@
         <min.required.maven.version>3.2</min.required.maven.version>
         <surefire.plugin.version>2.19</surefire.plugin.version>
 
-        <ant.version>1.9.6</ant.version>
+        <ant.version>1.10.11</ant.version>
         <xmltask.version>1.16</xmltask.version>
         <ant-contrib.version>1.0b3</ant-contrib.version>
 
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
 
         <javadoc.plugin.version>2.10.1</javadoc.plugin.version>
     </properties>
