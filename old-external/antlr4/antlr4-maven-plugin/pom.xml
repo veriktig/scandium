@@ -23,7 +23,7 @@
   <inceptionYear>2009</inceptionYear>
 
   <properties>
-    <mavenVersion>3.3.9</mavenVersion>
+    <mavenVersion>3.8.1</mavenVersion>
     <takariLifecycleVersion>1.11.12</takariLifecycleVersion>
   </properties>
 
