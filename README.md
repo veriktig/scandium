@@ -91,17 +91,22 @@ By default, Eclipse builds the bundles. You use Bndtools to release the bundles.
 
 ### Setup
 
-1. Build the ODF jar.
+1. Pull submodules
 ```c
-cd external
+git submodule init
+git submodule update
+```
+2. Build the ODF jar.
+```c
+cd external/odftoolkit
 mvn package
 ```
-2. Start Eclipse and open the Bntools perspective.
-3. Create a new Bnd OSGi Workspace.
-4. Open Projects from File System (ScLauncher, ScAPI, ScUI, ScTest).
-5. Eclipse automatically builds the projects.
-6. Use Bndtools to release bundles.
-7. Use ant to generate the ScLauncher executable jar.
+3. Start Eclipse and open the Bntools perspective.
+4. Create a new Bnd OSGi Workspace.
+5. Open Projects from File System (ScLauncher, ScAPI, ScUI, ScTest).
+6. Eclipse automatically builds the projects.
+7. Use Bndtools to release bundles.
+8. Use ant to generate the ScLauncher executable jar.
 ```c
 cd ScLauncher
 ant
