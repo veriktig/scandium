@@ -41,7 +41,7 @@
         <!-- Skip because of problems with Java 8 -->
         <animal.sniffer.skip>true</animal.sniffer.skip>
         <felix.java.version>8</felix.java.version>
-        <jetty.version>10.0.10</jetty.version>
+        <jetty.version>10.0.14</jetty.version>
     </properties>
 
     <build>
