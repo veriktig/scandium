@@ -22,12 +22,12 @@
 [submodule "external/junit4"]
 	path = external/junit4
 	url = https://github.com/veriktig/junit4
-[submodule "external/odftoolkit"]
-	path = external/odftoolkit
-	url = https://github.com/veriktig/odftoolkit
 [submodule "external/osgi-r7"]
 	path = external/osgi-r7
 	url = https://github.com/veriktig/osgi-r7
 [submodule "external/jaxb-ri"]
 	path = external/jaxb-ri
 	url = https://github.com/veriktig/jaxb-ri
+[submodule "external/tdf-odftoolkit"]
+	path = external/tdf-odftoolkit
+	url = https://github.com/veriktig/tdf-odftoolkit
