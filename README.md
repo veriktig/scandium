@@ -98,7 +98,7 @@ git submodule update
 ```
 2. Build the ODF jar.
 ```c
-cd external/odftoolkit
+cd external/tdf-odftoolkit
 mvn package
 ```
 3. Start Eclipse and open the Bntools perspective.
