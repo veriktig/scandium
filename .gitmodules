@@ -4,9 +4,6 @@
 [submodule "external/commons-cli"]
 	path = external/commons-cli
 	url = https://github.com/veriktig/commons-cli
-[submodule "external/felix"]
-	path = external/felix
-	url = https://github.com/veriktig/felix
 [submodule "external/JavaHamcrest"]
 	path = external/JavaHamcrest
 	url = https://github.com/veriktig/JavaHamcrest
@@ -22,12 +19,15 @@
 [submodule "external/junit4"]
 	path = external/junit4
 	url = https://github.com/veriktig/junit4
-[submodule "external/osgi-r7"]
-	path = external/osgi-r7
-	url = https://github.com/veriktig/osgi-r7
 [submodule "external/jaxb-ri"]
 	path = external/jaxb-ri
 	url = https://github.com/veriktig/jaxb-ri
 [submodule "external/tdf-odftoolkit"]
 	path = external/tdf-odftoolkit
 	url = https://github.com/veriktig/tdf-odftoolkit
+[submodule "external/felix-dev"]
+	path = external/felix-dev
+	url = https://github.com/veriktig/felix-dev
+[submodule "external/osgi"]
+	path = external/osgi
+	url = https://github.com/veriktig/osgi
