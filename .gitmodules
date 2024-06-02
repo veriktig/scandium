@@ -1,9 +1,6 @@
 [submodule "external/antlr4"]
 	path = external/antlr4
 	url = https://github.com/veriktig/antlr4
-[submodule "external/commons-cli"]
-	path = external/commons-cli
-	url = https://github.com/veriktig/commons-cli
 [submodule "external/JavaHamcrest"]
 	path = external/JavaHamcrest
 	url = https://github.com/veriktig/JavaHamcrest
