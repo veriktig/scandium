@@ -22,9 +22,10 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.odftoolkit.simple.TextDocument;
-import org.odftoolkit.simple.text.Paragraph;
+import org.odftoolkit.odfdom.doc.OdfTextDocument;
+import org.odftoolkit.odfdom.incubator.doc.text.OdfTextParagraph;
 import org.odftoolkit.odfdom.dom.OdfContentDom;
+import org.odftoolkit.odfdom.dom.element.office.OfficeTextElement;
 import org.odftoolkit.odfdom.dom.element.text.TextPElement;
 import org.odftoolkit.odfdom.dom.element.text.TextSpanElement;
 import org.odftoolkit.odfdom.dom.element.text.TextTabElement;
@@ -42,16 +43,19 @@ import com.veriktig.documentation.help.generated.SeeAlso;
 public class ODFileFactory extends FileFactory {
     private static final String NULL_OPTION = "null"; // SCAPI
     private static OdfContentDom contentDom;
-    private static TextDocument outputDocument;
+    private static OdfTextDocument outputDocument;
     private static int currentParagraph = 0;
     private static boolean indented = false;
+    private static OfficeTextElement officeText = null;
 
     public static void make(File file, List<Help> list) throws FactoryException {
         try {
-            outputDocument = TextDocument.newTextDocument();
+            outputDocument = OdfTextDocument.newTextDocument();
+            officeText = outputDocument.getContentRoot();
             CommonStyles.init(outputDocument);
             contentDom = outputDocument.getContentDom();
             CommonStyles.addStyles();
+            CommonStyles.cleanUp();
             // Sort the list by command name
             Collections.sort(list, (o1, o2) -> o1.getName().compareTo(o2.getName()));
             Iterator<Help> iter = list.iterator();
@@ -144,7 +148,7 @@ public class ODFileFactory extends FileFactory {
         TextSpanElement tse;
         TextSpanElement tse2;
         TextSpanElement tse3;
-        Paragraph paragraph;
+        OdfTextParagraph paragraph;
         TextTabElement tab;
 
         tpe = new TextPElement(contentDom);
@@ -155,8 +159,7 @@ public class ODFileFactory extends FileFactory {
         tse2 = tpe.newTextSpanElement();
         tse2.setTextContent(name);
         tse2.setStyleName("T_BOLD");
-        paragraph = Paragraph.getInstanceof(tpe);
-        currentParagraph = CommonStyles.addParagraph(currentParagraph, paragraph);
+        officeText.appendChild(tpe);
 
         // Single arguments
         Iterator<Option> iter = option.iterator();
@@ -208,8 +211,7 @@ public class ODFileFactory extends FileFactory {
                     tse3.setStyleName("T_NORMAL");
                 }
                 
-                paragraph = Paragraph.getInstanceof(tpe);
-                currentParagraph = CommonStyles.addParagraph(currentParagraph, paragraph);
+                officeText.appendChild(tpe);
             } else {
                 tpe = new TextPElement(contentDom);
                 tpe.setStyleName(indented ? "P_FIXED_INDENTED" : "P_FIXED");
@@ -222,8 +224,7 @@ public class ODFileFactory extends FileFactory {
                     tse.setTextContent("[" + Arg.getArgName() + "]");
                 }
                 tse.setStyleName("T_ITALIC");
-                paragraph = Paragraph.getInstanceof(tpe);
-                currentParagraph = CommonStyles.addParagraph(currentParagraph, paragraph);
+                officeText.appendChild(tpe);
             }
         }
         // OR'd arguments
@@ -259,8 +260,7 @@ public class ODFileFactory extends FileFactory {
                         tse3.setStyleName("T_NORMAL");
                     }
                     
-                    paragraph = Paragraph.getInstanceof(tpe);
-                    currentParagraph = CommonStyles.addParagraph(currentParagraph, paragraph);
+                    officeText.appendChild(tpe);
                     first_time = false;
                 } else {
                     String close = null;
@@ -290,8 +290,7 @@ public class ODFileFactory extends FileFactory {
                     tse3.setTextContent(close);
                     tse3.setStyleName("T_NORMAL");
                     
-                    paragraph = Paragraph.getInstanceof(tpe);
-                    currentParagraph = CommonStyles.addParagraph(currentParagraph, paragraph);
+                    officeText.appendChild(tpe);
                     first_time = false;
                 }
             }
@@ -302,7 +301,7 @@ public class ODFileFactory extends FileFactory {
         TextPElement tpe;
         TextSpanElement tse;
         TextSpanElement tse2;
-        Paragraph paragraph;
+        OdfTextParagraph paragraph;
 
         tpe = new TextPElement(contentDom);
         tpe.setStyleName(indented ? "P_DEFAULT_INDENTED" : "P_DEFAULT");
@@ -318,35 +317,31 @@ public class ODFileFactory extends FileFactory {
             tse2.setTextContent("(" + option.getType() + ")");
             tse2.setStyleName("T_FIXEDBOLD");
         }
-        paragraph = Paragraph.getInstanceof(tpe);
-        currentParagraph = CommonStyles.addParagraph(currentParagraph, paragraph);
+        officeText.appendChild(tpe);
 
         tpe = new TextPElement(contentDom);
         tpe.setStyleName(indented ? "P_DEFAULT_INDENTED" : "P_DEFAULT");
         tpe.setTextContent(option.getDesc());
-        paragraph = Paragraph.getInstanceof(tpe);
-        currentParagraph = CommonStyles.addParagraph(currentParagraph, paragraph);
+        officeText.appendChild(tpe);
     }
 
     private static void createExample(Example ex) {
         TextPElement tpe;
         TextSpanElement tse;
-        Paragraph paragraph;
+        OdfTextParagraph paragraph;
 
         tpe = new TextPElement(contentDom);
         tpe.setStyleName(indented ? "P_DEFAULT_INDENTED" : "P_DEFAULT");
         tse = tpe.newTextSpanElement();
         tse.setTextContent(ex.getDesc());
         tse.setStyleName("T_NORMAL");
-        paragraph = Paragraph.getInstanceof(tpe);
-        currentParagraph = CommonStyles.addParagraph(currentParagraph, paragraph);
+        officeText.appendChild(tpe);
 
         tpe = new TextPElement(contentDom);
         tpe.setStyleName(indented ? "P_FIXED_INDENTED" : "P_FIXED");
         tse = tpe.newTextSpanElement();
         tse.setTextContent(ex.getVerbatim());
         tse.setStyleName("T_FIXEDBOLD");
-        paragraph = Paragraph.getInstanceof(tpe);
-        currentParagraph = CommonStyles.addParagraph(currentParagraph, paragraph);
+        officeText.appendChild(tpe);
     }
 }

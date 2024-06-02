@@ -72,10 +72,10 @@ $(CLASSES):
 	mkdir -p $@
 
 $(PROGRAM): $(SRCS) $(CLASSES)
-	$(JAVAC) $(LINT) -d $(CLASSES) -cp $(ODF) $(SRCS) $(GENERATED)
+	$(JAVAC) $(LINT) -d $(CLASSES) -cp $(XJC_CLASSPATH):$(ODF) $(SRCS) $(GENERATED)
 
 docs: $(PROGRAM)
-	$(JAVA) -cp $(ODF):$(CLASSES) $(MAIN) $(OUTPUT)
+	$(JAVA) -cp $(XJC_CLASSPATH):$(ODF):$(CLASSES) $(MAIN) $(OUTPUT)
 
 CLEANFILES = \
 	$(CLASSES)/*

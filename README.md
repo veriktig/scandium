@@ -74,7 +74,7 @@ The Documentation directory contains code to automate generating aspects of the 
 
 The definitions are written to a XML schema and provide the means to always keep the source code and written documentation in sync. The code also checks the definitions in the XML to the code, and vice versa.
 
-Documentation uses make as its build tool.
+Documentation uses make as its build tool, but first cd external/jaxb-ri and run "mvn clean install"
 
 ## Building
 
