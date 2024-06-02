@@ -28,3 +28,6 @@
 [submodule "external/odftoolkit"]
 	path = external/odftoolkit
 	url = https://github.com/veriktig/tdf-odftoolkit
+[submodule "external/commons-cli"]
+	path = external/commons-cli
+	url = https://github.com/veriktig/commons-cli.git
