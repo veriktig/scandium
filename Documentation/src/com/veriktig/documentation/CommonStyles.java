@@ -19,8 +19,8 @@ package com.veriktig.documentation;
 import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeAutomaticStyles;
 import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 import org.odftoolkit.odfdom.pkg.OdfElement;
-import org.odftoolkit.simple.TextDocument;
-import org.odftoolkit.simple.text.Paragraph;
+import org.odftoolkit.odfdom.doc.OdfTextDocument;
+import org.odftoolkit.odfdom.incubator.doc.text.OdfTextParagraph;
 
 import java.io.File;
 
@@ -30,6 +30,7 @@ import org.odftoolkit.odfdom.dom.element.office.OfficeAutomaticStylesElement;
 import org.odftoolkit.odfdom.dom.element.office.OfficeDocumentStylesElement;
 import org.odftoolkit.odfdom.dom.element.office.OfficeFontFaceDeclsElement;
 import org.odftoolkit.odfdom.dom.element.office.OfficeMasterStylesElement;
+import org.odftoolkit.odfdom.dom.element.office.OfficeTextElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleFontFaceElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleMasterPageElement;
 import org.odftoolkit.odfdom.dom.element.style.StylePageLayoutElement;
@@ -46,19 +47,33 @@ import org.w3c.dom.Node;
 public class CommonStyles {
     private static final String FONT = "Source Sans Pro";
     private static final String CODE = "Source Code Pro";
-    private static TextDocument outputDocument = null;
+    private static OdfTextDocument outputDocument = null;
     private static OdfContentDom contentDom = null;
     private static OdfStylesDom stylesDom = null;
     private static boolean indented = false;
+    private static OfficeTextElement officeText = null;
     
-    public static void init(TextDocument doc) {
+    public static void init(OdfTextDocument doc) {
         outputDocument = doc;
         try {
             contentDom = outputDocument.getContentDom();
             stylesDom = outputDocument.getStylesDom();
+            officeText = outputDocument.getContentRoot();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+        }
+        cleanUp();
+    }
+
+    public static void cleanUp() {
+        Node childNode;
+
+        // Remove <text:p> from default document
+        childNode = officeText.getFirstChild();
+        while (childNode != null) {
+            officeText.removeChild(childNode);
+            childNode = officeText.getFirstChild();
         }
     }
     
@@ -311,9 +326,7 @@ public class CommonStyles {
         } else {
             the.setStyleName("P_NAME_HEADER_PARAGRAPH");
         }
-        Paragraph paragraph = Paragraph.getInstanceof(the);
-        currentParagraph = CommonStyles.addParagraph(currentParagraph, paragraph);
-        currentParagraph = CommonStyles.addEmptyParagraph(currentParagraph);
+        officeText.appendChild(the);
         return currentParagraph;
     }
     
@@ -322,9 +335,7 @@ public class CommonStyles {
         the.setTextContent(heading);
         the.setTextOutlineLevelAttribute(2);
         the.setStyleName(indented ? "P_HEADER_INDENTED" : "P_HEADER");
-        Paragraph paragraph = Paragraph.getInstanceof(the);
-        currentParagraph = CommonStyles.addParagraph(currentParagraph, paragraph);
-        currentParagraph = CommonStyles.addEmptyParagraph(currentParagraph);
+        officeText.appendChild(the);
         return currentParagraph;
     }
     
@@ -337,8 +348,7 @@ public class CommonStyles {
         TextSpanElement tse2 = tpe.newTextSpanElement();
         tse2.setTextContent(summary);
         tse2.setStyleName("T_NORMAL");
-        Paragraph paragraph = Paragraph.getInstanceof(tpe);
-        currentParagraph = CommonStyles.addParagraph(currentParagraph, paragraph);
+        officeText.appendChild(tpe);
         return currentParagraph;
     }
     
@@ -348,8 +358,7 @@ public class CommonStyles {
         TextSpanElement tse = tpe.newTextSpanElement();
         tse.setTextContent(desc);
         tse.setStyleName("T_NORMAL");
-        Paragraph paragraph = Paragraph.getInstanceof(tpe);
-        currentParagraph = CommonStyles.addParagraph(currentParagraph, paragraph);
+        officeText.appendChild(tpe);
         return currentParagraph;
     }
 
@@ -359,14 +368,11 @@ public class CommonStyles {
         TextSpanElement tse = tpe.newTextSpanElement();
         tse.setTextContent(see_also);
         tse.setStyleName("T_BOLD");
-        Paragraph paragraph = Paragraph.getInstanceof(tpe);
-        currentParagraph = CommonStyles.addParagraph(currentParagraph, paragraph);
+        officeText.appendChild(tpe);
         return currentParagraph;
     }
     
-    public static int addParagraph(int currentParagraph, Paragraph pp) {
-        Paragraph ref = outputDocument.getParagraphByIndex(currentParagraph, false);
-        outputDocument.insertParagraph(ref, pp, false);
+    public static int addParagraph(int currentParagraph, OdfTextParagraph pp) {
         return ++currentParagraph;
     }
 
@@ -374,17 +380,11 @@ public class CommonStyles {
         TextPElement tpe = new TextPElement(contentDom);
         tpe.setStyleName("P_DEFAULT");
         tpe.setTextContent("");
-        Paragraph paragraph = Paragraph.getInstanceof(tpe);
-        return (addParagraph(currentParagraph, paragraph));
+        officeText.appendChild(tpe);
+        return (0);
     }
     
     public static void finish(File file) throws FactoryException {
-        // Hack to remove the empty first paragraph
-        Paragraph ref = outputDocument.getParagraphByIndex(0, false);
-        Node empty = ref.getOdfElement();
-        Node parent = empty.getParentNode();
-        parent.removeChild(empty);
-        
         try {
             outputDocument.save(file);
         } catch (Exception e) {

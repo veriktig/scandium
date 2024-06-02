@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.odftoolkit.simple.TextDocument;
+import org.odftoolkit.odfdom.doc.OdfTextDocument;
 
 import com.veriktig.documentation.CommonStyles;
 import com.veriktig.documentation.FactoryException;
@@ -31,12 +31,12 @@ import com.veriktig.documentation.errors.generated.WhatNext;
 import com.veriktig.documentation.errors.generated.SeeAlso;
 
 public class ODFileFactory extends FileFactory {
-    private static TextDocument outputDocument;
+    private static OdfTextDocument outputDocument;
     private static int currentParagraph = 0;
 
     public static void make(File file, List<SError> list) throws FactoryException {
         try {
-            outputDocument = TextDocument.newTextDocument();
+            outputDocument = OdfTextDocument.newTextDocument();
             CommonStyles.init(outputDocument);
             CommonStyles.addStyles();
             // Sort the list by command name

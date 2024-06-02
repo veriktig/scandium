@@ -21,9 +21,10 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.odftoolkit.simple.TextDocument;
-import org.odftoolkit.simple.text.Paragraph;
+import org.odftoolkit.odfdom.doc.OdfTextDocument;
+import org.odftoolkit.odfdom.incubator.doc.text.OdfTextParagraph;
 import org.odftoolkit.odfdom.dom.OdfContentDom;
+import org.odftoolkit.odfdom.dom.element.office.OfficeTextElement;
 import org.odftoolkit.odfdom.dom.element.text.TextPElement;
 import org.odftoolkit.odfdom.dom.element.text.TextSpanElement;
 
@@ -36,16 +37,19 @@ import com.veriktig.documentation.variables.generated.Variable;
 
 public class ODFileFactory extends FileFactory {
     private static OdfContentDom contentDom;
-    private static TextDocument outputDocument;
+    private static OdfTextDocument outputDocument;
     private static int currentParagraph = 0;
     private static boolean indented = false;
+    private static OfficeTextElement officeText = null;
 
     public static void make(File file, List<Variable> list) throws FactoryException {
         try {
-            outputDocument = TextDocument.newTextDocument();
+            outputDocument = OdfTextDocument.newTextDocument();
+            officeText = outputDocument.getContentRoot();
             CommonStyles.init(outputDocument);
             contentDom = outputDocument.getContentDom();
             CommonStyles.addStyles();
+            CommonStyles.cleanUp();
             // Sort the list by command name
             Collections.sort(list, (o1, o2) -> o1.getName().compareTo(o2.getName()));
             Iterator<Variable> iter = list.iterator();
@@ -98,8 +102,7 @@ public class ODFileFactory extends FileFactory {
         TextSpanElement tse = tpe.newTextSpanElement();
         tse.setTextContent(type);
         tse.setStyleName("T_NORMAL");
-        Paragraph paragraph = Paragraph.getInstanceof(tpe);
-        currentParagraph = CommonStyles.addParagraph(currentParagraph, paragraph);
+        officeText.appendChild(tpe);
     }
 
     private static void createDefault(String default_value) {
@@ -108,7 +111,6 @@ public class ODFileFactory extends FileFactory {
         TextSpanElement tse = tpe.newTextSpanElement();
         tse.setTextContent(default_value);
         tse.setStyleName("T_NORMAL");
-        Paragraph paragraph = Paragraph.getInstanceof(tpe);
-        currentParagraph = CommonStyles.addParagraph(currentParagraph, paragraph);
+        officeText.appendChild(tpe);
     }
 }
