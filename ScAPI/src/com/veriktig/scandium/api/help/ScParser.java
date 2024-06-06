@@ -39,7 +39,7 @@ import com.veriktig.scandium.api.SCAPI;
 /**
  * Default parser.
  * 
- * @version $Id: DefaultParser.java 1783175 2017-02-16 07:52:05Z britter $
+ * @version $Id$
  * @since 1.3
  */
 public class ScParser implements CommandLineParser
@@ -183,7 +183,7 @@ public class ScParser implements CommandLineParser
                 {
                     if (opt.getValues() == null || opt.getValues().length == 0)
                     {
-                        opt.addValueForProcessing(value);
+                        opt.processValue(value);
                     }
                 }
                 else if (!("yes".equalsIgnoreCase(value)
@@ -248,7 +248,7 @@ public class ScParser implements CommandLineParser
         }
         else if (currentOption != null && currentOption.acceptsArg() && isArgument(token))
         {
-            currentOption.addValueForProcessing(Util.stripLeadingAndTrailingQuotes(token));
+            currentOption.processValue(Util.stripLeadingAndTrailingQuotes(token));
         }
         else if (token.startsWith("--"))
         {
@@ -473,7 +473,7 @@ public class ScParser implements CommandLineParser
             if (option.acceptsArg())
             {
                 handleOption(option);
-                currentOption.addValueForProcessing(value);
+                currentOption.processValue(value);
                 currentOption = null;
             }
             else
@@ -540,14 +540,14 @@ public class ScParser implements CommandLineParser
                 if (opt != null && options.getOption(opt).acceptsArg())
                 {
                     handleOption(options.getOption(opt));
-                    currentOption.addValueForProcessing(t.substring(opt.length()));
+                    currentOption.processValue(t.substring(opt.length()));
                     currentOption = null;
                 }
                 else if (isJavaProperty(t))
                 {
                     // -SV1 (-Dflag)
                     handleOption(options.getOption(t.substring(0, 1)));
-                    currentOption.addValueForProcessing(t.substring(1));
+                    currentOption.processValue(t.substring(1));
                     currentOption = null;
                 }
                 else
@@ -570,7 +570,7 @@ public class ScParser implements CommandLineParser
                 if (option != null && option.acceptsArg())
                 {
                     handleOption(option);
-                    currentOption.addValueForProcessing(value);
+                    currentOption.processValue(value);
                     currentOption = null;
                 }
                 else
@@ -582,8 +582,8 @@ public class ScParser implements CommandLineParser
             {
                 // -SV1=V2 (-Dkey=value)
                 handleOption(options.getOption(opt.substring(0, 1)));
-                currentOption.addValueForProcessing(opt.substring(1));
-                currentOption.addValueForProcessing(value);
+                currentOption.processValue(opt.substring(1));
+                currentOption.processValue(value);
                 currentOption = null;
             }
             else
@@ -716,7 +716,7 @@ public class ScParser implements CommandLineParser
                 if (currentOption != null && token.length() != i + 1)
                 {
                     // add the trail as an argument of the option
-                    currentOption.addValueForProcessing(token.substring(i + 1));
+                    currentOption.processValue(token.substring(i + 1));
                     break;
                 }
             }
