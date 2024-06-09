@@ -65,7 +65,7 @@ import com.veriktig.scandium.api.SCAPI;
  * Please report issues at http://example.com/issues
  * </pre>
  * 
- * @version $Id: HelpFormatter.java 1677407 2015-05-03 14:31:12Z britter $
+ * @version $Id$
  */
 public class ScHelpFormatter extends HelpFormatter
 {
