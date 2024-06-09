@@ -8,12 +8,15 @@
     <property name="dir.jarfile" value="${dir.buildfile}/generated"/>
     <target name="create_run_jar">
         <jar destfile="${dir.jarfile}/ScLauncher.jar" filesetmanifest="mergewithoutmain">
-        	<service type="org.osgi.framework.launch.FrameworkFactory"
+            <service type="org.osgi.framework.launch.FrameworkFactory"
+        	           provider="org.apache.felix.framework.FrameworkFactory"/>
+            <service type="org.osgi.framework.connect.ConnectFrameworkFactory"
         	           provider="org.apache.felix.framework.FrameworkFactory"/>
             <manifest>
                 <attribute name="Main-Class" value="com.veriktig.scandium.launcher.Main"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
+            <fileset dir="${dir.buildfile}/resources"/>
             <fileset dir="${dir.buildfile}/bin"/>
             <fileset dir="${dir.buildfile}/src" excludes="**/default.properties,**/Felix.properties,**/packageinfo"/>
         </jar>
