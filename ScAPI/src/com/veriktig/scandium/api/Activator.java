@@ -24,7 +24,6 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.framework.wiring.BundleWiring;
 
-import com.veriktig.scandium.api.TclCommand;
 import com.veriktig.scandium.api.finders.CommandFinder;
 import com.veriktig.scandium.api.finders.ErrorFinder;
 import com.veriktig.scandium.api.finders.HelpFinder;
