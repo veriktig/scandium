@@ -16,9 +16,9 @@
                 <attribute name="Main-Class" value="com.veriktig.scandium.launcher.Main"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
-            <fileset dir="${dir.buildfile}/resources"/>
+            <fileset dir="${dir.buildfile}/src/main/resources"/>
             <fileset dir="${dir.buildfile}/bin"/>
-            <fileset dir="${dir.buildfile}/src" excludes="**/default.properties,**/Felix.properties,**/packageinfo"/>
+            <fileset dir="${dir.buildfile}/src/main/java" excludes="**/default.properties,**/Felix.properties,**/packageinfo"/>
         </jar>
     </target>
 </project>
