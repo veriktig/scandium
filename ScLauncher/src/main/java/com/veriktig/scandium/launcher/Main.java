@@ -33,6 +33,8 @@ import org.osgi.framework.FrameworkEvent;
 import org.osgi.framework.launch.Framework;
 import org.osgi.framework.launch.FrameworkFactory;
 
+import com.veriktig.scandium.launcher.AutoProcessor;
+
 /**
  * <p>
  * This class is the default way to instantiate and execute the framework. It is not
