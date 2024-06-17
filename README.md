@@ -2,6 +2,9 @@
 # Project Scandium - Tcl meets microservices
 A general purpose framework for Java CLI applications based on Tcl and [OSGi](https://www.osgi.org).
 
+## DANGER
+Not currently compiling. In the process of moving everything to build with make.
+
 ## Overview
 The framework consists of 2 bundles and an executable jar file:
 * ScLauncher - executable
