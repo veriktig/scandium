@@ -31,3 +31,6 @@
 [submodule "external/commons-cli"]
 	path = external/commons-cli
 	url = https://github.com/veriktig/commons-cli.git
+[submodule "external/jdepz"]
+	path = external/jdepz
+	url = git@github.com:veriktig/jdepz.git
