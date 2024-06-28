@@ -19,9 +19,13 @@ compile: list
 	${RM} ${FILELIST}
 
 jar: compile
-	jar --create --file ${JAR} -e ${MAIN_CLASS} -C src/main/resources .
+	jar --create --file ${JAR} -M -e ${MAIN_CLASS} -C src/main/resources .
 	jar --update --file ${JAR} -C ${OUTPUT} .
 	jar --update --file ${JAR} -C src/main/java .
 
 deps: jar
-	jdeps --ignore-missing-deps --generate-module-info . ${JAR}
+	${RM} -rf generated/MANIFEST.osgi
+	${RM} -rf src/main/resources/META-INF/MANIFEST.MF
+	java -jar ../external/jdepz/jdepz.jar --osgi ${JAR} > generated/MANIFEST.osgi
+	cat src/MANIFEST.template generated/MANIFEST.osgi > src/main/resources/META-INF/MANIFEST.MF
+	jar --update --file ${JAR} -m src/main/resources/META-INF/MANIFEST.MF
