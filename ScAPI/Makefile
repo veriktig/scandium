@@ -20,6 +20,7 @@ compile: list
 
 jar: compile
 	jar --create --file ${JAR} -C ${OUTPUT} .
+	jar --update --file ${JAR} -C src/main/resources .
 
 deps: jar
 	${RM} -rf generated/MANIFEST.osgi
