@@ -1,11 +1,12 @@
 # Dependencies
 CLASSPATH=../ScLauncher/generated/ScLauncher-1.0.0.jar
 
-VERSION=1.2.0
+BUNDLE_NAME=ScAPI
+BUNDLE_VERSION=1.2.0
 
 FILELIST=src_list
 OUTPUT=generated/classes
-JAR=generated/ScAPI-${VERSION}.jar
+JAR=generated/ScAPI-${BUNDLE_VERSION}.jar
 
 all: deps
 
@@ -23,6 +24,6 @@ jar: compile
 deps: jar
 	${RM} -rf generated/MANIFEST.osgi
 	${RM} -rf src/main/resources/META-INF/MANIFEST.MF
-	java -jar ../external/jdepz/jdepz.jar --osgi ${JAR} > generated/MANIFEST.osgi
+	java -jar ../external/jdepz/jdepz.jar --osgi ${BUNDLE_VERSION} ${JAR} > generated/MANIFEST.osgi
 	cat src/MANIFEST.template generated/MANIFEST.osgi > src/main/resources/META-INF/MANIFEST.MF
 	jar --update --file ${JAR} -m src/main/resources/META-INF/MANIFEST.MF
