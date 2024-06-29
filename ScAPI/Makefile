@@ -1,5 +1,5 @@
 # Dependencies
-CLASSPATH=../ScLauncher/generated/ScLauncher.jar
+CLASSPATH=../ScLauncher/generated/ScLauncher-1.0.0.jar
 
 VERSION=1.2.0
 
@@ -21,4 +21,8 @@ jar: compile
 	jar --create --file ${JAR} -C ${OUTPUT} .
 
 deps: jar
-	jdeps --ignore-missing-deps --generate-module-info . ${JAR}
+	${RM} -rf generated/MANIFEST.osgi
+	${RM} -rf src/main/resources/META-INF/MANIFEST.MF
+	java -jar ../external/jdepz/jdepz.jar --osgi ${JAR} > generated/MANIFEST.osgi
+	cat src/MANIFEST.template generated/MANIFEST.osgi > src/main/resources/META-INF/MANIFEST.MF
+	jar --update --file ${JAR} -m src/main/resources/META-INF/MANIFEST.MF
