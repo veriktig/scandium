@@ -15,12 +15,9 @@ ScUI finds TclCommandProvider's, extends the Tcl interpreter with new commands, 
 
 ## Demo
 
-SCTEST CURRENTLY NOT WORKING
+For a quick demostration, clone the project, make, then make run.
 
-For a quick demostration, clone the project, or grab the files under the demo directory.
-You will need the Java8 runtime installed.
-
-demo initially contains the following:
+demo will contain the following:
 
 ```c
 ScLauncher-1.0.0.jar
@@ -32,9 +29,9 @@ bundle
     ScTest-1.0.0.jar
 ```
 
-You can start the application using:
+You can also start the application using:
 ```c
-java -jar ScLauncher-1.0.0.jar
+java -jar --enable-native-access=ALL-UNNAMED ScLauncher-1.0.0.jar
 ```
 
 You should see the prompt of the Tcl shell:
@@ -54,7 +51,7 @@ You can also try removing ScTest from the framework:
 
 1. Move ScTest-1.0.0.jar to a different directory.
 2. Remove the Felix cache: rm -rf felix-cache
-3. java -jar ScLauncher-1.0.0.jar
+3. java -jar --enable-native-access=ALL-UNNAMED ScLauncher-1.0.0.jar
 
 Note the internal_test command is no longer available in the Tcl shell.
 
@@ -62,7 +59,7 @@ To return the functionality,
 
 1. Move ScTest-1.0.0.jar back to the bundle directory
 2. Remove the Felix cache: rm -rf felix-cache
-3. java -jar ScLauncher-1.0.0.jar
+3. java -jar --enable-native-access=ALL-UNNAMED ScLauncher-1.0.0.jar
 
 Now the internal_test command is available again.
 
