@@ -78,10 +78,10 @@ docs: $(PROGRAM)
 	$(JAVA) -cp $(XJC_CLASSPATH):$(ODF):$(CLASSES) $(MAIN) $(OUTPUT)
 
 CLEANFILES = \
+	$(GENERATED)	\
 	$(CLASSES)/*
 
 CLOBBERFILES = \
-	$(GENERATED)	\
 	$(OUTPUT)/*
 
 clean::

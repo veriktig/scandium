@@ -14,7 +14,7 @@ jdepz:
 	cd external/jdepz; make
 
 docs:
-	cd Documentation; make
+	cd Documentation; make; make clean
 
 launcher:
 	cd ScLauncher; make

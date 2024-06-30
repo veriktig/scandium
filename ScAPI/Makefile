@@ -8,7 +8,7 @@ FILELIST=src_list
 OUTPUT=generated/classes
 JAR=generated/ScAPI-${BUNDLE_VERSION}.jar
 
-all: deps
+all: clean
 
 list: 
 	find -L ./src/main/java -name \*.java -print > ${FILELIST}
@@ -28,3 +28,6 @@ deps: jar
 	java -jar ../external/jdepz/jdepz.jar --osgi ${BUNDLE_VERSION} ${JAR} > generated/MANIFEST.osgi
 	cat src/MANIFEST.template generated/MANIFEST.osgi > src/main/resources/META-INF/MANIFEST.MF
 	jar --update --file ${JAR} -m src/main/resources/META-INF/MANIFEST.MF
+
+clean: deps
+	cd src; ${RM} -rf com
