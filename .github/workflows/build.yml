@@ -14,13 +14,10 @@ jobs:
         steps:
         -   name: Git Checkout
             uses: actions/checkout@v1
-        -   name: Gradle Wrapper Validation
-            uses: gradle/wrapper-validation-action@v1
         -   name: Set up Java
             uses: actions/setup-java@v2
             with: 
-                java-version: 17
-                distribution: 'temurin'
+                java-version: 22
         -   name: Build
             shell: bash
-            run: ./gradlew --parallel build
+            run: ./make
