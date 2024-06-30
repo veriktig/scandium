@@ -110,7 +110,6 @@ Project Scandium stands on the shoulders of giants to provide its functionality.
 * [JTcl Project](http://jtcl-project.github.io/jtcl/) Tcl. Sun Labs license
 * [Apache Commons CLI](https://commons.apache.org/proper/commons-cli/) CLI support. Apache-2.0 license
 * [JLine](https://github.com/jline/jline3.git) Command line editing. BSD-2-clause license
-* [Java Native Access](https://github.com/java-native-access/jna.git) Native support for JLine. Apache-2.0 license
 
 ### Documentation:
 * [Apache ODF Toolkit](http://incubator.apache.org/odftoolkit/index.html) ODF file output. Apache-2.0 license
