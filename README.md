@@ -2,9 +2,6 @@
 # Project Scandium - Tcl meets microservices
 A general purpose framework for Java CLI applications based on Tcl and [OSGi](https://www.osgi.org).
 
-## DANGER
-Not currently compiling. In the process of moving everything to build with make.
-
 ## Overview
 The framework consists of 2 bundles and an executable jar file:
 * ScLauncher - executable
@@ -17,6 +14,9 @@ ScAPI provides core services such as the Tcl interpreter.
 ScUI finds TclCommandProvider's, extends the Tcl interpreter with new commands, services command line arguments, and starts the Tcl shell.
 
 ## Demo
+
+SCTEST CURRENTLY NOT WORKING
+
 For a quick demostration, clone the project, or grab the files under the demo directory.
 You will need the Java8 runtime installed.
 
@@ -83,39 +83,17 @@ Documentation uses make as its build tool, but first cd external/jaxb-ri and run
 
 ### Tools Required
 You will need the following to build:
-* Java8 
-* Eclipse for RCP and RAP Developers 
-* Bndtools from Eclipse Marketplace
+* JDK22
 * make
-* ant
 * Maven
-
-By default, Eclipse builds the bundles. You use Bndtools to release the bundles. You also may need to run ant from ScLauncher to create the executable jar under generated.
 
 ### Setup
 
-1. Pull submodules
-```c
-git submodule init
-git submodule update
-```
-2. Build the ODF jar.
-```c
-cd external/tdf-odftoolkit
-mvn package
-```
-3. Start Eclipse and open the Bntools perspective.
-4. Create a new Bnd OSGi Workspace.
-5. Open Projects from File System (ScLauncher, ScAPI, ScUI, ScTest).
-6. Eclipse automatically builds the projects.
-7. Use Bndtools to release bundles.
-8. Use ant to generate the ScLauncher executable jar.
-```c
-cd ScLauncher
-ant
-```
+1. make
 
 ### Creating a New Bundle
+
+TO BE REVISED
 
 1. Create a new Bnd project.
 2. Create a cmd subdirectory if the bundle provides Tcl commands.
