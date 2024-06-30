@@ -24,3 +24,6 @@ api:
 
 ui:
 	cd ScUI; make
+
+run:
+	cd demo; rm -rf felix-cache; java --enable-native-access=ALL-UNNAMED -jar ScLauncher-1.0.0.jar
