@@ -8,7 +8,7 @@ FILELIST=src_list
 OUTPUT=${CLASSPATH}
 JAR=generated/ScLauncher-${VERSION}.jar
 
-all: clean
+all: install
 
 list: 
 	find -L ./src/main/java -name \*.java -print > ${FILELIST}
@@ -29,3 +29,6 @@ deps: jar
 
 clean: deps
 	${RM} -rf src/main/resources/META-INF/MANIFEST.MF
+
+install: clean
+	cp ${JAR} ../demo

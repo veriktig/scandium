@@ -7,7 +7,7 @@ FILELIST=src_list
 OUTPUT=generated/classes
 JAR=generated/ScTest-${BUNDLE_VERSION}.jar
 
-all: clean
+all: install
 
 list: 
 	find -L ./src/main/java -name \*.java -print > ${FILELIST}
@@ -30,3 +30,6 @@ deps: jar
 
 clean: deps
 	cd src; ${RM} -rf com
+
+install: clean
+	cp ${JAR} ../demo/bundle
