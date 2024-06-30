@@ -1,4 +1,4 @@
-all: submodule jaxb odftoolkit jdepz docs launcher api ui
+all: submodule jaxb odftoolkit jdepz docs launcher api ui test
 
 submodule:
 	git submodule init
@@ -24,6 +24,9 @@ api:
 
 ui:
 	cd ScUI; make
+
+test:
+	cd ScTest; make
 
 run:
 	cd demo; rm -rf felix-cache; java --enable-native-access=ALL-UNNAMED -jar ScLauncher-1.0.0.jar
