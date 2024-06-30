@@ -77,8 +77,6 @@ The Documentation directory contains code to automate generating aspects of the 
 
 The definitions are written to a XML schema and provide the means to always keep the source code and written documentation in sync. The code also checks the definitions in the XML to the code, and vice versa.
 
-Documentation uses make as its build tool, but first cd external/jaxb-ri and run "mvn clean install"
-
 ## Building
 
 ### Tools Required
@@ -125,6 +123,7 @@ Project Scandium stands on the shoulders of giants to provide its functionality.
 Any file modifications are stored under the external directory.
 
 ### Change Log
+* 2.0.0 Moved to JDK22, removed JNA, BND and Eclipse
 * 1.2.0 Changed ClassResolver for Java9
 * 1.1.0 Added ANTLR v4 to ScAPI
 * 1.0.0 Initial Release
