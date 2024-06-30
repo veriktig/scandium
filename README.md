@@ -1,5 +1,8 @@
 ![Alt text](./assets/ScLogo128.png)
 # Project Scandium - Tcl meets microservices
+
+![workflow](https://github.com/veriktig/scandium/actions/workflows/WORKFLOW-FILE/badge.svg)
+
 A general purpose framework for Java CLI applications based on Tcl and [OSGi](https://www.osgi.org).
 
 ## Overview
