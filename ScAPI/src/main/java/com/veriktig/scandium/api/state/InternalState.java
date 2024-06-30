@@ -42,6 +42,7 @@ public enum InternalState {
     private static Map<String, String> user_variables = new HashMap<String, String>();
     private static Map<String, String> app_variables = new HashMap<String, String>();
     private static Map<String, String> bundle_versions = new HashMap<String, String>();
+    private static ClassLoader ScAPIClassLoader;
     
     public static void setInterp(Interp interp) {
         InternalState.interp = interp;
@@ -144,5 +145,13 @@ public enum InternalState {
     
     public static Map<String, String> getBundleVersions() {
         return bundle_versions;
+    }
+
+    public static void setScAPIClassLoader(ClassLoader cl) {
+        InternalState.ScAPIClassLoader = cl;
+    }
+
+    public static ClassLoader getScAPIClassLoader() {
+        return ScAPIClassLoader;
     }
 }

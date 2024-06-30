@@ -7,9 +7,6 @@
 [submodule "external/jline3"]
 	path = external/jline3
 	url = https://github.com/veriktig/jline3
-[submodule "external/jna"]
-	path = external/jna
-	url = https://github.com/veriktig/jna
 [submodule "external/jtcl"]
 	path = external/jtcl
 	url = https://github.com/veriktig/jtcl

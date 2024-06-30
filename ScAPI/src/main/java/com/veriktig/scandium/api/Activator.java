@@ -49,7 +49,7 @@ public class Activator implements BundleActivator {
         ClassLoader cl = context.getBundle().adapt(BundleWiring.class).getClassLoader();
 
         // Save bundle and classloader for use by commands
-        //InternalState.setClassLoader(cl);
+        InternalState.setScAPIClassLoader(cl);
         //InternalState.setBundle(context.getBundle());
         
         // Errors
