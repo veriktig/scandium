@@ -86,7 +86,7 @@ You will need the following to build:
 
 ### Setup
 
-1. make
+Just use "make" at the top level.
 
 ### Creating a New Bundle
 
