@@ -30,6 +30,7 @@ deps: jar
 
 clean: deps
 	cd src; ${RM} -rf com
+	${RM} -rf src/main/resources/META-INF/MANIFEST.MF
 
 install: clean
 	cp ${JAR} ../demo/bundle
