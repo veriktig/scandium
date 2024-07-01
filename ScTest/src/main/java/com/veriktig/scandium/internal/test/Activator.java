@@ -48,10 +48,11 @@ public class Activator implements BundleActivator {
         Bundle bundle = context.getBundle();
         TestInternalState.setBundle(bundle);
         Collection<TclCommand> commands = CommandFinder.findCommands(bundle, BASE_PACKAGE);
-        ClassLoader cl = context.getBundle().adapt(BundleWiring.class).getClassLoader();
+
+        BundleWiring bundleWiring = bundle.adapt(BundleWiring.class);
+        ClassLoader cl = bundleWiring.getClassLoader();
 
         // Find test classes
-        BundleWiring bundleWiring = bundle.adapt(BundleWiring.class);
         String pkg = new String("tcl.lang.cmd");
         Collection<String> classes = bundleWiring.listResources(pkg.replace('.','/'), "*.class", BundleWiring.FINDENTRIES_RECURSE);
         TestInternalState.setTestClasses(classes);
@@ -63,7 +64,6 @@ public class Activator implements BundleActivator {
         
         // Save bundle and classloader for use by commands
         TestInternalState.setClassLoader(cl);
-        TestInternalState.setBundle(context.getBundle());
         
         // Now start the service
         TclCommandService scc = new TclCommandService(cl, commands);
