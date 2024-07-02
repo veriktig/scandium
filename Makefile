@@ -1,4 +1,5 @@
 all: submodule jaxb odftoolkit jdepz docs launcher api ui test
+short: launcher api ui test
 
 submodule:
 	git submodule init

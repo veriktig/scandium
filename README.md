@@ -50,8 +50,6 @@ In addition to standard Tcl commands, ScAPI provides 3 commands:
 ScTest demonstrates adding a new feature to the framework.
 ScTest wraps the jtcl internal tests in a bundle and provides them with a new command called internal_test.
 
-DANGER: internal_test is currently not working
-
 You can also try removing ScTest from the framework:
 
 1. Move ScTest-1.0.0.jar to a different directory.
