@@ -39,10 +39,20 @@ public class PrintVersionsCmd implements Command {
 // END AUTOMATICALLY GENERATED SECTION
         Map<String, String> result = new LinkedHashMap<String, String>();
         Map<String, String> bundle_versions = InternalState.getBundleVersions();
+
+        bundle_versions.remove(null);
+        /*
+        for (Map.Entry<String, String> entry : bundle_versions.entrySet()) {
+            System.out.println(entry.getKey() + " " + entry.getValue());
+        }
+        */
         
-        bundle_versions.entrySet().stream()
-        .sorted(Map.Entry.<String, String>comparingByKey())
-        .forEachOrdered(x -> result.put(x.getKey(), x.getValue()));
+        try {
+            bundle_versions.entrySet().stream()
+            .sorted(Map.Entry.<String, String>comparingByKey())
+            .forEachOrdered(x -> result.put(x.getKey(), x.getValue()));
+        } catch (Exception e) {
+        }
 
         for (Map.Entry<String, String> entry : result.entrySet()) {
             System.out.println(entry.getKey() + " " + entry.getValue());
