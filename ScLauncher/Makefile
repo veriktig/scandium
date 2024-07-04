@@ -32,6 +32,7 @@ jar: compile
 deps: jar
 	cat src/MANIFEST.template > src/main/resources/META-INF/MANIFEST.MF
 	jar --update --file ${JAR} -m src/main/resources/META-INF/MANIFEST.MF
+	cd ../external/felix-dev/framework/src/main/java/org/apache/felix/framework/util; rm FelixConstants.java
 
 clean: deps
 	${RM} -rf src/main/resources/META-INF/MANIFEST.MF
