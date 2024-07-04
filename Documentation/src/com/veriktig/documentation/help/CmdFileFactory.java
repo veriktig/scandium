@@ -42,7 +42,7 @@ public class CmdFileFactory extends FileFactory {
             List<Help> helpList = helpPkg.getHelp();
             for (Help help : helpList) { 
                 String name = camelCase(help.getName());
-                String filename = new String(Main.workPath + "/" + bundle + "/src/" + pkg + "/" + name + "Cmd.java");
+                String filename = new String(Main.workPath + "/" + bundle + "/src/main/java/" + pkg + "/" + name + "Cmd.java");
                 File fd = new File(filename);
                 if (fd.exists()) {
                     updateFile(fd, help);

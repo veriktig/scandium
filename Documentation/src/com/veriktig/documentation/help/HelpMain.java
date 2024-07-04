@@ -97,12 +97,10 @@ public class HelpMain {
                     summaries.add(new Summary(hh.getName(), hh.getHelp()));
                 }
                 // Create List of Help grouped by language_locale
-                if (!bundle.contains("Test")) {
-                    localeList.add(new HelpByLocale(language_locale, helpList));
-                }
+                localeList.add(new HelpByLocale(language_locale, helpList));
                 
                 // Use bundle and getPackage to create file path
-                File fd2 = new File(Main.workPath + "/" + bundle + "/src/" + pkg.getPackage().replace(".", "/") + "/" + java_filename);
+                File fd2 = new File(Main.workPath + "/" + bundle + "/src/main/java/" + pkg.getPackage().replace(".", "/") + "/" + java_filename);
                 HelpClassFileFactory.make(fd2, pkg.getPackage(), java_class, summaries);
                 Set<String> commands = new HashSet<String>();
                 for (Summary summary : summaries) {
@@ -189,7 +187,7 @@ public class HelpMain {
                     }
                     @Override
                     public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                        if (dir.toString().contains("/src/") && dir.toString().contains("/cmd") && !dir.toString().contains("tcl")) {
+                        if (dir.toString().contains("/src/main/java/") && dir.toString().contains("/cmd") && !dir.toString().contains("tcl")) {
                             look_here = true;
                         } else {
                             look_here = false;

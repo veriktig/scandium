@@ -37,3 +37,4 @@ run:
 
 clobber:
 	cd demo; rm -rf .scandium_history felix-cache *.jar; cd bundle; rm -rf *.jar;
+	cd Documentation; make clobber

@@ -93,7 +93,7 @@ public class ErrorMain {
                 localeList.add(new ErrorByLocale(prefix, language_locale, errorList));
                 
                 // Use bundle and getPackage to create file path
-                File fd2 = new File(Main.workPath + "/" + bundle + "/src/" + pkg.getPackage().replace(".", "/") + "/" + java_filename);
+                File fd2 = new File(Main.workPath + "/" + bundle + "/src/main/java/" + pkg.getPackage().replace(".", "/") + "/" + java_filename);
                 ErrorClassFileFactory.make(fd2, pkg.getPackage(), java_class, summaries);
                 Set<String> commands = new HashSet<String>();
                 for (Summary summary : summaries) {
