@@ -1,5 +1,5 @@
 Bundle-ManifestVersion: 2
 Bundle-Name: ScTest
-Bundle-SymbolicName: ScTest
+Bundle-SymbolicName: com.veriktig.scandium.internal.test
 Bundle-Version: 1.0.0
 Bundle-Activator: com.veriktig.scandium.internal.test.Activator
