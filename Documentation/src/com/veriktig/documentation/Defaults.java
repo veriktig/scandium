@@ -39,7 +39,7 @@ public class Defaults {
         //
         props.setProperty("workPath", "..");
         props.setProperty("uiPackage", "com.veriktig.scandium.api.state");
-        props.setProperty("uiPath", "ScAPI/src/com/veriktig/scandium/api/state");
+        props.setProperty("uiPath", "ScAPI/src/main/java/com/veriktig/scandium/api/state");
         props.setProperty("uiFile", "AppVariables.java");
         return (props);
     }
