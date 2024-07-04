@@ -12,8 +12,8 @@ JAR=generated/ScAPI-${BUNDLE_VERSION}.jar
 all: install
 
 version:
-	cd src; cat MANIFEST.template | sed -e "s/__SCAPI_NAME__/${SYMBOLIC_NAME}/" > MANIFEST.name
-	cd src; cat MANIFEST.name | sed -e "s/__SCAPI_VERSION__/${BUNDLE_VERSION}/" > MANIFEST.fragment
+	cd src; cat MANIFEST.template | sed -e "s/__NAME__/${SYMBOLIC_NAME}/" > MANIFEST.name
+	cd src; cat MANIFEST.name | sed -e "s/__VERSION__/${BUNDLE_VERSION}/" > MANIFEST.fragment
 	cd src; rm MANIFEST.name
 
 list: version
@@ -34,11 +34,10 @@ deps: jar
 	java -jar ../external/jdepz/jdepz.jar --osgi ${BUNDLE_VERSION} ${JAR} > generated/MANIFEST.osgi
 	cat src/MANIFEST.fragment generated/MANIFEST.osgi > src/main/resources/META-INF/MANIFEST.MF
 	jar --update --file ${JAR} -m src/main/resources/META-INF/MANIFEST.MF
-	cd src; rm MANIFEST.fragment
-	cd src/main/resources/META-INF; rm MANIFEST.MF
 
 clean: deps
-	cd src; ${RM} -rf com
+	cd src; ${RM} -rf com MANIFEST.fragment
+	${RM} -rf  src/main/resources/META-INF/MANIFEST.MF
 
 install: clean
 	cp ${JAR} ../demo/bundle

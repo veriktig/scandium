@@ -1,5 +1,5 @@
 Bundle-ManifestVersion: 2
 Bundle-Name: ScAPI
-Bundle-SymbolicName: __SCAPI_NAME__
-Bundle-Version: __SCAPI_VERSION__
+Bundle-SymbolicName: __NAME__
+Bundle-Version: __VERSION__
 Bundle-Activator: com.veriktig.scandium.api.Activator

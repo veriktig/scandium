@@ -12,8 +12,8 @@ JAR=generated/ScLauncher-${VERSION}.jar
 all: install
 
 version:
-	cd ../external/felix-dev/framework/src/main/java/org/apache/felix/framework/util; cat FelixConstants.template | sed -e "s/__SCLAUNCHER_NAME__/${SYMBOLIC_NAME}/g" > FelixConstants.name
-	cd ../external/felix-dev/framework/src/main/java/org/apache/felix/framework/util; cat FelixConstants.name | sed -e "s/__SCLAUNCHER_VERSION__/${VERSION}/g" > FelixConstants.java
+	cd ../external/felix-dev/framework/src/main/java/org/apache/felix/framework/util; cat FelixConstants.template | sed -e "s/__NAME__/${SYMBOLIC_NAME}/g" > FelixConstants.name
+	cd ../external/felix-dev/framework/src/main/java/org/apache/felix/framework/util; cat FelixConstants.name | sed -e "s/__VERSION__/${VERSION}/g" > FelixConstants.java
 	cd ../external/felix-dev/framework/src/main/java/org/apache/felix/framework/util; rm FelixConstants.name
 
 list: version

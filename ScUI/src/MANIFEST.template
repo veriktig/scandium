@@ -1,5 +1,5 @@
 Bundle-ManifestVersion: 2
 Bundle-Name: ScUI
-Bundle-SymbolicName: com.veriktig.scandium.ui
-Bundle-Version: 1.0.0
+Bundle-SymbolicName: __NAME__
+Bundle-Version: __VERSION__
 Bundle-Activator: com.veriktig.scandium.ui.Activator
