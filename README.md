@@ -30,7 +30,9 @@ bundle
     ScAPI-1.2.0.jar
     ScUI-1.0.0.jar
     ScTest-1.0.0.jar
+    ...
 ```
+It also makes a link to the jaxb jar to demonstrate third-party compatibility.
 
 You can also start the application using:
 ```c

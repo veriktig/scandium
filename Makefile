@@ -1,4 +1,4 @@
-all: submodule jaxb odftoolkit jdepz docs launcher api ui test
+all: submodule jaxb odftoolkit jdepz docs launcher api ui test jaxb-install
 bundles: launcher api ui test
 
 submodule:
@@ -28,6 +28,9 @@ ui:
 
 test:
 	cd ScTest; make
+
+jaxb-install:
+	cd demo/bundle; ln -s ../../external/jaxb-ri/jaxb-ri/bundles/osgi/osgi/target/jaxb-osgi-4.0.6-SNAPSHOT.jar .
 
 run:
 	cd demo; rm -rf felix-cache; java --enable-native-access=ALL-UNNAMED -jar ScLauncher-1.0.0.jar
