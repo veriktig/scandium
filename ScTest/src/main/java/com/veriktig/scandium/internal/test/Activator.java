@@ -17,6 +17,7 @@
 package com.veriktig.scandium.internal.test;
 
 import java.util.Collection;
+import java.util.ListResourceBundle;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
@@ -26,9 +27,11 @@ import org.osgi.framework.wiring.BundleWiring;
 
 import com.veriktig.scandium.api.TclCommand;
 import com.veriktig.scandium.api.finders.CommandFinder;
+import com.veriktig.scandium.api.finders.HelpFinder;
 import com.veriktig.scandium.api.providers.TclCommandProvider;
 import com.veriktig.scandium.api.service.TclCommandService;
 import com.veriktig.scandium.internal.test.state.TestInternalState;
+import com.veriktig.scandium.api.state.InternalState;
 
 /**
  * 
@@ -61,6 +64,10 @@ public class Activator implements BundleActivator {
         pkg = new String("resources.tcl.lang.cmd");
         Collection<String> tests = bundleWiring.listResources(pkg.replace('.','/'), "*.test", BundleWiring.FINDENTRIES_RECURSE);
         TestInternalState.setTestResources(tests);
+        
+        // Help
+        ListResourceBundle rb = (ListResourceBundle) HelpFinder.findHelp(context.getBundle(), BASE_PACKAGE);
+        InternalState.addHelp(rb);
         
         // Save bundle and classloader for use by commands
         TestInternalState.setClassLoader(cl);
