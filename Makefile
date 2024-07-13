@@ -30,7 +30,7 @@ test:
 	cd ScTest; make
 
 jaxb-install:
-	cd demo/bundle; ln -s ../../external/jaxb-ri/jaxb-ri/bundles/osgi/osgi/target/jaxb-osgi-4.0.6-SNAPSHOT.jar .
+	cd demo/bundle; unlink jaxb-osgi-4.0.6-SNAPSHOT.jar; ln -s ../../external/jaxb-ri/jaxb-ri/bundles/osgi/osgi/target/jaxb-osgi-4.0.6-SNAPSHOT.jar .
 
 run:
 	cd demo; rm -rf felix-cache; java --enable-native-access=ALL-UNNAMED -jar ScLauncher-1.0.0.jar
