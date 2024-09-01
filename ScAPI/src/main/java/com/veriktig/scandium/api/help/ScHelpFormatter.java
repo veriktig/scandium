@@ -78,7 +78,7 @@ public class ScHelpFormatter extends HelpFormatter
      * @param required whether the Option is required or not
      */
     @Override
-    public void appendOption(StringBuffer buff, Option option, boolean required)
+    public void appendOption(StringBuilder buff, Option option, boolean required)
     {
         if (!required)
         {
