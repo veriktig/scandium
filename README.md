@@ -18,7 +18,7 @@ ScUI finds TclCommandProvider's, extends the Tcl interpreter with new commands, 
 
 ## Demo
 
-For a quick demostration, clone the project, make, then make run.
+For a quick demostration, clone the project, make submodule, make, then make run.
 
 demo will contain the following:
 
