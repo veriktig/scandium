@@ -10,8 +10,8 @@ public class Help_en_US extends ListResourceBundle {
     protected Object[][] getContents() {
         return new Object[][] {
             {"help", "Displays a concise description of a command."},
-            {"printvar", "Displays the value of variables."},
-            {"print_versions", "Displays the installed bundles and version information."}
+            {"print_versions", "Displays the installed bundles and version information."},
+            {"printvar", "Displays the value of variables."}
         };
     }
 }

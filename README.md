@@ -83,7 +83,7 @@ The definitions are written to a XML schema and provide the means to always keep
 
 ### Tools Required
 You will need the following to build:
-* JDK22
+* JDK22 or greater
 * make
 * Maven
 
@@ -124,6 +124,7 @@ Project Scandium stands on the shoulders of giants to provide its functionality.
 Any file modifications are stored under the external directory.
 
 ### Change Log
+* 2.0.1 Moved github build to JDK23
 * 2.0.0 Moved to JDK22, removed JNA, BND and Eclipse
 * 1.2.0 Changed ClassResolver for Java9
 * 1.1.0 Added ANTLR v4 to ScAPI
