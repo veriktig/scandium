@@ -1,4 +1,5 @@
-all: jaxb odftoolkit jdepz docs launcher api ui test jaxb-install
+all: submodule jaxb odftoolkit jdepz docs launcher api ui test jaxb-install
+update: jaxb odftoolkit jdepz docs launcher api ui test jaxb-install
 bundles: launcher api ui test
 
 submodule:
