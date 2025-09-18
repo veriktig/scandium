@@ -31,3 +31,6 @@
 [submodule "external/jdepz"]
 	path = external/jdepz
 	url = https://github.com/veriktig/jdepz.git
+[submodule "external/juniversalchardet"]
+	path = external/juniversalchardet
+	url = https://github.com/veriktig/juniversalchardet.git
