@@ -18,7 +18,7 @@ jobs:
             uses: oracle-actions/setup-java@v1
             with: 
                 website: oracle.com
-                release: 24
+                release: 25
         -   name: Build
             shell: bash
             run: make
