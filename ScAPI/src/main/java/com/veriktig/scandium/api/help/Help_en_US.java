@@ -9,9 +9,9 @@ import java.util.ListResourceBundle;
 public class Help_en_US extends ListResourceBundle {
     protected Object[][] getContents() {
         return new Object[][] {
-            {"print_versions", "Displays the installed bundles and version information."},
             {"help", "Displays a concise description of a command."},
-            {"printvar", "Displays the value of variables."}
+            {"printvar", "Displays the value of variables."},
+            {"print_versions", "Displays the installed bundles and version information."}
         };
     }
 }
