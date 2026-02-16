@@ -25,7 +25,7 @@ JAVADOC = $(JAVA_HOME)/bin/javadoc
 
 XJC_BASE = ../external/jaxb-ri/jaxb-ri
 XJC_CP = $(XJC_BASE)/xjc/target/xjctask-cp/*
-XJC_JAR = $(XJC_BASE)/xjc/target/jaxb-xjc-4.0.6-SNAPSHOT.jar
+XJC_JAR = $(XJC_BASE)/xjc/target/jaxb-xjc-4.0.7-SNAPSHOT.jar
 XJC_CLASSPATH = $(XJC_CP):$(XJC_JAR)
 
 XJC = java -cp $(XJC_CLASSPATH) com.sun.tools.xjc.XJCFacade
